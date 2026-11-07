@@ -10,8 +10,10 @@
 .scene-preview .module-heading .module-index { display: none; }
 .scene-preview .announcement-board .module-heading h2 { background-image: url('../assets/generated/cp3/announcement-wordmark.png'); background-position-x: -25px; }
 .scene-preview .announcement-board .small-label { font-weight: 400; }
-.scene-preview .messages { margin-top: 18px; }
-.scene-preview .message { padding: 14px 0; }
+.scene-preview .messages { margin-top: 18px; flex: 1 1 auto; min-height: 0; overflow-y: auto; scrollbar-width: none; }
+.scene-preview .messages::-webkit-scrollbar { display: none; }
+.scene-preview .message { padding: 14px 0; flex: 0 0 auto; }
+.scene-preview .message:first-child { margin-top: auto; }
 .scene-preview .lyrics-board { padding: 16px 28px; }
 .scene-preview .lyrics-heading .module-index { display: block; width: 240px; height: 72px; font-size: 0; background: url('../assets/generated/cp3/playing-wordmark.png') -11px center / 240px 80px no-repeat; image-rendering: pixelated; }
 .scene-preview .song-title { margin-top: 6px; }
@@ -19,7 +21,7 @@
 .scene-preview .module-index, .scene-preview .small-label { font-size: 20px; letter-spacing: 0; }
 .scene-preview .module-description, .scene-preview .quest p, .scene-preview .lyric-line { font-size: 20px; }
 .scene-preview .message-meta, .scene-preview .message-meta > span, .scene-preview .sample-tag,
-.scene-preview .song-title > span, .scene-preview .quest-count, .scene-preview .board-footnote { font-size: 20px; letter-spacing: 0; }
+.scene-preview .song-title > span, .scene-preview .quest-count { font-size: 20px; letter-spacing: 0; }
 .scene-preview .message p, .scene-preview .notice p, .scene-preview .song-title { font-size: 20px; }
 .scene-preview .quest h3 { font-size: 30px; font-weight: 400; }
 .scene-preview .quest { margin-top: 20px; padding-top: 18px; }
@@ -30,11 +32,29 @@
 .scene-preview .today-quest h2 { font-size: 20px; margin-top: 10px; line-height: 1.5; }
 .scene-preview .module-index, .scene-preview .small-label, .scene-preview .message-meta b,
 .scene-preview .module-description, .scene-preview .quest p, .scene-preview .quest-count,
-.scene-preview .board-footnote, .scene-preview .sample-tag, .scene-preview .message-meta > span,
+.scene-preview .sample-tag, .scene-preview .message-meta > span,
 .scene-preview .song-title > span, .scene-preview .lyric-line { color: #A8C7D1; }
 .scene-preview .lyric-line.current { color: #F3ECDD; }
 .scene-preview .message, .scene-preview .notice, .scene-preview .quest,
-.scene-preview .board-footnote, .scene-preview .sample-tag, .scene-preview .message-meta > span { border-color: #364E6A; }
+.scene-preview .sample-tag, .scene-preview .message-meta > span { border-color: #364E6A; }
+.scene-preview .messages { display: flex; flex-direction: column; gap: 0; }
+.scene-preview .message { position: relative; }
+.scene-preview .message--gift,
+.scene-preview .message--captain,
+.scene-preview .message--sc { border: 3px solid #C9A85E; padding: 11px 14px 10px; margin-top: 10px; }
+.scene-preview .message--captain { border-color: #A8C7D1; }
+.scene-preview .message--sc { border-color: #D24943; }
+.scene-preview .message--gift .message-meta > span { border-color: #C9A85E; color: #C9A85E; }
+.scene-preview .message--captain .message-meta > span { border-color: #A8C7D1; color: #A8C7D1; }
+.scene-preview .message--sc .message-meta > span { border-color: #D24943; color: #D24943; }
+.scene-preview .message-detail { margin-left: auto; color: inherit; font-size: 18px; }
+.scene-preview .message-meta { min-width: 0; }
+.scene-preview .message-meta b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.scene-preview .song-progress { height: 6px; margin-top: 12px; background: #364E6A; }
+.scene-preview .song-progress i { display: block; height: 100%; background: #C9A85E; }
+.scene-preview .song-time { display: flex; justify-content: space-between; margin-top: 4px; color: #A8C7D1; font: 16px/1.4 'Fusion Pixel', monospace; }
+.source-stage { position: relative; width: 1920px; height: 1080px; overflow: hidden; }
+.source-stage .overlay { position: absolute; inset: 0; }
 .scene-preview .quest-progress { background: #364E6A; }
 .scene-preview .quest-progress i { background: #C9A85E; }
 .scene-assets { padding: 36px 0; border-bottom: 1px solid var(--line); }

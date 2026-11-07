@@ -136,17 +136,28 @@ function Preview({ scene = false }: { scene?: boolean }) {
   )
 }
 
+function SourcePage({ platform }: { platform: Platform }) {
+  const lyrics = params.get('lyrics') !== 'off'
+  return (
+    <main className="source-stage scene-preview" aria-label={`${platformNames[platform]}酒馆直播源`}>
+      <img className="scene-background" src={sceneBackground} width="1920" height="1080" alt="已验收模块化酒馆背景，游戏窗口透明" />
+      <Overlay platform={platform} lyrics={lyrics} />
+      <img className="scene-title-art" src={sceneTitle} width="384" height="128" alt="凌巽的酒馆" />
+    </main>
+  )
+}
+
 function UnavailablePage() {
   const admin = path === '/admin'
   return <div className="unavailable-page"><p className="eyebrow">LINGXUN’S TAVERN</p><h1>{admin ? '管理后台还没开工。' : '这扇门还没有打开。'}</h1><p>{admin ? '横屏布局已通过。统一管理后台安排在 CP5。' : '请从布局验收页进入两个直播源。'}</p><a href="/preview">返回布局验收 ↗</a></div>
 }
 
-if (sourcePlatform) document.title = `凌巽的酒馆 · ${platformNames[sourcePlatform]}透明测试页 · CP1`
+if (sourcePlatform) document.title = `凌巽的酒馆 · ${platformNames[sourcePlatform]}透明测试页 · CP4`
 if (path === '/assets/review') document.title = '凌巽的酒馆 · CP2 像素素材验收'
 if (path === '/scene/review') document.title = '凌巽的酒馆 · CP3 场景验收'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    {sourcePlatform ? <Overlay platform={sourcePlatform} lyrics={params.get('lyrics') !== 'off'} /> : path === '/assets/review' ? <AssetReview /> : path === '/scene/review' ? <Preview scene /> : path === '/admin' ? <Admin /> : (path === '/' || path === '/preview') ? <Preview /> : <UnavailablePage />}
+    {sourcePlatform ? <SourcePage platform={sourcePlatform} /> : path === '/assets/review' ? <AssetReview /> : path === '/scene/review' ? <Preview scene /> : path === '/admin' ? <Admin /> : (path === '/' || path === '/preview') ? <Preview /> : <UnavailablePage />}
   </StrictMode>,
 )

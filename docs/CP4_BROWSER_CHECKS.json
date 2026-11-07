@@ -1,0 +1,79 @@
+{
+  "checkpoint": "CP4",
+  "browser": "Microsoft Edge via Playwright CLI",
+  "viewport": {
+    "width": 1920,
+    "height": 1080
+  },
+  "sources": [
+    {
+      "platform": "bilibili",
+      "lyrics": true,
+      "sideColumn": { "x": 1352, "y": 144, "width": 528, "height": 856 },
+      "commentPanel": { "x": 1352, "y": 144, "width": 528, "height": 576 },
+      "messageList": { "x": 1384, "y": 274, "width": 464, "height": 414 },
+      "latestMessageBottom": 688,
+      "messageListBottom": 688,
+      "messageListAtBottom": true,
+      "latestMessageFullyVisible": true,
+      "messageKinds": ["comment", "gift", "captain", "sc"],
+      "lyricsPanel": { "x": 1352, "y": 744, "width": 528, "height": 256 },
+      "screenshot": "screenshots/cp4/bilibili-lyrics-on-comments-bottom.png"
+    },
+    {
+      "platform": "bilibili",
+      "lyrics": false,
+      "sideColumn": { "x": 1352, "y": 144, "width": 528, "height": 856 },
+      "commentPanel": { "x": 1352, "y": 144, "width": 528, "height": 856 },
+      "messageList": { "x": 1384, "y": 274, "width": 464, "height": 694 },
+      "latestMessageBottom": 968,
+      "messageListBottom": 968,
+      "messageListAtBottom": true,
+      "latestMessageFullyVisible": true,
+      "messageKinds": ["comment", "gift", "captain", "sc"],
+      "lyricsPanel": null,
+      "screenshot": "screenshots/cp4/bilibili-lyrics-off-comments-bottom.png"
+    },
+    {
+      "platform": "douyin",
+      "lyrics": true,
+      "sideColumn": { "x": 1352, "y": 144, "width": 528, "height": 856 },
+      "commentPanel": { "x": 1352, "y": 144, "width": 528, "height": 576 },
+      "messageList": { "x": 1384, "y": 274, "width": 464, "height": 414 },
+      "latestMessageBottom": 688,
+      "messageListBottom": 688,
+      "messageListAtBottom": true,
+      "latestMessageFullyVisible": true,
+      "messageKinds": ["comment", "gift", "follow", "comment"],
+      "lyricsPanel": { "x": 1352, "y": 744, "width": 528, "height": 256 },
+      "screenshot": "screenshots/cp4/douyin-lyrics-on-comments-bottom.png"
+    },
+    {
+      "platform": "douyin",
+      "lyrics": false,
+      "sideColumn": { "x": 1352, "y": 144, "width": 528, "height": 856 },
+      "commentPanel": { "x": 1352, "y": 144, "width": 528, "height": 856 },
+      "messageList": { "x": 1384, "y": 274, "width": 464, "height": 694 },
+      "latestMessageBottom": 968,
+      "messageListBottom": 968,
+      "messageListAtBottom": true,
+      "latestMessageFullyVisible": true,
+      "messageKinds": ["comment", "gift", "follow", "comment"],
+      "lyricsPanel": null,
+      "screenshot": "screenshots/cp4/douyin-lyrics-off-comments-bottom.png"
+    }
+  ],
+  "concurrentSources": {
+    "openedTogether": true,
+    "bilibiliLatest": "愿下一段冒险，也有好风景。",
+    "douyinLatest": "下一段冒险，也一起出发吧。",
+    "streamsIndependent": true
+  },
+  "announcementPreview": {
+    "route": "/scene/review?bilibiliBoard=announcement",
+    "boardPresent": true,
+    "removedFooterPresent": false
+  },
+  "commentIntroPresent": false,
+  "commentTypeFootnotePresent": false
+}

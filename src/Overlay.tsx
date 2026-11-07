@@ -1,3 +1,7 @@
+import { useEffect, useRef, useState } from 'react'
+import { appendSimulatedMessage, eventTimeline, initialMessages, lyricIndexAt, lyricLines, messageLabels } from './simulation'
+import type { SimulatedMessage } from './simulation'
+
 export type Platform = 'bilibili' | 'douyin'
 export type BoardMode = 'comments' | 'announcement'
 
@@ -6,38 +10,52 @@ export const platformNames: Record<Platform, string> = {
   douyin: '抖音',
 }
 
-const messages = {
-  bilibili: [
-    { kind: '留言', name: '路过的冒险者', text: '晚上好，今天也来酒馆坐坐。' },
-    { kind: '礼物', name: '森林来信', text: '送来了一份小礼物。' },
-    { kind: '舰长', name: '远航的朋友', text: '加入了这次旅途。' },
-    { kind: 'SC', name: '山间的风', text: '愿下一段冒险，也有好风景。' },
-  ],
-  douyin: [
-    { kind: '留言', name: '抖音的旅人', text: '从抖音过来，来酒馆歇歇脚。' },
-    { kind: '礼物', name: '夜航来客', text: '送来了一份小礼物。' },
-    { kind: '关注', name: '新来的朋友', text: '关注了这间酒馆。' },
-    { kind: '留言', name: '晚风同行', text: '下一段冒险，也一起出发吧。' },
-  ],
-}
+function MessageBoard({ platform }: { platform: Platform }) {
+  const [messages, setMessages] = useState(() => initialMessages[platform])
+  const messagesRef = useRef<HTMLDivElement>(null)
 
-function MessageBoard({ platform, lyrics }: { platform: Platform; lyrics: boolean }) {
+  useEffect(() => {
+    setMessages(initialMessages[platform])
+    let eventIndex = 0
+    const timer = window.setInterval(() => {
+      const event = eventTimeline[platform][eventIndex % eventTimeline[platform].length]
+      const message: SimulatedMessage = { ...event, id: `${platform}-${eventIndex}` }
+      eventIndex += 1
+      setMessages(current => appendSimulatedMessage(current, message))
+    }, 3000)
+    return () => window.clearInterval(timer)
+  }, [platform])
+
+  useEffect(() => {
+    const messagesElement = messagesRef.current
+    if (!messagesElement) return
+    let active = true
+    const scrollToBottom = () => {
+      if (active) messagesElement.scrollTop = messagesElement.scrollHeight
+    }
+    scrollToBottom()
+    const frame = window.requestAnimationFrame(scrollToBottom)
+    document.fonts.ready.then(scrollToBottom)
+    return () => {
+      active = false
+      window.cancelAnimationFrame(frame)
+    }
+  }, [messages])
+
   return (
     <section className="side-board" aria-label={`${platformNames[platform]}留言板`}>
       <div className="module-heading">
         <div><span className="module-index">02 / 留言</span><h2>酒馆留言板</h2></div>
         <span className="sample-tag">示例</span>
       </div>
-      <p className="module-description">旅人的留言，都收在这里。</p>
-      <div className="messages">
-        {messages[platform].slice(0, lyrics ? 3 : 4).map(message => (
-          <div className="message" key={message.name}>
-            <div className="message-meta"><span>{message.kind}</span><b>{message.name}</b></div>
+      <div className="messages" ref={messagesRef}>
+        {messages.map(message => (
+          <div className={`message message--${message.kind}`} data-event-kind={message.kind} data-gift-count={message.count} key={message.id}>
+            <div className="message-meta"><span>{messageLabels[message.kind]}</span><b>{message.name}</b>{message.detail && <small className="message-detail">{message.detail}</small>}{message.kind === 'gift' && <small className="message-detail">×{message.count}</small>}</div>
             <p>{message.text}</p>
           </div>
         ))}
       </div>
-      <div className="board-footnote">{platform === 'bilibili' ? '弹幕 · 礼物 · 舰长 · SC' : '弹幕 · 礼物 · 关注'}</div>
     </section>
   )
 }
@@ -58,18 +76,29 @@ function AnnouncementBoard({ platform }: { platform: Platform }) {
         <h3 className="small-label">店内小约定</h3>
         <p>友好交流，尊重彼此。愿每位旅人都能度过轻松的一晚。</p>
       </section>
-      <div className="board-footnote">公告内容示例 · 欢迎来到酒馆</div>
     </section>
   )
 }
 
 function Lyrics() {
+  const [elapsed, setElapsed] = useState(0)
+  const currentIndex = lyricIndexAt(elapsed)
+
+  useEffect(() => {
+    const timer = window.setInterval(() => setElapsed(seconds => (seconds + 1) % 192), 1000)
+    return () => window.clearInterval(timer)
+  }, [])
+
+  const formatTime = (seconds: number) => `${String(Math.floor(seconds / 60)).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`
+
   return (
-    <section className="lyrics-board" aria-label="示例歌词">
+    <section className="lyrics-board" aria-label="模拟歌词" data-lyric-index={currentIndex}>
       <div className="lyrics-heading"><span className="module-index">03 / 正在播放</span><span className="sample-tag">示例</span></div>
-      <div className="song-title">酒馆的晚风 <span>原创占位文字</span></div>
-      <p className="lyric-line current">把今天的故事，留在这里</p>
-      <p className="lyric-line">下一段旅程，慢慢开启</p>
+      <div className="song-title">酒馆的晚风 <span>模拟播放</span></div>
+      <div className="song-progress" role="progressbar" aria-label="模拟歌曲进度" aria-valuemin={0} aria-valuemax={192} aria-valuenow={elapsed}><i style={{ width: `${elapsed / 192 * 100}%` }} /></div>
+      <div className="song-time"><span>{formatTime(elapsed)}</span><span>03:12</span></div>
+      <p className="lyric-line current">{lyricLines[currentIndex]}</p>
+      <p className="lyric-line">{lyricLines[(currentIndex + 1) % lyricLines.length]}</p>
     </section>
   )
 }
@@ -81,7 +110,7 @@ export function Overlay({ platform, lyrics = true, board = 'comments' }: { platf
         <strong className="tavern-name">凌巽的酒馆</strong>
       </header>
       <aside className={`side-column ${lyrics ? '' : 'without-lyrics'}`}>
-        {board === 'announcement' ? <AnnouncementBoard platform={platform} /> : <MessageBoard platform={platform} lyrics={lyrics} />}
+        {board === 'announcement' ? <AnnouncementBoard platform={platform} /> : <MessageBoard platform={platform} />}
         {lyrics && <Lyrics />}
       </aside>
       <section className="stream-info" aria-label="今日委托">

@@ -103,13 +103,12 @@ button, a, input { transition: background-color 140ms ease, color 140ms ease; }
 .module-heading h2 { margin-top: 8px; font-size: 32px; line-height: 1.4; font-weight: 500; letter-spacing: 2px; }
 .sample-tag { border: 1px solid #b3b5ab; padding: 4px 8px; font-size: 14px; line-height: 1.5; color: #6e7066; white-space: nowrap; }
 .module-description { color: #73756d; font-size: 18px; margin-top: 8px; line-height: 1.7; }
-.messages { margin-top: 22px; }
+.messages { margin-top: 22px; flex: 1 1 auto; min-height: 0; overflow-y: auto; }
 .message { border-top: 1px solid #c9cbc0; padding: 18px 0; }
 .message-meta { display: flex; gap: 12px; align-items: center; font-size: 16px; }
 .message-meta > span { border: 1px solid #b4b6ac; padding: 1px 6px; font-size: 14px; color: #6c6f63; }
 .message-meta b { font-weight: 400; color: #6e7165; }
 .message p { font-size: 22px; line-height: 1.6; margin-top: 8px; overflow-wrap: anywhere; }
-.board-footnote { margin-top: auto; padding-top: 16px; border-top: 1px solid #c9cbc0; font-size: 15px; line-height: 1.5; letter-spacing: 3px; color: #76796d; }
 .quest { margin-top: 28px; padding-top: 22px; border-top: 1px solid #c9cbc0; }
 .small-label { font-size: 16px; letter-spacing: 2px; color: #77796f; }
 .quest h3 { font-size: 28px; font-weight: 500; margin-top: 14px; }
