@@ -70,19 +70,15 @@ export function Overlay({ platform, lyrics = true }: { platform: Platform; lyric
   return (
     <main className="overlay" data-platform={platform} data-lyrics={lyrics ? 'on' : 'off'} aria-label={`${platformNames[platform]}横屏直播装饰`}>
       <header className="stream-header">
-        <div className="tavern-name"><span className="tavern-mark" aria-hidden="true">巽</span><strong>凌巽的酒馆</strong></div>
-        <div className="stream-topic"><span>今夜的旅程</span><b>探索下一片大陆</b></div>
-        <div className="stream-platform"><span className="square-dot" />{platformNames[platform]} · 横屏</div>
+        <strong className="tavern-name">凌巽的酒馆</strong>
       </header>
       <aside className={`side-column ${lyrics ? '' : 'without-lyrics'}`}>
         {platform === 'bilibili' ? <BilibiliBoard lyrics={lyrics} /> : <DouyinBoard lyrics={lyrics} />}
         {lyrics && <Lyrics />}
       </aside>
-      <section className="stream-info" aria-label="今日委托与主播信息">
+      <section className="stream-info" aria-label="今日委托">
         <div className="today-quest"><span className="module-index">04 / 今日委托</span><h2>探索未知，也记得沿途歇脚。</h2></div>
-        <div className="decoration-slot"><span className="decoration-placeholder" aria-hidden="true" /><span>主播信息<br /><small>装饰预留</small></span></div>
       </section>
-      <footer className="stream-footer"><span>LINGXUN’S TAVERN</span><span>布局线框 · 示例内容</span><span>{platformNames[platform]} / 1920 × 1080</span></footer>
     </main>
   )
 }
