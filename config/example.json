@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "server": {
+    "host": "127.0.0.1",
+    "port": 3000,
+    "openAdminOnStart": false
+  },
+  "global": {
+    "title": "凌巽的酒馆",
+    "task": "探索未知，也记得沿途歇脚。"
+  },
+  "platforms": {
+    "bilibili": { "lyricsEnabled": true },
+    "douyin": { "lyricsEnabled": true }
+  },
+  "adapters": {
+    "music": { "enabled": false },
+    "bilibili": { "enabled": false }
+  }
+}

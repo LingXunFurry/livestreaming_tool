@@ -1,0 +1,16 @@
+{
+  "checkedAt": "2026-11-07T06:13:45.0604359Z",
+  "stopped": "STOPPED",
+  "stoppedStatus": "STOPPED",
+  "started": "RUNNING",
+  "port": 3000,
+  "pages": {
+    "bilibili": true,
+    "douyin": true,
+    "admin": true
+  },
+  "websocketReachable": true,
+  "music": "DISCONNECTED",
+  "bilibili": "NOT_CONFIGURED",
+  "finalState": "RUNNING"
+}

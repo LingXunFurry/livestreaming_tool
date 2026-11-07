@@ -1,4 +1,4 @@
 @echo off
 cd /d "%~dp0"
-call npm run dev -- --open /preview
-pause
+call "%~dp0start.bat" %*
+if not "%~1"=="--json" pause

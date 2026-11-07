@@ -1,0 +1,74 @@
+{
+  "bilibili": {
+    "canvas": {
+      "height": 1080,
+      "width": 1920.0001220703125,
+      "x": 0,
+      "y": 0
+    },
+    "clippedPanels": [],
+    "gameOverlaps": [],
+    "lyrics": "on",
+    "lyricsPanel": {
+      "height": 256,
+      "width": 528,
+      "x": 1352,
+      "y": 744.0000610351562
+    },
+    "platform": "bilibili",
+    "previewHelpers": 0,
+    "rootBackgrounds": [
+      "rgba(0, 0, 0, 0)",
+      "rgba(0, 0, 0, 0)",
+      "rgba(0, 0, 0, 0)",
+      "rgba(0, 0, 0, 0)"
+    ],
+    "side": {
+      "height": 576,
+      "width": 528,
+      "x": 1352,
+      "y": 144
+    }
+  },
+  "douyin": {
+    "canvas": {
+      "height": 1080,
+      "width": 1920.0001220703125,
+      "x": 0,
+      "y": 0
+    },
+    "clippedPanels": [],
+    "gameOverlaps": [],
+    "lyrics": "on",
+    "lyricsPanel": {
+      "height": 256,
+      "width": 528,
+      "x": 1352,
+      "y": 744.0000610351562
+    },
+    "platform": "douyin",
+    "previewHelpers": 0,
+    "rootBackgrounds": [
+      "rgba(0, 0, 0, 0)",
+      "rgba(0, 0, 0, 0)",
+      "rgba(0, 0, 0, 0)",
+      "rgba(0, 0, 0, 0)"
+    ],
+    "side": {
+      "height": 576,
+      "width": 528,
+      "x": 1352,
+      "y": 144
+    }
+  },
+  "consoleErrors": {
+    "admin": [],
+    "bilibili": [],
+    "douyin": []
+  },
+  "adminRecovery": {
+    "afterStop": "ERROR",
+    "afterRestart": "RUNNING",
+    "websocket": "CONNECTED"
+  }
+}

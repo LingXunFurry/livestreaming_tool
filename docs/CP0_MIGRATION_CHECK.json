@@ -1,0 +1,25 @@
+{
+  "checkedAt": "2026-11-07T05:54:59.266Z",
+  "hostPlatform": "win32",
+  "nodeVersion": "24.16.0",
+  "directory": ".cache\\CP0 中文 迁移 A1Npch",
+  "freshDependencyCache": true,
+  "launchedFromDifferentWorkingDirectory": true,
+  "chineseAndSpacePath": true,
+  "entrypoints": [
+    "启动直播间.bat",
+    "检查运行状态.bat",
+    "关闭直播间.bat"
+  ],
+  "start": "RUNNING",
+  "repeatedStartReused": true,
+  "pages": {
+    "bilibili": true,
+    "douyin": true,
+    "admin": true
+  },
+  "websocketReachable": true,
+  "persistedTitle": "迁移验收酒馆",
+  "finalState": "STOPPED",
+  "scope": "当前电脑的新目录开发版迁移测试，第二台电脑和实际直播客户端等待 CP8 实测"
+}
