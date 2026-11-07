@@ -113,7 +113,7 @@ function Preview({ scene = false }: { scene?: boolean }) {
 
       <div className="review-details">
         <section className="layout-notes" aria-labelledby="layout-notes-title"><p className="eyebrow">APPROVED LAYOUT</p><h2 id="layout-notes-title">已确认的区域比例。</h2>
-          <ol><li><span>01</span><div><h3>完整游戏区</h3><p>1280 × 720，16∶9 透明窗口。</p></div></li><li><span>02</span><div><h3>双平台右栏</h3><p>宽 528px，分别承载留言板与任务公告。</p></div></li><li><span>03</span><div><h3>歌词开关</h3><p>关闭后右侧主面板扩展。当前均为示例内容。</p></div></li></ol>
+          <ol><li><span>01</span><div><h3>完整游戏区</h3><p>1280 × 720，16∶9 透明窗口。</p></div></li><li><span>02</span><div><h3>双平台右栏</h3><p>宽 528px，同一套外观，各自显示本平台留言。</p></div></li><li><span>03</span><div><h3>歌词开关</h3><p>关闭后右侧主面板扩展。当前均为示例内容。</p></div></li></ol>
         </section>
         <section className="source-notes" aria-labelledby="source-notes-title"><p className="eyebrow">TWO INDEPENDENT SOURCES</p><h2 id="source-notes-title">同一间酒馆，两个窗口。</h2><p>这两个地址可同时打开。直播软件中的网页素材尺寸均设为 1920 × 1080。</p>
           <a href="/live/bilibili" target="_blank" rel="noreferrer"><strong>B 站</strong><code>/live/bilibili</code><span aria-hidden="true">↗</span></a>

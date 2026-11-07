@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-07T09:47:04.194Z",
+  "checkedAt": "2026-11-07T10:01:58.604Z",
   "preview": [
     {
       "platform": "bilibili",
@@ -60,6 +60,8 @@
           "visibleLeftDelta": 0
         }
       ],
+      "ownPlatformExamples": true,
+      "backgroundUrl": "http://127.0.0.1:3000/assets/cp3-tavern-MYDBMX0W.png",
       "lyricsRect": [
         0,
         600,
@@ -120,6 +122,8 @@
           "visibleLeftDelta": 0
         }
       ],
+      "ownPlatformExamples": true,
+      "backgroundUrl": "http://127.0.0.1:3000/assets/cp3-tavern-MYDBMX0W.png",
       "lyricsRect": null
     },
     {
@@ -160,7 +164,7 @@
       "questBottom": 68,
       "imagesLoaded": true,
       "artwork": {
-        "comments": "none",
+        "comments": "url(\"http://127.0.0.1:3000/assets/comment-wordmark-BdBQVmJn.png\")",
         "playing": "url(\"data:image/png;",
         "playingLoaded": true
       },
@@ -171,11 +175,18 @@
       },
       "headingAlignment": [
         {
+          "alphaLeft": 15,
+          "shift": -15,
+          "visibleLeftDelta": 0
+        },
+        {
           "alphaLeft": 11,
           "shift": -11,
           "visibleLeftDelta": 0
         }
       ],
+      "ownPlatformExamples": true,
+      "backgroundUrl": "http://127.0.0.1:3000/assets/cp3-tavern-MYDBMX0W.png",
       "lyricsRect": [
         0,
         600,
@@ -221,7 +232,7 @@
       "questBottom": 68,
       "imagesLoaded": true,
       "artwork": {
-        "comments": "none",
+        "comments": "url(\"http://127.0.0.1:3000/assets/comment-wordmark-BdBQVmJn.png\")",
         "playing": null
       },
       "fit": {
@@ -229,7 +240,15 @@
         "boardOverflow": 0,
         "musicFits": true
       },
-      "headingAlignment": [],
+      "headingAlignment": [
+        {
+          "alphaLeft": 15,
+          "shift": -15,
+          "visibleLeftDelta": 0
+        }
+      ],
+      "ownPlatformExamples": true,
+      "backgroundUrl": "http://127.0.0.1:3000/assets/cp3-tavern-MYDBMX0W.png",
       "lyricsRect": null
     }
   ],
@@ -296,7 +315,8 @@
       "boardHeight": 576,
       "rootBackground": "rgba(0, 0, 0, 0)",
       "sceneAssets": 0,
-      "font": "\"Microsoft YaHei\", \"PingFang SC\", sans-serif"
+      "font": "\"Microsoft YaHei\", \"PingFang SC\", sans-serif",
+      "ownPlatformExamples": true
     },
     {
       "platform": "douyin",
@@ -306,7 +326,8 @@
       "boardHeight": 576,
       "rootBackground": "rgba(0, 0, 0, 0)",
       "sceneAssets": 0,
-      "font": "\"Microsoft YaHei\", \"PingFang SC\", sans-serif"
+      "font": "\"Microsoft YaHei\", \"PingFang SC\", sans-serif",
+      "ownPlatformExamples": true
     },
     {
       "platform": "bilibili",
@@ -316,7 +337,8 @@
       "boardHeight": 856,
       "rootBackground": "rgba(0, 0, 0, 0)",
       "sceneAssets": 0,
-      "font": "\"Microsoft YaHei\", \"PingFang SC\", sans-serif"
+      "font": "\"Microsoft YaHei\", \"PingFang SC\", sans-serif",
+      "ownPlatformExamples": true
     },
     {
       "platform": "douyin",
@@ -326,7 +348,8 @@
       "boardHeight": 856,
       "rootBackground": "rgba(0, 0, 0, 0)",
       "sceneAssets": 0,
-      "font": "\"Microsoft YaHei\", \"PingFang SC\", sans-serif"
+      "font": "\"Microsoft YaHei\", \"PingFang SC\", sans-serif",
+      "ownPlatformExamples": true
     }
   ],
   "errors": [],
@@ -339,5 +362,6 @@
     "viewport": 375,
     "scrollWidth": 375
   },
-  "concurrentSources": 2
+  "concurrentSources": 2,
+  "sharedAppearanceSeparateExamples": true
 }

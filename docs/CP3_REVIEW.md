@@ -4,6 +4,8 @@
 
 ## 当前预览
 
+本轮追加双平台外观统一，抖音由任务公告改为与 B 站相同样式的留言板。两端各自展示本平台静态示例，分别保留专属路由。真实房间地址设置和采集连接按 CP5、CP7 验收，方案与当前接入限制见 `DANMAKU_SOURCES.md`。
+
 [CP3 场景验收页](http://127.0.0.1:3000/scene/review)
 
 本轮重做梁架与吧台组合，左右上角采用不同陈设，并制作三份独立标题图。留言板和播放区的中英文艺术字共同生成为透明图像，英文较小并与中文做轻微前后叠压。栏目正文使用本地 Fusion Pixel Font 10px 简中比例版。
@@ -43,6 +45,7 @@
 | 配方复现 | 移动物件后哈希改变，恢复配方后与交付背景哈希一致 |
 | 非法配置 | 八类非法布局及四类非法源区域被拒绝，已有输出保留 |
 | 浏览器场景 | Edge 中 B 站/抖音和歌词开/关四种组合通过 |
+| 双平台外观和示例 | 两端背景和标题样式一致，各自专属路由只展示本平台静态示例，四种组合通过 |
 | 排版 | 四种组合的面板内容完整，今日委托和歌词文字处于容器内 |
 | 下载 | 十二件素材及背景共十三个 PNG 的 SHA256 与仓库一致，布局 JSON 一致 |
 | 375px 窄窗口 | 页面滚动宽度为 375px |
@@ -68,8 +71,9 @@
 - `assets/fonts/fusion-pixel/` 中的 WOFF2、OFL、三份上游许可及来源记录。
 - `assets/layouts/cp3-tavern.json`、`assets/backgrounds/cp3-tavern.png`、`assets/manifest.json`。
 - `scripts/prepare-cp2-assets.ps1`、`scripts/compose-cp3-scene.ps1`。
-- `src/main.tsx`、`src/scene-review.css`。
+- `src/Overlay.tsx`、`src/main.tsx`、`src/scene-review.css`。
 - `AGENTS.md`、`README.md`、`docs/V2_BRIEF.md`、`docs/PROJECT_SPEC.md`、`docs/DESIGN_SYSTEM.md`、`docs/ASSET_POLICY.md`、`docs/ARCHITECTURE.md`、`docs/CHECKPOINTS.md`、`docs/DECISIONS.md`、`docs/TEST_PLAN.md`。
 - 本报告、六份机器检查记录和七张返修截图。
+- `docs/DANMAKU_SOURCES.md` 记录抖音官方及第三方接入方式、来源链接和待实测条件。
 
-本地 Git 快照标签为 `checkpoint/cp3-revision`，提交号由聊天交付。下一检查点等待用户明确验收。直播客户端的透明显示和音画捕获等待 CP8 实机验收。
+美术返修快照标签为 `checkpoint/cp3-revision`，双平台外观统一的追加快照为 `checkpoint/cp3-platforms`，提交号由聊天交付。下一检查点等待用户明确验收。直播客户端的透明显示和音画捕获等待 CP8 实机验收。

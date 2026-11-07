@@ -5,52 +5,38 @@ export const platformNames: Record<Platform, string> = {
   douyin: '抖音',
 }
 
-const messages = [
-  { kind: '留言', name: '路过的冒险者', text: '晚上好，今天也来酒馆坐坐。' },
-  { kind: '礼物', name: '森林来信', text: '送来了一份小礼物。' },
-  { kind: '舰长', name: '远航的朋友', text: '加入了这次旅途。' },
-  { kind: 'SC', name: '山间的风', text: '愿下一段冒险，也有好风景。' },
-]
+const messages = {
+  bilibili: [
+    { kind: '留言', name: '路过的冒险者', text: '晚上好，今天也来酒馆坐坐。' },
+    { kind: '礼物', name: '森林来信', text: '送来了一份小礼物。' },
+    { kind: '舰长', name: '远航的朋友', text: '加入了这次旅途。' },
+    { kind: 'SC', name: '山间的风', text: '愿下一段冒险，也有好风景。' },
+  ],
+  douyin: [
+    { kind: '留言', name: '抖音的旅人', text: '从抖音过来，来酒馆歇歇脚。' },
+    { kind: '礼物', name: '夜航来客', text: '送来了一份小礼物。' },
+    { kind: '关注', name: '新来的朋友', text: '关注了这间酒馆。' },
+    { kind: '留言', name: '晚风同行', text: '下一段冒险，也一起出发吧。' },
+  ],
+}
 
-function BilibiliBoard({ lyrics }: { lyrics: boolean }) {
+function MessageBoard({ platform, lyrics }: { platform: Platform; lyrics: boolean }) {
   return (
-    <section className="side-board" aria-label="B 站留言板">
+    <section className="side-board" aria-label={`${platformNames[platform]}留言板`}>
       <div className="module-heading">
         <div><span className="module-index">02 / 留言</span><h2>酒馆留言板</h2></div>
         <span className="sample-tag">示例</span>
       </div>
       <p className="module-description">旅人的留言，都收在这里。</p>
       <div className="messages">
-        {messages.slice(0, lyrics ? 3 : 4).map(message => (
-          <div className="message" key={message.kind}>
+        {messages[platform].slice(0, lyrics ? 3 : 4).map(message => (
+          <div className="message" key={message.name}>
             <div className="message-meta"><span>{message.kind}</span><b>{message.name}</b></div>
             <p>{message.text}</p>
           </div>
         ))}
       </div>
-      <div className="board-footnote">弹幕 · 礼物 · 舰长 · SC</div>
-    </section>
-  )
-}
-
-function DouyinBoard({ lyrics }: { lyrics: boolean }) {
-  return (
-    <section className="side-board" aria-label="抖音任务与公告">
-      <div className="module-heading">
-        <div><span className="module-index">02 / 委托</span><h2>公会告示板</h2></div>
-        <span className="sample-tag">示例</span>
-      </div>
-      <p className="module-description">今天的旅途，从一份委托开始。</p>
-      <div className="quest">
-        <span className="small-label">进行中的委托</span>
-        <h3>探索下一片大陆</h3>
-        <p>慢慢走，把沿途的风景带回来。</p>
-        <div className="quest-progress"><i /></div>
-        <div className="quest-count"><span>旅途进度 · 示例</span><span>1 / 3</span></div>
-      </div>
-      <div className="notice"><span className="small-label">酒馆公告</span><p>欢迎歇歇脚，陪我一起冒险。</p></div>
-      {!lyrics && <div className="notice extra-notice"><span className="small-label">下一个目的地</span><p>留一点时间，探索地图的另一边。</p></div>}
-      <div className="board-footnote">任务 · 公告</div>
+      <div className="board-footnote">{platform === 'bilibili' ? '弹幕 · 礼物 · 舰长 · SC' : '弹幕 · 礼物 · 关注'}</div>
     </section>
   )
 }
@@ -73,7 +59,7 @@ export function Overlay({ platform, lyrics = true }: { platform: Platform; lyric
         <strong className="tavern-name">凌巽的酒馆</strong>
       </header>
       <aside className={`side-column ${lyrics ? '' : 'without-lyrics'}`}>
-        {platform === 'bilibili' ? <BilibiliBoard lyrics={lyrics} /> : <DouyinBoard lyrics={lyrics} />}
+        <MessageBoard platform={platform} lyrics={lyrics} />
         {lyrics && <Lyrics />}
       </aside>
       <section className="stream-info" aria-label="今日委托">
