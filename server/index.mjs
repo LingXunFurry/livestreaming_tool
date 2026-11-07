@@ -6,6 +6,7 @@ import { randomUUID, timingSafeEqual } from 'node:crypto';
 import { WebSocketServer, WebSocket } from 'ws';
 import { atomicWriteJson, getPaths, loadSettings, projectRoot, readJson, saveSettings, validateSettings } from './config.mjs';
 import { createLogger } from './logger.mjs';
+import { createMusicAdapter } from './music.mjs';
 
 const paths = getPaths();
 const log = createLogger(paths.logsDir);
@@ -26,10 +27,15 @@ try {
   const allowedOrigins = new Set([origin, `http://localhost:${port}`]);
   const sockets = new WebSocketServer({ noServer: true, maxPayload: 4096 });
   const adapters = {
-    music: { state: settings.adapters.music.enabled ? 'UNAVAILABLE' : 'DISCONNECTED', configured: settings.adapters.music.enabled, implemented: false },
+    music: { state: 'DISCONNECTED', configured: settings.adapters.music.enabled, implemented: true },
     bilibili: { state: settings.adapters.bilibili.enabled ? 'UNAVAILABLE' : 'NOT_CONFIGURED', configured: settings.adapters.bilibili.enabled, implemented: false },
     douyin: { state: 'NOT_CONFIGURED', configured: false, implemented: false },
   };
+  const music = createMusicAdapter(snapshot => {
+    if (adapters.music.state !== snapshot.state) log('music_adapter_status', { state: snapshot.state, error: snapshot.error });
+    adapters.music = { state: snapshot.state, configured: settings.adapters.music.enabled, implemented: true, playbackState: snapshot.playbackState, error: snapshot.error };
+    broadcastMessage({ type: 'music.updated', data: snapshot });
+  });
 
   function runtimeStatus() {
     const degraded = Object.values(adapters).some(adapter => adapter.configured && adapter.state === 'UNAVAILABLE');
@@ -39,7 +45,7 @@ try {
       instanceId,
       state: degraded ? 'DEGRADED' : 'RUNNING',
       version: packageInfo.version,
-      checkpoint: 'CP5',
+      checkpoint: 'CP6',
       startedAt,
       port,
       host: '127.0.0.1',
@@ -58,11 +64,13 @@ try {
   function editableSettings() {
     return {
       global: { task: settings.global.task, fontSizes: settings.global.fontSizes },
+      music: { enabled: settings.adapters.music.enabled, baseUrl: settings.adapters.music.baseUrl },
       platforms: Object.fromEntries(['bilibili', 'douyin'].map(platform => [platform, {
         boardMode: settings.platforms[platform].boardMode,
         announcementText: settings.platforms[platform].announcementText,
-        benefitsText: settings.platforms[platform].benefitsText,
+        bottomAnnouncementText: settings.platforms[platform].bottomAnnouncementText,
         lyricsEnabled: settings.platforms[platform].lyricsEnabled,
+        lyricsAutoHide: settings.platforms[platform].lyricsAutoHide,
         fontSizes: settings.platforms[platform].fontSizes,
       }])),
     };
@@ -93,10 +101,11 @@ try {
       && expected.every(key => Object.hasOwn(value, key))
       && Object.keys(value).every(key => expected.includes(key) || optional.includes(key));
     const platformFields = ['boardMode', 'announcementText', 'lyricsEnabled'];
-    if (!exactKeys(input, ['global', 'platforms']) || !exactKeys(input.global, ['task'], ['fontSizes'])
+    if (!exactKeys(input, ['global', 'platforms'], ['music']) || !exactKeys(input.global, ['task'], ['fontSizes'])
+      || (input.music !== undefined && !exactKeys(input.music, ['enabled', 'baseUrl']))
       || !exactKeys(input.platforms, ['bilibili', 'douyin'])
-      || !exactKeys(input.platforms.bilibili, platformFields, ['benefitsText', 'fontSizes'])
-      || !exactKeys(input.platforms.douyin, platformFields, ['benefitsText', 'fontSizes'])) {
+      || !exactKeys(input.platforms.bilibili, platformFields, ['benefitsText', 'bottomAnnouncementText', 'fontSizes', 'lyricsAutoHide'])
+      || !exactKeys(input.platforms.douyin, platformFields, ['benefitsText', 'bottomAnnouncementText', 'fontSizes', 'lyricsAutoHide'])) {
       throw Object.assign(new Error('配置字段不完整或包含不允许的字段'), { status: 400 });
     }
     return input;
@@ -121,6 +130,17 @@ try {
       }
       if (request.method === 'GET' && pathname === '/api/runtime/status') return sendJson(response, 200, runtimeStatus());
       if (request.method === 'GET' && pathname === '/api/settings') return sendJson(response, 200, { settings: editableSettings() });
+      if (request.method === 'GET' && pathname === '/api/music') return sendJson(response, 200, music.getState());
+      if (request.method === 'POST' && pathname === '/api/music/control') {
+        if (request.headers.origin && !allowedOrigins.has(request.headers.origin)) return sendJson(response, 403, { error: 'MUSIC_REQUEST_DENIED' });
+        if (!String(request.headers['content-type'] || '').toLowerCase().startsWith('application/json')) return sendJson(response, 415, { error: 'JSON_REQUIRED' });
+        try {
+          const body = await readSettingsRequest(request);
+          if (!body || typeof body !== 'object' || Array.isArray(body) || Object.keys(body).length !== 1 || !Object.hasOwn(body, 'action')) return sendJson(response, 400, { error: 'INVALID_MUSIC_ACTION' });
+          await music.control(body.action);
+          return sendJson(response, 200, { accepted: true });
+        } catch (error) { return sendJson(response, error.status || 502, { error: error.message }); }
+      }
       if (request.method === 'PUT' && pathname === '/api/settings') {
         if ((request.headers.origin && !allowedOrigins.has(request.headers.origin)) || !String(request.headers['content-type'] || '').toLowerCase().startsWith('application/json')) {
           return sendJson(response, request.headers.origin && !allowedOrigins.has(request.headers.origin) ? 403 : 415, { error: 'SETTINGS_REQUEST_DENIED' });
@@ -132,6 +152,7 @@ try {
           nextSettings = validateSettings({
             ...settings,
             global: { ...settings.global, ...payload.global },
+            adapters: { ...settings.adapters, music: { ...settings.adapters.music, ...payload.music } },
             platforms: {
               bilibili: { ...settings.platforms.bilibili, ...payload.platforms.bilibili },
               douyin: { ...settings.platforms.douyin, ...payload.platforms.douyin },
@@ -147,12 +168,15 @@ try {
           return sendJson(response, 500, { error: 'SETTINGS_SAVE_FAILED' });
         }
         const globalChanged = JSON.stringify(previousSettings.global) !== JSON.stringify(settings.global);
+        const musicChanged = JSON.stringify(previousSettings.adapters.music) !== JSON.stringify(settings.adapters.music);
+        if (musicChanged) music.configure(settings.adapters.music);
         for (const platform of ['bilibili', 'douyin']) {
           const platformChanged = JSON.stringify(previousSettings.platforms[platform]) !== JSON.stringify(settings.platforms[platform]);
-          if (!globalChanged && !platformChanged) continue;
+          if (!globalChanged && !platformChanged && !musicChanged) continue;
           broadcastMessage({ type: 'settings.updated', data: {
             platform,
             global: editableSettings().global,
+            music: editableSettings().music,
             platformSettings: editableSettings().platforms[platform],
           } });
         }
@@ -207,6 +231,7 @@ try {
     connection.on('error', error => log('websocket_error', { code: error.code || 'SOCKET_ERROR' }));
     connection.on('close', () => log('websocket_disconnected'));
     connection.send(JSON.stringify({ type: 'runtime.status', data: runtimeStatus() }));
+    connection.send(JSON.stringify({ type: 'music.updated', data: music.getState() }));
   });
   sockets.on('error', error => log('websocket_server_error', { code: error.code || 'SOCKET_ERROR' }));
 
@@ -233,6 +258,7 @@ try {
     log('stopping', { reason });
     clearInterval(broadcast);
     clearInterval(heartbeat);
+    music.close();
     for (const connection of sockets.clients) connection.close(1001, 'Service stopping');
     const forceClose = setTimeout(() => {
       for (const connection of sockets.clients) connection.terminate();
@@ -261,6 +287,7 @@ try {
     server.listen(port, '127.0.0.1', resolve);
   });
   await atomicWriteJson(paths.metadataFile, { instanceId, controlToken, projectKey: paths.projectKey, pid: process.pid, port, startedAt });
+  music.configure(settings.adapters.music);
   log('started', { port, version: packageInfo.version });
   log('adapter_status', { music: adapters.music.state, bilibili: adapters.bilibili.state });
 } catch (error) {

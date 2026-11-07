@@ -1,0 +1,97 @@
+{
+  "checkedAt": "2026-11-07T15:33:05.388Z",
+  "source": "actual local NetEase client",
+  "initial": {
+    "trackId": "1456890009",
+    "title": "罗生门（Follow）",
+    "artist": "梨冻紧 / Wiz_H张子豪",
+    "state": "CONNECTED",
+    "playing": true,
+    "positionMs": 240150,
+    "durationMs": 243755,
+    "lyricsState": "AVAILABLE",
+    "lyricCount": 99
+  },
+  "progress": [
+    {
+      "trackId": "1456890009",
+      "title": "罗生门（Follow）",
+      "artist": "梨冻紧 / Wiz_H张子豪",
+      "state": "CONNECTED",
+      "playing": true,
+      "positionMs": 240150,
+      "durationMs": 243755,
+      "lyricsState": "AVAILABLE",
+      "lyricCount": 99
+    },
+    {
+      "trackId": "1456890009",
+      "title": "罗生门（Follow）",
+      "artist": "梨冻紧 / Wiz_H张子豪",
+      "state": "CONNECTED",
+      "playing": true,
+      "positionMs": 241240,
+      "durationMs": 243755,
+      "lyricsState": "AVAILABLE",
+      "lyricCount": 99
+    }
+  ],
+  "pause": [
+    {
+      "trackId": "1456890009",
+      "title": "罗生门（Follow）",
+      "artist": "梨冻紧 / Wiz_H张子豪",
+      "state": "CONNECTED",
+      "playing": false,
+      "positionMs": 243080,
+      "durationMs": 243755,
+      "lyricsState": "AVAILABLE",
+      "lyricCount": 99
+    },
+    {
+      "trackId": "1456890009",
+      "title": "罗生门（Follow）",
+      "artist": "梨冻紧 / Wiz_H张子豪",
+      "state": "CONNECTED",
+      "playing": false,
+      "positionMs": 243080,
+      "durationMs": 243755,
+      "lyricsState": "AVAILABLE",
+      "lyricCount": 99
+    }
+  ],
+  "next": {
+    "trackId": "1304720983",
+    "title": "泡沫 Bubble",
+    "artist": "G.E.M.邓紫棋",
+    "state": "CONNECTED",
+    "playing": false,
+    "positionMs": 0,
+    "durationMs": 258880,
+    "lyricsState": "AVAILABLE",
+    "lyricCount": 38
+  },
+  "previous": {
+    "trackId": "1456890009",
+    "title": "罗生门（Follow）",
+    "artist": "梨冻紧 / Wiz_H张子豪",
+    "state": "CONNECTED",
+    "playing": true,
+    "positionMs": 0,
+    "durationMs": 243755,
+    "lyricsState": "AVAILABLE",
+    "lyricCount": 99
+  },
+  "final": {
+    "trackId": "1456890009",
+    "title": "罗生门（Follow）",
+    "artist": "梨冻紧 / Wiz_H张子豪",
+    "state": "CONNECTED",
+    "playing": true,
+    "positionMs": 0,
+    "durationMs": 243755,
+    "lyricsState": "AVAILABLE",
+    "lyricCount": 99
+  },
+  "passed": true
+}

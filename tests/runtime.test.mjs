@@ -7,6 +7,8 @@ import { mkdtemp, readFile, writeFile, mkdir, rm, access, readdir } from 'node:f
 import os from 'node:os';
 import path from 'node:path';
 import net from 'node:net';
+import http from 'node:http';
+import { setTimeout as delay } from 'node:timers/promises';
 import { WebSocket } from 'ws';
 import { projectRoot } from '../server/config.mjs';
 
@@ -66,7 +68,7 @@ test('真实服务生命周期、并发、关闭、冲突与恢复', { timeout: 
       const result = await cli('start', environment);
       assert.equal(result.exitCode, 0);
       assert.equal(result.state, 'RUNNING');
-      assert.equal(result.checkpoint, 'CP5');
+      assert.equal(result.checkpoint, 'CP6');
       assert.equal(result.port, port);
       assert.equal(result.adapters.music.state, 'DISCONNECTED');
       assert.equal(result.adapters.bilibili.state, 'NOT_CONFIGURED');
@@ -99,14 +101,15 @@ test('真实服务生命周期、并发、关闭、冲突与恢复', { timeout: 
     await context.test('后台覆盖全部直播页字段并保持平台设置隔离', async () => {
       const initial = await (await fetch(`${origin}/api/settings`)).json();
       assert.deepEqual(Object.keys(initial.settings.global).sort(), ['fontSizes', 'task']);
-      assert.deepEqual(Object.keys(initial.settings.platforms.bilibili).sort(), ['announcementText', 'benefitsText', 'boardMode', 'fontSizes', 'lyricsEnabled']);
-      assert.deepEqual(Object.keys(initial.settings.platforms.douyin).sort(), ['announcementText', 'benefitsText', 'boardMode', 'fontSizes', 'lyricsEnabled']);
+      assert.deepEqual(Object.keys(initial.settings.platforms.bilibili).sort(), ['announcementText', 'boardMode', 'bottomAnnouncementText', 'fontSizes', 'lyricsAutoHide', 'lyricsEnabled']);
+      assert.deepEqual(Object.keys(initial.settings.platforms.douyin).sort(), ['announcementText', 'boardMode', 'bottomAnnouncementText', 'fontSizes', 'lyricsAutoHide', 'lyricsEnabled']);
       settingsSocket = new WebSocket(`ws://127.0.0.1:${port}/ws`);
       assert.equal((await nextJsonMessage(settingsSocket)).type, 'runtime.status');
       const payload = {
         global: { task: '寻找今晚的风', fontSizes: initial.settings.global.fontSizes },
+        music: initial.settings.music,
         platforms: {
-          bilibili: { boardMode: 'announcement', announcementText: 'B 站今晚公告', lyricsEnabled: false, benefitsText: '上舰福利第一行\n第二行', fontSizes: initial.settings.platforms.bilibili.fontSizes },
+          bilibili: { boardMode: 'announcement', announcementText: 'B 站今晚公告', lyricsEnabled: false, lyricsAutoHide: false, bottomAnnouncementText: 'B站底部公告\n第二行', fontSizes: initial.settings.platforms.bilibili.fontSizes },
           douyin: initial.settings.platforms.douyin,
         },
       };
@@ -119,11 +122,11 @@ test('真实服务生命周期、并发、关闭、冲突与恢复', { timeout: 
       assert.equal(update.data.platform, 'bilibili');
       assert.equal(update.data.global.task, '寻找今晚的风');
       assert.equal(update.data.platformSettings.boardMode, 'announcement');
-      assert.equal(update.data.platformSettings.benefitsText, '上舰福利第一行\n第二行');
+      assert.equal(update.data.platformSettings.bottomAnnouncementText, 'B站底部公告\n第二行');
       const afterSave = (await (await fetch(`${origin}/api/settings`)).json()).settings;
       assert.equal(afterSave.global.task, '寻找今晚的风');
       assert.equal(afterSave.platforms.douyin.boardMode, initial.settings.platforms.douyin.boardMode);
-      assert.equal(afterSave.platforms.douyin.benefitsText, '');
+      assert.equal(afterSave.platforms.douyin.bottomAnnouncementText, '');
       const backupCount = (await readdir(path.join(directory, 'backups'))).length;
       const invalid = await fetch(`${origin}/api/settings`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...payload, global: { ...payload.global, title: 42 } }) });
       assert.equal(invalid.status, 400);
@@ -131,25 +134,25 @@ test('真实服务生命周期、并发、关闭、冲突与恢复', { timeout: 
       assert.equal((await readdir(path.join(directory, 'backups'))).length, backupCount);
     });
 
-    await context.test('福利严格校验，旧后台保存兼容且平台隔离', async () => {
+    await context.test('底部公告严格校验，旧后台保存兼容且平台隔离', async () => {
       const { settings } = await (await fetch(`${origin}/api/settings`)).json();
-      for (const benefitsText of [null, 42, '福'.repeat(501)]) {
+      for (const bottomAnnouncementText of [null, 42, '告'.repeat(501)]) {
         const invalid = structuredClone(settings);
-        invalid.platforms.douyin.benefitsText = benefitsText;
+        invalid.platforms.douyin.bottomAnnouncementText = bottomAnnouncementText;
         assert.equal((await fetch(`${origin}/api/settings`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(invalid) })).status, 400);
       }
       const legacyPayload = structuredClone(settings);
-      delete legacyPayload.platforms.bilibili.benefitsText;
-      legacyPayload.platforms.douyin.benefitsText = '灯牌福利';
+      delete legacyPayload.platforms.bilibili.bottomAnnouncementText;
+      legacyPayload.platforms.douyin.bottomAnnouncementText = '抖音底部公告';
       const updatePromise = nextSettingsUpdate(settingsSocket);
       const saved = await fetch(`${origin}/api/settings`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(legacyPayload) });
       assert.equal(saved.status, 200);
       const result = (await saved.json()).settings;
-      assert.equal(result.platforms.bilibili.benefitsText, settings.platforms.bilibili.benefitsText);
-      assert.equal(result.platforms.douyin.benefitsText, '灯牌福利');
+      assert.equal(result.platforms.bilibili.bottomAnnouncementText, settings.platforms.bilibili.bottomAnnouncementText);
+      assert.equal(result.platforms.douyin.bottomAnnouncementText, '抖音底部公告');
       const update = await updatePromise;
       assert.equal(update.data.platform, 'douyin');
-      assert.equal(update.data.platformSettings.benefitsText, '灯牌福利');
+      assert.equal(update.data.platformSettings.bottomAnnouncementText, '抖音底部公告');
     });
 
     await context.test('分区字号校验、全局同步与旧后台保存兼容', async () => {
@@ -180,6 +183,66 @@ test('真实服务生命周期、并发、关闭、冲突与恢复', { timeout: 
       assert.deepEqual(actual.platforms.douyin.fontSizes, { ...settings.platforms.douyin.fontSizes, benefits: 32 });
     });
 
+    await context.test('音乐桥接经真实服务同步、控制、断线降级和恢复', async () => {
+      let playing = false;
+      let track = 1;
+      const bridge = http.createServer((request, response) => {
+        response.setHeader('Content-Type', 'application/json');
+        if (request.url === '/info') return response.end(JSON.stringify({ process_active: true, playing, basic_info: { id: track, name: `接口测试歌曲 ${track}`, artist: '测试歌手' }, playback: { current_sec: 2, total_sec: 60 } }));
+        if (request.url === '/lyrics') return response.end(JSON.stringify({ id: track, lrc: '[00:00.00]测试第一行\n[00:03.00]测试第二行' }));
+        if (request.method === 'POST' && request.url === '/control/playpause') playing = !playing;
+        else if (request.method === 'POST' && request.url === '/control/next') track += 1;
+        else { response.statusCode = 404; return response.end('{}'); }
+        response.end('{"code":200}');
+      });
+      bridge.listen(0, '127.0.0.1');
+      await once(bridge, 'listening');
+      const original = (await (await fetch(`${origin}/api/settings`)).json()).settings;
+      const events = [];
+      const capture = raw => { const message = JSON.parse(raw.toString()); if (message.type === 'music.updated') events.push(message.data); };
+      settingsSocket.on('message', capture);
+      const waitMusic = async predicate => {
+        for (let attempt = 0; attempt < 80; attempt += 1) {
+          const snapshot = await (await fetch(`${origin}/api/music`)).json();
+          if (predicate(snapshot)) return snapshot;
+          await delay(50);
+        }
+        assert.fail('音乐快照未在限时内更新');
+      };
+      try {
+        assert.equal((await (await fetch(`${origin}/api/music`)).json()).state, 'DISCONNECTED');
+        const configured = structuredClone(original);
+        configured.music = { enabled: true, baseUrl: `http://127.0.0.1:${bridge.address().port}` };
+        assert.equal((await fetch(`${origin}/api/settings`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(configured) })).status, 200);
+        const connected = await waitMusic(value => value.state === 'CONNECTED');
+        assert.equal(connected.title, '接口测试歌曲 1');
+        assert.equal(connected.lyrics.length, 2);
+        assert.ok(events.some(value => value.state === 'CONNECTED'));
+        assert.equal((await fetch(`${origin}/api/music/control`, { method: 'POST', headers: { 'Content-Type': 'application/json', Origin: 'https://unrelated.example' }, body: '{"action":"next"}' })).status, 403);
+        assert.equal((await fetch(`${origin}/api/music/control`, { method: 'POST', body: '{}' })).status, 415);
+        assert.equal((await fetch(`${origin}/api/music/control`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{"action":"shutdown"}' })).status, 400);
+        assert.equal((await fetch(`${origin}/api/music/control`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{"action":"playpause"}' })).status, 200);
+        await waitMusic(value => value.playing);
+        await fetch(`${origin}/api/music/control`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{"action":"next"}' });
+        await waitMusic(value => value.title === '接口测试歌曲 2');
+        const bridgePort = bridge.address().port;
+        await new Promise(resolve => bridge.close(resolve));
+        const unavailable = await waitMusic(value => value.state === 'UNAVAILABLE');
+        assert.equal(unavailable.title, '');
+        assert.deepEqual(unavailable.lyrics, []);
+        assert.equal((await (await fetch(`${origin}/api/runtime/status`)).json()).state, 'DEGRADED');
+        assert.equal((await fetch(`${origin}/live/bilibili`)).status, 200);
+        assert.equal((await fetch(`${origin}/live/douyin`)).status, 200);
+        bridge.listen(bridgePort, '127.0.0.1');
+        await once(bridge, 'listening');
+        await waitMusic(value => value.state === 'CONNECTED');
+      } finally {
+        settingsSocket.off('message', capture);
+        await fetch(`${origin}/api/settings`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(original) });
+        if (bridge.listening) await new Promise(resolve => bridge.close(resolve));
+      }
+    });
+
     await context.test('WebSocket 真实快照与正常关闭', async () => {
       socket = new WebSocket(`ws://127.0.0.1:${port}/ws`);
       const [message] = await once(socket, 'message');
@@ -202,8 +265,8 @@ test('真实服务生命周期、并发、关闭、冲突与恢复', { timeout: 
       assert.ok(results.every(result => result.state === 'RUNNING'));
       assert.equal(results[0].instanceId, results[1].instanceId);
       const { settings } = await (await fetch(`${origin}/api/settings`)).json();
-      assert.equal(settings.platforms.bilibili.benefitsText, '上舰福利第一行\n第二行');
-      assert.equal(settings.platforms.douyin.benefitsText, '灯牌福利');
+      assert.equal(settings.platforms.bilibili.bottomAnnouncementText, 'B站底部公告\n第二行');
+      assert.equal(settings.platforms.douyin.bottomAnnouncementText, '抖音底部公告');
       assert.equal(settings.global.fontSizes.task, 56);
       assert.equal(settings.platforms.bilibili.fontSizes.comments, 36);
       assert.equal(settings.platforms.douyin.fontSizes.benefits, 32);
@@ -238,7 +301,8 @@ test('真实服务生命周期、并发、关闭、冲突与恢复', { timeout: 
       const settings = JSON.parse(await readFile(settingsFile, 'utf8'));
       await writeFile(settingsFile, JSON.stringify({ ...settings, server: { ...settings.server, host: '0.0.0.0' } }));
       assert.equal((await cli('start', environment)).state, 'ERROR');
-      await writeFile(settingsFile, JSON.stringify({ ...settings, adapters: { music: { enabled: true }, bilibili: { enabled: true } } }));
+      const unavailablePort = await unusedPort();
+      await writeFile(settingsFile, JSON.stringify({ ...settings, adapters: { music: { enabled: true, baseUrl: `http://127.0.0.1:${unavailablePort}` }, bilibili: { enabled: true } } }));
       assert.equal((await cli('start', environment)).state, 'DEGRADED');
       const state = await cli('status', environment);
       assert.equal(state.state, 'DEGRADED');

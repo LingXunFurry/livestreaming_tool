@@ -133,7 +133,7 @@ button, a, input { transition: background-color 140ms ease, color 140ms ease; }
 .bottom-table h2 { font-size: var(--font-bottomLabel, 20px); font-weight: 400; line-height: 1.2; }
 .bottom-table p { margin-top: 8px; overflow: hidden; }
 .today-quest p { font-size: var(--font-task, 34px); line-height: 1.4; white-space: nowrap; text-overflow: ellipsis; }
-.fan-benefits p { font-size: var(--font-benefits, 24px); line-height: 1.2; white-space: pre-wrap; overflow-wrap: anywhere; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.bottom-announcement p { font-size: var(--font-benefits, 24px); line-height: 1.2; white-space: pre-wrap; overflow-wrap: anywhere; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
 
 /* These helpers are siblings of Overlay; none exist in /live/* pages. */
 .game-guide { pointer-events: none; position: absolute; left: 40px; top: 144px; width: 1280px; height: 720px; display: grid; place-items: center; color: #787d6f; }
@@ -218,6 +218,13 @@ html[data-theme="dark"][data-surface="review"] { color-scheme: dark; --page: #20
 .admin-font-size > span { display: flex; justify-content: space-between; gap: 12px; }
 .admin-font-size output { color: var(--ink); font-variant-numeric: tabular-nums; }
 .admin-font-size input { width: 100%; margin: 0; min-height: 28px; accent-color: var(--ink); }
+.admin-music { display: grid; gap: 14px; margin-bottom: 20px; }
+.admin-music-status { display: grid; grid-template-columns: 90px minmax(0, 1fr); gap: 12px; margin: 0; font-size: 13px; }
+.admin-music-status dt { color: var(--muted); }
+.admin-music-status dd { margin: 0; overflow-wrap: anywhere; }
+.admin-music-controls { display: flex; flex-wrap: wrap; gap: 10px; }
+.admin-music-controls button { padding: 9px 16px; border: 1px solid var(--line); color: var(--ink); background: var(--surface); }
+.admin-music-controls button:disabled { opacity: .5; cursor: default; }
 .admin-check { display: inline-flex; align-items: center; gap: 9px; min-height: 36px; font-size: 13px; cursor: pointer; }
 .admin-check input { width: 16px; height: 16px; margin: 0; accent-color: var(--ink); }
 .admin-links { margin-top: 30px; padding-top: 24px; border-top: 1px solid var(--line); }

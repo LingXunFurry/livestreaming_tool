@@ -8,7 +8,7 @@
 .scene-preview .module-heading h2 { color: #C9A85E; font-size: 30px; line-height: 1.4; font-weight: 400; }
 .scene-preview .module-heading h2 { width: 288px; height: 80px; margin-top: 0; font-size: 0; background: url('../assets/generated/cp3/comment-wordmark.png') -15px center / 288px 96px no-repeat; image-rendering: pixelated; }
 .scene-preview .module-heading .module-index { display: none; }
-.scene-preview .announcement-board .module-heading h2 { background-image: url('../assets/generated/cp3/announcement-wordmark.png'); background-position-x: -25px; }
+.scene-preview .announcement-board .module-heading h2 { display: flex; align-items: center; font-size: 30px; background: none; }
 .scene-preview .announcement-board .small-label { font-weight: 400; }
 .scene-preview .messages { margin-top: 18px; flex: 1 1 auto; min-height: 0; overflow-y: auto; scrollbar-width: none; }
 .scene-preview .messages::-webkit-scrollbar { display: none; }
@@ -16,6 +16,7 @@
 .scene-preview .message:first-child { margin-top: auto; }
 .scene-preview .lyrics-board { padding: 16px 28px; }
 .scene-preview .lyrics-heading .module-index { display: block; width: 240px; height: 72px; font-size: 0; background: url('../assets/generated/cp3/playing-wordmark.png') -11px center / 240px 80px no-repeat; image-rendering: pixelated; }
+.scene-preview .music-state { color: #A8C7D1; font-size: 14px; line-height: 1.2; }
 .scene-preview .song-title { margin-top: 6px; }
 .scene-preview .lyric-line, .scene-preview .lyric-line.current { margin-top: 6px; line-height: 1.5; }
 .scene-preview .module-index, .scene-preview .small-label { font-size: 20px; letter-spacing: 0; }

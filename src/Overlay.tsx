@@ -2,6 +2,8 @@ import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import defaultSettings from '../config/example.json'
 import { appendSimulatedMessage, eventTimeline, initialMessages, lyricIndexAt, lyricLines, messageLabels } from './simulation'
 import type { SimulatedMessage } from './simulation'
+import { MusicPanel } from './MusicPanel'
+import type { MusicState } from './music'
 
 const announcementColors = new Set(['gold', 'red', 'wind', 'cream'])
 
@@ -46,11 +48,6 @@ export type PlatformFontSizes = typeof defaultSettings.platforms.bilibili.fontSi
 export const platformNames: Record<Platform, string> = {
   bilibili: 'B 站',
   douyin: '抖音',
-}
-
-export const benefitsTitles: Record<Platform, string> = {
-  bilibili: '上舰福利',
-  douyin: '灯牌福利',
 }
 
 function MessageBoard({ platform }: { platform: Platform }) {
@@ -115,7 +112,7 @@ function AnnouncementBoard({ platform, content }: { platform: Platform; content:
   )
 }
 
-function Lyrics() {
+function SimulatedLyrics() {
   const [elapsed, setElapsed] = useState(0)
   const currentIndex = lyricIndexAt(elapsed)
 
@@ -144,10 +141,11 @@ export function Overlay({
   board = 'comments',
   announcementText = '欢迎来到凌巽的酒馆，歇歇脚，一起聊聊今天的冒险。',
   task = '探索未知，也记得沿途歇脚。',
-  benefitsText = '',
+  bottomAnnouncementText = '',
   globalFontSizes = defaultSettings.global.fontSizes,
   fontSizes = defaultSettings.platforms.bilibili.fontSizes,
-}: { platform: Platform; lyrics?: boolean; board?: BoardMode; announcementText?: string; task?: string; benefitsText?: string; globalFontSizes?: GlobalFontSizes; fontSizes?: PlatformFontSizes }) {
+  music,
+}: { platform: Platform; lyrics?: boolean; board?: BoardMode; announcementText?: string; task?: string; bottomAnnouncementText?: string; globalFontSizes?: GlobalFontSizes; fontSizes?: PlatformFontSizes; music?: MusicState }) {
   const fontStyle = Object.fromEntries(
     Object.entries({ ...globalFontSizes, ...fontSizes }).map(([field, size]) => [`--font-${field}`, `${size}px`]),
   ) as CSSProperties
@@ -158,14 +156,14 @@ export function Overlay({
       </header>
       <aside className={`side-column ${lyrics ? '' : 'without-lyrics'}`}>
         {board === 'announcement' ? <AnnouncementBoard platform={platform} content={announcementText} /> : <MessageBoard platform={platform} />}
-        {lyrics && <Lyrics />}
+        {lyrics && (music ? <MusicPanel music={music} /> : <SimulatedLyrics />)}
       </aside>
       <section className="stream-info" aria-label="底部酒桌">
         <section className="bottom-table today-quest" aria-label="今日委托">
           <h2 className="module-index">今日委托</h2><p title={task}>{task}</p>
         </section>
-        <section className="bottom-table fan-benefits" aria-label={benefitsTitles[platform]}>
-          <h2 className="module-index">{benefitsTitles[platform]}</h2><p title={benefitsText}>{benefitsText}</p>
+        <section className="bottom-table bottom-announcement" aria-label="底部公告">
+          <h2 className="module-index">公告</h2><p title={bottomAnnouncementText}>{bottomAnnouncementText}</p>
         </section>
       </section>
     </main>

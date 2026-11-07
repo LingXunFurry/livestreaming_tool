@@ -19,12 +19,22 @@ test('配置校验、原子写入与备份', async () => {
     delete legacySettings.global.fontSizes;
     delete legacySettings.platforms.bilibili.fontSizes;
     delete legacySettings.platforms.douyin.fontSizes;
+    delete legacySettings.platforms.bilibili.lyricsAutoHide;
+    delete legacySettings.platforms.douyin.lyricsAutoHide;
+    delete legacySettings.adapters.music.baseUrl;
     await writeFile(path.join(directory, 'settings.json'), JSON.stringify(legacySettings));
     assert.equal((await loadSettings()).platforms.bilibili.benefitsText, '');
     assert.equal((await loadSettings()).platforms.douyin.benefitsText, '');
+    assert.equal((await loadSettings()).platforms.douyin.bottomAnnouncementText, '');
     assert.deepEqual(JSON.parse(await readFile(path.join(directory, 'settings.json'), 'utf8')), legacySettings);
     assert.deepEqual((await loadSettings()).global.fontSizes, { task: 34, bottomLabel: 20 });
     assert.equal((await loadSettings()).platforms.douyin.fontSizes.comments, 20);
+    assert.equal((await loadSettings()).platforms.bilibili.lyricsAutoHide, false);
+    assert.equal((await loadSettings()).adapters.music.baseUrl, 'http://127.0.0.1:18726');
+    for (const baseUrl of ['https://127.0.0.1:18726', 'http://example.com', 'http://127.0.0.1:18726/info', 'http://user:pass@localhost', ['http://localhost'], null]) {
+      assert.throws(() => validateSettings({ adapters: { music: { baseUrl } } }, settings), /baseUrl/);
+    }
+    assert.throws(() => validateSettings({ platforms: { bilibili: { lyricsAutoHide: 'yes' } } }, settings), /lyricsAutoHide/);
     for (const fontSizes of [null, [], { task: '34' }, { task: 57 }, { task: 15 }, { task: 34.5 }, { unknown: 20 }]) {
       assert.throws(() => validateSettings({ global: { fontSizes } }, settings), /fontSizes/);
     }
@@ -33,6 +43,12 @@ test('配置校验、原子写入与备份', async () => {
       assert.throws(() => validateSettings({ platforms: { bilibili: { benefitsText } } }, settings), /benefitsText/);
     }
     assert.equal(validateSettings({ platforms: { bilibili: { benefitsText: '专属徽章\n一起开黑' } } }, settings).platforms.bilibili.benefitsText, '专属徽章\n一起开黑');
+    for (const bottomAnnouncementText of [null, 42, '告'.repeat(501)]) {
+      assert.throws(() => validateSettings({ platforms: { bilibili: { bottomAnnouncementText } } }, settings), /bottomAnnouncementText/);
+    }
+    const legacyBenefits = validateSettings({ platforms: { bilibili: { benefitsText: '旧福利' } } }, settings).platforms.bilibili;
+    assert.equal(legacyBenefits.benefitsText, '旧福利');
+    assert.equal(legacyBenefits.bottomAnnouncementText, '');
     assert.throws(() => validateSettings({ server: { host: '0.0.0.0' } }, settings), /127.0.0.1/);
     assert.throws(() => validateSettings({ server: { port: 70000 } }, settings), /65535/);
     assert.throws(() => validateSettings({ schemaVersion: 2 }, settings), /配置版本/);

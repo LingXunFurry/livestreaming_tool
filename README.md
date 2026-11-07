@@ -1,7 +1,7 @@
 # 凌巽的酒馆
 
 本地双平台直播装饰系统，使用 React、TypeScript、Vite 和 Node.js。
-CP0、CP1、CP2 已通过验收。CP3 已完成场景返修，提供独立场景组、中英文艺术字、本地像素字体、无 UI 背景及可编辑布局，当前等待场景美术验收。
+CP0 至 CP5 已通过验收；CP6 网易云播放与歌词功能等待用户验收。
 
 ## 首次初始化
 
@@ -53,7 +53,7 @@ npm run stop
 项目要求见 `docs/PROJECT_SPEC.md`，固定视觉 Token 见 `docs/DESIGN_SYSTEM.md`，独立透明素材及用户原稿授权边界见 `docs/ASSET_POLICY.md`。
 架构、运行、迁移、阶段、决策、测试和日常操作分别记录在 `docs/` 对应文件。
 
-CP0 提供统一运行管理、健康接口、基础状态 WebSocket、双平台透明测试页和只读系统后台。完整管理编辑、真实网易云与 B 站事件分别在后续检查点实现。实际直播姬、抖音直播伴侣和第二台电脑等待 CP8 实机验收。
+后台支持编辑两平台独立配置、底部公告和各区字号。CP6 使用单独运行的本机网易云桥接，安装和启动见 `docs/MUSIC_SETUP.md`；酒馆启动器不会自动启动该桥接。真实平台互动属于 CP7，实际直播客户端和第二台电脑等待 CP8 实机验收。
 
 CP2 源稿、64×64 交付 PNG 和提示词分别位于 `assets/generated/cp2/`、`assets/prompts/cp2/`，清单位于 `assets/manifest.json`。离线制作命令 `pwsh -File scripts/prepare-cp2-assets.ps1` 通过 Windows 自带的 System.Drawing 统一像素与固定色板，并写出检查记录。日常服务直接使用已交付 PNG。验收结果和文件清单见 `docs/CP2_REVIEW.md`。
 
@@ -68,4 +68,4 @@ npm run build
 
 重新处理 CP3 生图源稿时运行 `pwsh -File scripts/prepare-cp2-assets.ps1 -Checkpoint cp3`。脚本使用 Windows 自带的 System.Drawing。运行服务直接加载交付 PNG。实际检查及文件清单见 `docs/CP3_REVIEW.md`。
 
-V2 前的美术草稿保存在本地 `data/backups/pre-v2-draft/`，旧规范保存在 `docs/history/`。CP3 完成后等待用户验收，再进入下一阶段。
+V2 前的美术草稿保存在本地 `data/backups/pre-v2-draft/`，旧规范保存在 `docs/history/`。

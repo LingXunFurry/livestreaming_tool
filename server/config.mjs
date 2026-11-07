@@ -105,11 +105,20 @@ export function validateSettings(input, defaults) {
     if (!['comments', 'announcement'].includes(platform.boardMode)) throw new Error('boardMode 必须为 comments 或 announcement');
     if (typeof platform.announcementText !== 'string' || platform.announcementText.length > 2000) throw new Error('announcementText 必须为 2000 字以内的文本');
     if (typeof platform.lyricsEnabled !== 'boolean') throw new Error('lyricsEnabled 必须为布尔值');
+    if (typeof platform.lyricsAutoHide !== 'boolean') throw new Error('lyricsAutoHide 必须为布尔值');
     if (typeof platform.benefitsText !== 'string' || platform.benefitsText.length > 500) throw new Error('benefitsText 必须为 500 字以内的文本');
+    if (typeof platform.bottomAnnouncementText !== 'string' || platform.bottomAnnouncementText.length > 500) throw new Error('bottomAnnouncementText 必须为 500 字以内的文本');
   }
   for (const adapter of Object.values(settings.adapters)) {
     if (typeof adapter.enabled !== 'boolean') throw new Error('适配器 enabled 必须为布尔值');
   }
+  try {
+    if (typeof settings.adapters.music.baseUrl !== 'string' || settings.adapters.music.baseUrl.length > 256) throw new Error();
+    const url = new URL(settings.adapters.music.baseUrl);
+    if (url.protocol !== 'http:' || !['127.0.0.1', 'localhost', '[::1]'].includes(url.hostname)
+      || url.username || url.password || url.pathname !== '/' || url.search || url.hash) throw new Error();
+    settings.adapters.music.baseUrl = url.origin;
+  } catch { throw new Error('音乐桥接 baseUrl 必须为本机回环 HTTP 地址，且不包含路径、凭证或参数'); }
   for (const field of ['task']) {
     if (typeof settings.global[field] !== 'string' || settings.global[field].length > 500) {
       throw new Error(`global.${field} 必须为 500 字以内的文本`);
