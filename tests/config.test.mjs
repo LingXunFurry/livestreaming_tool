@@ -16,10 +16,19 @@ test('配置校验、原子写入与备份', async () => {
     const legacySettings = JSON.parse(await readFile(path.join(directory, 'settings.json'), 'utf8'));
     delete legacySettings.platforms.bilibili.benefitsText;
     delete legacySettings.platforms.douyin.benefitsText;
+    delete legacySettings.global.fontSizes;
+    delete legacySettings.platforms.bilibili.fontSizes;
+    delete legacySettings.platforms.douyin.fontSizes;
     await writeFile(path.join(directory, 'settings.json'), JSON.stringify(legacySettings));
     assert.equal((await loadSettings()).platforms.bilibili.benefitsText, '');
     assert.equal((await loadSettings()).platforms.douyin.benefitsText, '');
     assert.deepEqual(JSON.parse(await readFile(path.join(directory, 'settings.json'), 'utf8')), legacySettings);
+    assert.deepEqual((await loadSettings()).global.fontSizes, { task: 34, bottomLabel: 20 });
+    assert.equal((await loadSettings()).platforms.douyin.fontSizes.comments, 20);
+    for (const fontSizes of [null, [], { task: '34' }, { task: 57 }, { task: 15 }, { task: 34.5 }, { unknown: 20 }]) {
+      assert.throws(() => validateSettings({ global: { fontSizes } }, settings), /fontSizes/);
+    }
+    assert.throws(() => validateSettings({ platforms: { bilibili: { fontSizes: { task: 20 } } } }, settings), /fontSizes/);
     for (const benefitsText of [null, 42, '福'.repeat(501)]) {
       assert.throws(() => validateSettings({ platforms: { bilibili: { benefitsText } } }, settings), /benefitsText/);
     }

@@ -36,7 +36,7 @@ async function nextJsonMessage(socket) {
   return JSON.parse(message.toString());
 }
 
-function nextSettingsUpdate(socket) {
+function nextSettingsUpdate(socket, platform) {
   return new Promise((resolve, reject) => {
     const timeout = setTimeout(() => {
       socket.off('message', onMessage);
@@ -44,7 +44,7 @@ function nextSettingsUpdate(socket) {
     }, 5000);
     function onMessage(raw) {
       const message = JSON.parse(raw.toString());
-      if (message.type !== 'settings.updated') return;
+      if (message.type !== 'settings.updated' || (platform && message.data.platform !== platform)) return;
       clearTimeout(timeout);
       socket.off('message', onMessage);
       resolve(message);
@@ -98,15 +98,15 @@ test('真实服务生命周期、并发、关闭、冲突与恢复', { timeout: 
 
     await context.test('后台覆盖全部直播页字段并保持平台设置隔离', async () => {
       const initial = await (await fetch(`${origin}/api/settings`)).json();
-      assert.deepEqual(Object.keys(initial.settings.global).sort(), ['task']);
-      assert.deepEqual(Object.keys(initial.settings.platforms.bilibili).sort(), ['announcementText', 'benefitsText', 'boardMode', 'lyricsEnabled']);
-      assert.deepEqual(Object.keys(initial.settings.platforms.douyin).sort(), ['announcementText', 'benefitsText', 'boardMode', 'lyricsEnabled']);
+      assert.deepEqual(Object.keys(initial.settings.global).sort(), ['fontSizes', 'task']);
+      assert.deepEqual(Object.keys(initial.settings.platforms.bilibili).sort(), ['announcementText', 'benefitsText', 'boardMode', 'fontSizes', 'lyricsEnabled']);
+      assert.deepEqual(Object.keys(initial.settings.platforms.douyin).sort(), ['announcementText', 'benefitsText', 'boardMode', 'fontSizes', 'lyricsEnabled']);
       settingsSocket = new WebSocket(`ws://127.0.0.1:${port}/ws`);
       assert.equal((await nextJsonMessage(settingsSocket)).type, 'runtime.status');
       const payload = {
-        global: { task: '寻找今晚的风' },
+        global: { task: '寻找今晚的风', fontSizes: initial.settings.global.fontSizes },
         platforms: {
-          bilibili: { boardMode: 'announcement', announcementText: 'B 站今晚公告', lyricsEnabled: false, benefitsText: '上舰福利第一行\n第二行' },
+          bilibili: { boardMode: 'announcement', announcementText: 'B 站今晚公告', lyricsEnabled: false, benefitsText: '上舰福利第一行\n第二行', fontSizes: initial.settings.platforms.bilibili.fontSizes },
           douyin: initial.settings.platforms.douyin,
         },
       };
@@ -152,6 +152,34 @@ test('真实服务生命周期、并发、关闭、冲突与恢复', { timeout: 
       assert.equal(update.data.platformSettings.benefitsText, '灯牌福利');
     });
 
+    await context.test('分区字号校验、全局同步与旧后台保存兼容', async () => {
+      const { settings } = await (await fetch(`${origin}/api/settings`)).json();
+      const backupCount = (await readdir(path.join(directory, 'backups'))).length;
+      for (const fontSizes of [null, [], { lyrics: 25 }, { benefits: '24' }, { benefits: 12.5 }, { comments: 37 }, { announcement: 41 }, { song: 11 }, { unknown: 20 }]) {
+        const invalid = structuredClone(settings);
+        invalid.platforms.bilibili.fontSizes = fontSizes;
+        assert.equal((await fetch(`${origin}/api/settings`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(invalid) })).status, 400);
+      }
+      assert.equal((await readdir(path.join(directory, 'backups'))).length, backupCount);
+      settings.global.fontSizes = { task: 56, bottomLabel: 32 };
+      settings.platforms.bilibili.fontSizes = { comments: 36, announcement: 40, song: 24, lyrics: 24, benefits: 40 };
+      const bilibiliUpdate = nextSettingsUpdate(settingsSocket, 'bilibili');
+      const douyinUpdate = nextSettingsUpdate(settingsSocket, 'douyin');
+      assert.equal((await fetch(`${origin}/api/settings`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(settings) })).status, 200);
+      assert.deepEqual((await bilibiliUpdate).data.global.fontSizes, settings.global.fontSizes);
+      assert.deepEqual((await douyinUpdate).data.global.fontSizes, settings.global.fontSizes);
+      const legacy = structuredClone(settings);
+      delete legacy.global.fontSizes;
+      delete legacy.platforms.bilibili.fontSizes;
+      legacy.platforms.douyin.fontSizes = { benefits: 32 };
+      const saved = await fetch(`${origin}/api/settings`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(legacy) });
+      assert.equal(saved.status, 200);
+      const actual = (await saved.json()).settings;
+      assert.deepEqual(actual.global.fontSizes, settings.global.fontSizes);
+      assert.deepEqual(actual.platforms.bilibili.fontSizes, settings.platforms.bilibili.fontSizes);
+      assert.deepEqual(actual.platforms.douyin.fontSizes, { ...settings.platforms.douyin.fontSizes, benefits: 32 });
+    });
+
     await context.test('WebSocket 真实快照与正常关闭', async () => {
       socket = new WebSocket(`ws://127.0.0.1:${port}/ws`);
       const [message] = await once(socket, 'message');
@@ -176,6 +204,9 @@ test('真实服务生命周期、并发、关闭、冲突与恢复', { timeout: 
       const { settings } = await (await fetch(`${origin}/api/settings`)).json();
       assert.equal(settings.platforms.bilibili.benefitsText, '上舰福利第一行\n第二行');
       assert.equal(settings.platforms.douyin.benefitsText, '灯牌福利');
+      assert.equal(settings.global.fontSizes.task, 56);
+      assert.equal(settings.platforms.bilibili.fontSizes.comments, 36);
+      assert.equal(settings.platforms.douyin.fontSizes.benefits, 32);
       assert.deepEqual(results.map(result => result.reused).sort(), [false, true]);
       await cli('stop', environment);
     });

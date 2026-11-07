@@ -1,7 +1,8 @@
 import { StrictMode, useEffect, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Overlay, platformNames } from './Overlay'
-import type { BoardMode, Platform } from './Overlay'
+import type { BoardMode, Platform, GlobalFontSizes, PlatformFontSizes } from './Overlay'
+import defaultSettings from '../config/example.json'
 import { Admin } from './Admin'
 import { AssetReview } from './AssetReview'
 import sceneLayout from '../assets/layouts/cp3-tavern.json'
@@ -137,15 +138,15 @@ function Preview({ scene = false }: { scene?: boolean }) {
 }
 
 type SourceSettings = {
-  global: { task: string }
-  platforms: Record<Platform, { boardMode: BoardMode; announcementText: string; lyricsEnabled: boolean; benefitsText: string }>
+  global: { task: string; fontSizes: GlobalFontSizes }
+  platforms: Record<Platform, { boardMode: BoardMode; announcementText: string; lyricsEnabled: boolean; benefitsText: string; fontSizes: PlatformFontSizes }>
 }
 
 const defaultSourceSettings: SourceSettings = {
-  global: { task: '探索未知，也记得沿途歇脚。' },
+  global: { task: '探索未知，也记得沿途歇脚。', fontSizes: defaultSettings.global.fontSizes },
   platforms: {
-    bilibili: { boardMode: 'comments', announcementText: '欢迎来到凌巽的酒馆，歇歇脚，一起聊聊今天的冒险。', lyricsEnabled: true, benefitsText: '' },
-    douyin: { boardMode: 'comments', announcementText: '欢迎来到凌巽的酒馆，歇歇脚，一起聊聊今天的冒险。', lyricsEnabled: true, benefitsText: '' },
+    bilibili: { boardMode: 'comments', announcementText: '欢迎来到凌巽的酒馆，歇歇脚，一起聊聊今天的冒险。', lyricsEnabled: true, benefitsText: '', fontSizes: defaultSettings.platforms.bilibili.fontSizes },
+    douyin: { boardMode: 'comments', announcementText: '欢迎来到凌巽的酒馆，歇歇脚，一起聊聊今天的冒险。', lyricsEnabled: true, benefitsText: '', fontSizes: defaultSettings.platforms.douyin.fontSizes },
   },
 }
 
@@ -209,7 +210,7 @@ function SourcePage({ platform }: { platform: Platform }) {
   return (
     <main className="source-stage scene-preview" aria-label={`${platformNames[platform]}酒馆直播源`}>
       <img className="scene-background" src={sceneBackground} width="1920" height="1080" alt="已验收模块化酒馆背景，游戏窗口透明" />
-      <Overlay platform={platform} lyrics={platformSettings.lyricsEnabled} board={platformSettings.boardMode} announcementText={platformSettings.announcementText} task={settings.global.task} benefitsText={platformSettings.benefitsText} />
+      <Overlay platform={platform} lyrics={platformSettings.lyricsEnabled} board={platformSettings.boardMode} announcementText={platformSettings.announcementText} task={settings.global.task} benefitsText={platformSettings.benefitsText} globalFontSizes={settings.global.fontSizes} fontSizes={platformSettings.fontSizes} />
       <img className="scene-title-art" src={sceneTitle} width="384" height="128" alt="凌巽的酒馆" />
     </main>
   )

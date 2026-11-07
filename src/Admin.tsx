@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { benefitsTitles, type BoardMode, type Platform } from './Overlay'
+import { benefitsTitles, type BoardMode, type Platform, type GlobalFontSizes, type PlatformFontSizes } from './Overlay'
+import fontSizeLimits from '../config/font-sizes.json'
 
 interface RuntimeStatus {
   service: string
@@ -15,11 +16,22 @@ interface RuntimeStatus {
 }
 
 interface EditableSettings {
-  global: { task: string }
-  platforms: Record<Platform, { boardMode: BoardMode; announcementText: string; lyricsEnabled: boolean; benefitsText: string }>
+  global: { task: string; fontSizes: GlobalFontSizes }
+  platforms: Record<Platform, { boardMode: BoardMode; announcementText: string; lyricsEnabled: boolean; benefitsText: string; fontSizes: PlatformFontSizes }>
 }
 
 const platformLabels: Record<Platform, string> = { bilibili: 'B 站', douyin: '抖音' }
+
+function FontSizeControl({ name, label, value, onChange }: {
+  name: keyof typeof fontSizeLimits; label: string; value: number; onChange: (size: number) => void
+}) {
+  const { min, max } = fontSizeLimits[name]
+  return <label className="admin-font-size">
+    <span>{label}<output>{value}px</output></span>
+    <input type="range" aria-label={label} min={min} max={max} step={1} value={value}
+      onChange={event => onChange(Number(event.target.value))} />
+  </label>
+}
 
 export function Admin() {
   const [status, setStatus] = useState<RuntimeStatus | null>(null)
@@ -99,6 +111,12 @@ export function Admin() {
     setSettings(current => current ? { ...current, platforms: { ...current.platforms, [platform]: { ...current.platforms[platform], ...update } } } : current)
   }
 
+  function updateFontSize(platform: Platform, field: keyof PlatformFontSizes, size: number) {
+    if (!settings) return
+    updatePlatform(platform, { fontSizes: { ...settings.platforms[platform].fontSizes, [field]: size } })
+    setSaveState('')
+  }
+
   async function save() {
     if (!settings) return
     setSaveState('保存中')
@@ -139,12 +157,20 @@ export function Admin() {
         {settings ? <>
           <fieldset className="admin-bottom-settings"><legend>底部酒桌</legend>
             <label className="admin-field admin-task"><span>左桌 · 全局今日委托</span><input value={settings.global.task} maxLength={500} onChange={event => { setSettings({ ...settings, global: { ...settings.global, task: event.target.value } }); setSaveState('') }} /></label>
+            <div className="admin-font-grid">{([['task', '今日委托字号'], ['bottomLabel', '底栏栏目名字号']] as const).map(([field, label]) => (
+              <FontSizeControl key={field} name={field} label={label} value={settings.global.fontSizes[field]}
+                onChange={size => { setSettings({ ...settings, global: { ...settings.global, fontSizes: { ...settings.global.fontSizes, [field]: size } } }); setSaveState('') }} />
+            ))}</div>
             <div className="admin-platform-grid">{(['bilibili', 'douyin'] as Platform[]).map(platform => (
-              <label className="admin-field" key={platform}>
-                <span>{platformLabels[platform]}右桌 · {benefitsTitles[platform]}</span>
-                <textarea value={settings.platforms[platform].benefitsText} maxLength={500} rows={3}
-                  onChange={event => { updatePlatform(platform, { benefitsText: event.target.value }); setSaveState('') }} />
-              </label>
+              <div className="admin-benefits-field" key={platform}>
+                <label className="admin-field">
+                  <span>{platformLabels[platform]}右桌 · {benefitsTitles[platform]}</span>
+                  <textarea value={settings.platforms[platform].benefitsText} maxLength={500} rows={3}
+                    onChange={event => { updatePlatform(platform, { benefitsText: event.target.value }); setSaveState('') }} />
+                </label>
+                <FontSizeControl name="benefits" label={`${platformLabels[platform]}福利字号`} value={settings.platforms[platform].fontSizes.benefits}
+                  onChange={size => updateFontSize(platform, 'benefits', size)} />
+              </div>
             ))}</div>
             <p className="admin-field-hint">福利正文在直播页最多显示两行，支持换行，超长省略。留空时只显示栏目名。</p>
           </fieldset>
@@ -154,6 +180,10 @@ export function Admin() {
               <label className="admin-field"><span>右栏组件</span><select value={value.boardMode} onChange={event => { updatePlatform(platform, { boardMode: event.target.value as BoardMode }); setSaveState('') }}><option value="comments">留言板</option><option value="announcement">直播间公告</option></select></label>
               <label className="admin-field"><span>公告正文</span><textarea value={value.announcementText} maxLength={2000} rows={4} onChange={event => { updatePlatform(platform, { announcementText: event.target.value }); setSaveState('') }} /></label>
               <label className="admin-check"><input type="checkbox" checked={value.lyricsEnabled} onChange={event => { updatePlatform(platform, { lyricsEnabled: event.target.checked }); setSaveState('') }} /><span>显示歌词</span></label>
+              <div className="admin-font-grid">{([['comments', '评论文字字号'], ['announcement', '公告正文字号'], ['song', '歌曲信息字号'], ['lyrics', '歌词字号']] as const).map(([field, label]) => (
+                <FontSizeControl key={field} name={field} label={`${platformLabels[platform]}${label}`} value={value.fontSizes[field]}
+                  onChange={size => updateFontSize(platform, field, size)} />
+              ))}</div>
             </fieldset>
           })}</div>
         </> : <p>正在读取可编辑配置。</p>}

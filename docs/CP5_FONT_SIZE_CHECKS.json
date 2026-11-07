@@ -1,0 +1,188 @@
+{
+  "checkedAt": "2026-11-07T15:15:09.059Z",
+  "origin": "http://127.0.0.1:3001",
+  "testDataOnly": true,
+  "maximum": {
+    "task": "56px",
+    "bottomLabel": "32px",
+    "benefits": "40px",
+    "comments": "36px",
+    "meta": "36px",
+    "song": "24px",
+    "lyrics": "24px",
+    "time": "19.2px",
+    "leftLabel": {
+      "x": 68,
+      "y": 928,
+      "width": 572,
+      "height": 38.390625,
+      "bottom": 966.390625
+    },
+    "rightLabel": {
+      "x": 720,
+      "y": 928,
+      "width": 572,
+      "height": 38.390625,
+      "bottom": 966.390625
+    },
+    "taskBox": {
+      "x": 68,
+      "y": 974.390625,
+      "width": 572,
+      "height": 78.390625,
+      "bottom": 1052.78125
+    },
+    "benefitsBox": {
+      "x": 720,
+      "y": 974.390625,
+      "width": 572,
+      "height": 96,
+      "bottom": 1070.390625
+    },
+    "lastLyric": {
+      "x": 1384,
+      "y": 947.828125,
+      "width": 464,
+      "height": 28.796875,
+      "bottom": 976.625
+    },
+    "lyricsBox": {
+      "x": 1352,
+      "y": 744,
+      "width": 528,
+      "height": 256,
+      "bottom": 1000
+    },
+    "latestMessageVisible": true
+  },
+  "minimum": {
+    "task": "16px",
+    "bottomLabel": "12px",
+    "benefits": "12px",
+    "comments": "12px",
+    "meta": "12px",
+    "song": "12px",
+    "lyrics": "12px",
+    "time": "9.6px",
+    "leftLabel": {
+      "x": 68,
+      "y": 928,
+      "width": 572,
+      "height": 14.390625,
+      "bottom": 942.390625
+    },
+    "rightLabel": {
+      "x": 720,
+      "y": 928,
+      "width": 572,
+      "height": 14.390625,
+      "bottom": 942.390625
+    },
+    "taskBox": {
+      "x": 68,
+      "y": 950.390625,
+      "width": 572,
+      "height": 22.390625,
+      "bottom": 972.78125
+    },
+    "benefitsBox": {
+      "x": 720,
+      "y": 950.390625,
+      "width": 572,
+      "height": 28.78125,
+      "bottom": 979.171875
+    },
+    "lastLyric": {
+      "x": 1384,
+      "y": 909.890625,
+      "width": 464,
+      "height": 14.390625,
+      "bottom": 924.28125
+    },
+    "lyricsBox": {
+      "x": 1352,
+      "y": 744,
+      "width": 528,
+      "height": 256,
+      "bottom": 1000
+    },
+    "latestMessageVisible": true
+  },
+  "otherPlatform": {
+    "task": "56px",
+    "bottomLabel": "32px",
+    "benefits": "24px",
+    "comments": "20px",
+    "meta": "20px",
+    "song": "20px",
+    "lyrics": "20px",
+    "time": "16px",
+    "leftLabel": {
+      "x": 68,
+      "y": 928,
+      "width": 572,
+      "height": 38.390625,
+      "bottom": 966.390625
+    },
+    "rightLabel": {
+      "x": 720,
+      "y": 928,
+      "width": 572,
+      "height": 38.390625,
+      "bottom": 966.390625
+    },
+    "taskBox": {
+      "x": 68,
+      "y": 974.390625,
+      "width": 572,
+      "height": 78.390625,
+      "bottom": 1052.78125
+    },
+    "benefitsBox": {
+      "x": 720,
+      "y": 974.390625,
+      "width": 572,
+      "height": 0,
+      "bottom": 974.390625
+    },
+    "lastLyric": {
+      "x": 1384,
+      "y": 935.1875,
+      "width": 464,
+      "height": 24,
+      "bottom": 959.1875
+    },
+    "lyricsBox": {
+      "x": 1352,
+      "y": 744,
+      "width": 528,
+      "height": 256,
+      "bottom": 1000
+    },
+    "latestMessageVisible": true
+  },
+  "announcement": {
+    "scrollHeight": 794,
+    "clientHeight": 413,
+    "overflow": "auto"
+  },
+  "globalSynced": true,
+  "platformIsolation": true,
+  "reloadPersistence": true,
+  "narrowAdmin": true,
+  "sliderCount": 12,
+  "errors": [],
+  "nodeTests": {
+    "passed": 16,
+    "failed": 0
+  },
+  "production": {
+    "origin": "http://127.0.0.1:3000",
+    "sliderCount": 12
+  },
+  "userSettings": {
+    "fileHashBefore": "bccdf91ff0a07581c1e65211231775fd817b2464fe6a7f6a187574eadcba11c5",
+    "fileHashAfter": "bccdf91ff0a07581c1e65211231775fd817b2464fe6a7f6a187574eadcba11c5",
+    "testDataDirectory": ".cache/font-size-runtime"
+  }
+}

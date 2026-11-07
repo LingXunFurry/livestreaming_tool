@@ -52,6 +52,17 @@
 .scene-preview .song-progress { height: 6px; margin-top: 12px; background: #364E6A; }
 .scene-preview .song-progress i { display: block; height: 100%; background: #C9A85E; }
 .scene-preview .song-time { display: flex; justify-content: space-between; margin-top: 4px; color: #A8C7D1; font: 16px/1.4 'Fusion Pixel', monospace; }
+.scene-preview .bottom-table .module-index { font-size: var(--font-bottomLabel, 20px); }
+.scene-preview .message p, .scene-preview .message-meta,
+.scene-preview .message-meta > span { font-size: var(--font-comments, 20px); }
+.scene-preview .message-detail { font-size: calc(var(--font-comments, 20px) * .9); }
+.scene-preview .announcement-content { flex: 1 1 auto; min-height: 0; overflow-y: auto; }
+.scene-preview .announcement-content p { font-size: var(--font-announcement, 20px); }
+.scene-preview .song-title { font-size: var(--font-song, 20px); line-height: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.scene-preview .song-title > span { font-size: inherit; }
+.scene-preview .song-time { font-size: calc(var(--font-song, 20px) * .8); line-height: 1.2; }
+.scene-preview .song-progress { margin-top: 8px; }
+.scene-preview .lyric-line, .scene-preview .lyric-line.current { font-size: var(--font-lyrics, 20px); line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .source-stage { position: relative; width: 1920px; height: 1080px; overflow: hidden; }
 .source-stage .overlay { position: absolute; inset: 0; }
 .scene-preview .quest-progress { background: #364E6A; }

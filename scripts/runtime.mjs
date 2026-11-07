@@ -66,13 +66,13 @@ async function newestSourceTime(directory) {
 }
 
 async function ensureBuild() {
-  const required = ['package.json', 'config/example.json', 'server/index.mjs'];
+  const required = ['package.json', 'config/example.json', 'config/font-sizes.json', 'server/index.mjs'];
   for (const file of required) {
     await stat(path.join(projectRoot, file)).catch(() => { throw new Error(`程序文件缺失 ${file}`); });
   }
   try { await import('ws'); } catch { throw new Error('依赖尚未安装，请先在项目目录运行 npm ci'); }
   const built = await stat(path.join(paths.distDir, 'index.html')).catch(() => null);
-  const sourceTimes = await Promise.all(['index.html', 'vite.config.ts', 'package.json', 'package-lock.json'].map(async file => (await stat(path.join(projectRoot, file))).mtimeMs));
+  const sourceTimes = await Promise.all(['index.html', 'vite.config.ts', 'package.json', 'package-lock.json', 'config/example.json', 'config/font-sizes.json'].map(async file => (await stat(path.join(projectRoot, file))).mtimeMs));
   const latestSource = Math.max(await newestSourceTime(path.join(projectRoot, 'src')), ...sourceTimes);
   let completeBuild = false;
   if (built) {

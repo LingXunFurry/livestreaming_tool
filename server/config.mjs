@@ -4,6 +4,7 @@ import { constants } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { setTimeout as delay } from 'node:timers/promises';
+import fontSizeLimits from '../config/font-sizes.json' with { type: 'json' };
 
 export const projectRoot = fileURLToPath(new URL('../', import.meta.url));
 let settingsWriteQueue = Promise.resolve();
@@ -56,10 +57,13 @@ export function validateSettings(input, defaults) {
   const sections = {
     server: input.server,
     global: input.global,
+    'global.fontSizes': input.global?.fontSizes,
     platforms: input.platforms,
     adapters: input.adapters,
     'platforms.bilibili': input.platforms?.bilibili,
     'platforms.douyin': input.platforms?.douyin,
+    'platforms.bilibili.fontSizes': input.platforms?.bilibili?.fontSizes,
+    'platforms.douyin.fontSizes': input.platforms?.douyin?.fontSizes,
     'adapters.music': input.adapters?.music,
     'adapters.bilibili': input.adapters?.bilibili,
   };
@@ -69,10 +73,14 @@ export function validateSettings(input, defaults) {
   const settings = {
     schemaVersion: input.schemaVersion ?? 1,
     server: { ...defaults.server, ...input.server },
-    global: { title: defaults.global.title, task: input.global?.task ?? defaults.global.task },
+    global: {
+      title: defaults.global.title,
+      task: input.global?.task ?? defaults.global.task,
+      fontSizes: { ...defaults.global.fontSizes, ...input.global?.fontSizes },
+    },
     platforms: {
-      bilibili: { ...defaults.platforms.bilibili, ...input.platforms?.bilibili },
-      douyin: { ...defaults.platforms.douyin, ...input.platforms?.douyin },
+      bilibili: { ...defaults.platforms.bilibili, ...input.platforms?.bilibili, fontSizes: { ...defaults.platforms.bilibili.fontSizes, ...input.platforms?.bilibili?.fontSizes } },
+      douyin: { ...defaults.platforms.douyin, ...input.platforms?.douyin, fontSizes: { ...defaults.platforms.douyin.fontSizes, ...input.platforms?.douyin?.fontSizes } },
     },
     adapters: {
       music: { ...defaults.adapters.music, ...input.adapters?.music },
@@ -80,6 +88,14 @@ export function validateSettings(input, defaults) {
     },
   };
   if (settings.schemaVersion !== 1) throw new Error('不支持此配置版本，请保留文件并按迁移说明升级');
+  for (const [scope, value] of Object.entries({ global: settings.global, ...settings.platforms })) {
+    const allowed = scope === 'global' ? ['task', 'bottomLabel'] : ['comments', 'announcement', 'song', 'lyrics', 'benefits'];
+    for (const [field, size] of Object.entries(value.fontSizes)) {
+      if (!allowed.includes(field)) throw new Error(`fontSizes 包含未知字段 ${field}`);
+      const { min, max } = fontSizeLimits[field];
+      if (!Number.isInteger(size) || size < min || size > max) throw new Error(`fontSizes.${field} 必须为 ${min} 到 ${max} 之间的整数`);
+    }
+  }
   if (settings.server.host !== '127.0.0.1') throw new Error('server.host 必须为 127.0.0.1');
   if (!Number.isInteger(settings.server.port) || settings.server.port < 1 || settings.server.port > 65535) {
     throw new Error('server.port 必须为 1 到 65535 之间的整数');

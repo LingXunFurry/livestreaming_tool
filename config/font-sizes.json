@@ -1,0 +1,9 @@
+{
+  "task": { "min": 16, "max": 56 },
+  "bottomLabel": { "min": 12, "max": 32 },
+  "comments": { "min": 12, "max": 36 },
+  "announcement": { "min": 12, "max": 40 },
+  "song": { "min": 12, "max": 24 },
+  "lyrics": { "min": 12, "max": 24 },
+  "benefits": { "min": 12, "max": 40 }
+}

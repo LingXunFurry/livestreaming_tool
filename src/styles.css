@@ -130,10 +130,10 @@ button, a, input { transition: background-color 140ms ease, color 140ms ease; }
 .lyric-line.current { margin-top: 18px; font-size: 24px; color: #3f4338; }
 .stream-info { position: absolute; top: 888px; left: 40px; width: 1280px; height: 112px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
 .bottom-table { min-width: 0; padding: 12px 28px 0; background: var(--panel); border: 2px solid var(--panel-line); }
-.bottom-table h2 { font-weight: 400; line-height: 24px; }
+.bottom-table h2 { font-size: var(--font-bottomLabel, 20px); font-weight: 400; line-height: 1.2; }
 .bottom-table p { margin-top: 8px; overflow: hidden; }
-.today-quest p { font-size: 34px; line-height: 48px; white-space: nowrap; text-overflow: ellipsis; }
-.fan-benefits p { font-size: 24px; line-height: 28px; white-space: pre-wrap; overflow-wrap: anywhere; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.today-quest p { font-size: var(--font-task, 34px); line-height: 1.4; white-space: nowrap; text-overflow: ellipsis; }
+.fan-benefits p { font-size: var(--font-benefits, 24px); line-height: 1.2; white-space: pre-wrap; overflow-wrap: anywhere; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
 
 /* These helpers are siblings of Overlay; none exist in /live/* pages. */
 .game-guide { pointer-events: none; position: absolute; left: 40px; top: 144px; width: 1280px; height: 720px; display: grid; place-items: center; color: #787d6f; }
@@ -212,6 +212,12 @@ html[data-theme="dark"][data-surface="review"] { color-scheme: dark; --page: #20
 .admin-bottom-settings { min-width: 0; margin: 0; padding: 18px; border: 1px solid var(--line); }
 .admin-bottom-settings legend { padding: 0 7px; font-size: 16px; }
 .admin-field-hint { margin-top: 12px; font-size: 12px; color: var(--muted); line-height: 1.8; }
+.admin-font-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-top: 14px; }
+.admin-font-size, .admin-benefits-field { display: grid; gap: 10px; min-width: 0; }
+.admin-font-size { font-size: 13px; color: var(--muted); }
+.admin-font-size > span { display: flex; justify-content: space-between; gap: 12px; }
+.admin-font-size output { color: var(--ink); font-variant-numeric: tabular-nums; }
+.admin-font-size input { width: 100%; margin: 0; min-height: 28px; accent-color: var(--ink); }
 .admin-check { display: inline-flex; align-items: center; gap: 9px; min-height: 36px; font-size: 13px; cursor: pointer; }
 .admin-check input { width: 16px; height: 16px; margin: 0; accent-color: var(--ink); }
 .admin-links { margin-top: 30px; padding-top: 24px; border-top: 1px solid var(--line); }

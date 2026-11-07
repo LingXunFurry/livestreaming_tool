@@ -57,12 +57,13 @@ try {
 
   function editableSettings() {
     return {
-      global: { task: settings.global.task },
+      global: { task: settings.global.task, fontSizes: settings.global.fontSizes },
       platforms: Object.fromEntries(['bilibili', 'douyin'].map(platform => [platform, {
         boardMode: settings.platforms[platform].boardMode,
         announcementText: settings.platforms[platform].announcementText,
         benefitsText: settings.platforms[platform].benefitsText,
         lyricsEnabled: settings.platforms[platform].lyricsEnabled,
+        fontSizes: settings.platforms[platform].fontSizes,
       }])),
     };
   }
@@ -92,10 +93,10 @@ try {
       && expected.every(key => Object.hasOwn(value, key))
       && Object.keys(value).every(key => expected.includes(key) || optional.includes(key));
     const platformFields = ['boardMode', 'announcementText', 'lyricsEnabled'];
-    if (!exactKeys(input, ['global', 'platforms']) || !exactKeys(input.global, ['task'])
+    if (!exactKeys(input, ['global', 'platforms']) || !exactKeys(input.global, ['task'], ['fontSizes'])
       || !exactKeys(input.platforms, ['bilibili', 'douyin'])
-      || !exactKeys(input.platforms.bilibili, platformFields, ['benefitsText'])
-      || !exactKeys(input.platforms.douyin, platformFields, ['benefitsText'])) {
+      || !exactKeys(input.platforms.bilibili, platformFields, ['benefitsText', 'fontSizes'])
+      || !exactKeys(input.platforms.douyin, platformFields, ['benefitsText', 'fontSizes'])) {
       throw Object.assign(new Error('配置字段不完整或包含不允许的字段'), { status: 400 });
     }
     return input;
@@ -145,13 +146,13 @@ try {
           log('settings_save_error', { code: error.code || 'SAVE_FAILED' });
           return sendJson(response, 500, { error: 'SETTINGS_SAVE_FAILED' });
         }
-        const globalChanged = previousSettings.global.task !== settings.global.task;
+        const globalChanged = JSON.stringify(previousSettings.global) !== JSON.stringify(settings.global);
         for (const platform of ['bilibili', 'douyin']) {
           const platformChanged = JSON.stringify(previousSettings.platforms[platform]) !== JSON.stringify(settings.platforms[platform]);
           if (!globalChanged && !platformChanged) continue;
           broadcastMessage({ type: 'settings.updated', data: {
             platform,
-            global: { task: settings.global.task },
+            global: editableSettings().global,
             platformSettings: editableSettings().platforms[platform],
           } });
         }

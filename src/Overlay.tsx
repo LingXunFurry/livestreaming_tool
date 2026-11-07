@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type CSSProperties } from 'react'
+import defaultSettings from '../config/example.json'
 import { appendSimulatedMessage, eventTimeline, initialMessages, lyricIndexAt, lyricLines, messageLabels } from './simulation'
 import type { SimulatedMessage } from './simulation'
 
@@ -39,6 +40,8 @@ function renderAnnouncement(value: string) {
 
 export type Platform = 'bilibili' | 'douyin'
 export type BoardMode = 'comments' | 'announcement'
+export type GlobalFontSizes = typeof defaultSettings.global.fontSizes
+export type PlatformFontSizes = typeof defaultSettings.platforms.bilibili.fontSizes
 
 export const platformNames: Record<Platform, string> = {
   bilibili: 'B 站',
@@ -142,9 +145,14 @@ export function Overlay({
   announcementText = '欢迎来到凌巽的酒馆，歇歇脚，一起聊聊今天的冒险。',
   task = '探索未知，也记得沿途歇脚。',
   benefitsText = '',
-}: { platform: Platform; lyrics?: boolean; board?: BoardMode; announcementText?: string; task?: string; benefitsText?: string }) {
+  globalFontSizes = defaultSettings.global.fontSizes,
+  fontSizes = defaultSettings.platforms.bilibili.fontSizes,
+}: { platform: Platform; lyrics?: boolean; board?: BoardMode; announcementText?: string; task?: string; benefitsText?: string; globalFontSizes?: GlobalFontSizes; fontSizes?: PlatformFontSizes }) {
+  const fontStyle = Object.fromEntries(
+    Object.entries({ ...globalFontSizes, ...fontSizes }).map(([field, size]) => [`--font-${field}`, `${size}px`]),
+  ) as CSSProperties
   return (
-    <main className="overlay" data-platform={platform} data-lyrics={lyrics ? 'on' : 'off'} aria-label={`${platformNames[platform]}横屏直播装饰`}>
+    <main className="overlay" style={fontStyle} data-platform={platform} data-lyrics={lyrics ? 'on' : 'off'} aria-label={`${platformNames[platform]}横屏直播装饰`}>
       <header className="stream-header">
         <strong className="tavern-name">凌巽的酒馆</strong>
       </header>
