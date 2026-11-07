@@ -4,6 +4,23 @@
 
 ## 当前预览
 
+公告组件追加预览已完成。2026-11-07 用户要求改用内置 imagegen，参照本项目现有栏目标题生成“酒馆公告 / ANNOUNCEMENT”，并将生成艺术字的视觉字号调整到与留言板相同一档。交付图为 288×96，标题容器为 80px 高，按可见轮廓消除 25px 左透明留边。
+
+在场景验收页的“右栏预览”中选择酒馆留言板或酒馆公告，两者互斥显示。两平台的预览选择分别记录在页面查询参数中，刷新可恢复。公告正文使用临时示例文案，后台公告编辑、持久化与真实平台数据按 CP5、CP7 验收。
+
+[公告组件预览](http://127.0.0.1:3000/scene/review?bilibiliBoard=announcement)
+
+本次实际检查包括生产构建、11 项已有测试、两平台与评论/公告及歌词开/关共八种预览组合。所有组合的面板几何、互斥显示、标题左对齐和正文无溢出通过。两平台选择隔离、刷新恢复、UI 隐藏、375px 窄窗口、素材下载 SHA256 和中文字体覆盖检查通过。两直播源的四种平台/歌词组合回归通过，浏览器错误为零。
+
+13 件 CP3 PNG 的最近邻采样、色板和二值透明检查通过，原有 12 件素材输出和记录数值一致。新公告标题包含 15,751 个全透明像素和 11,897 个不透明像素，可见轮廓为 (25,21,243,66)。检查数据见 `CP3_ASSET_CHECKS.json` 和 `CP3_ANNOUNCEMENT_CHECKS.json`。
+
+追加文件为 `assets/generated/cp3/announcement-wordmark.png`、同名 `-source.png`、`assets/prompts/cp3/announcement-wordmark.md`、`CP3_ANNOUNCEMENT_CHECKS.json` 及下列截图。更新 `assets/manifest.json`、`src/Overlay.tsx`、`src/main.tsx`、`src/scene-review.css`、产品/视觉/素材/架构/检查点规范和本报告。提示词、输入参考、生成来源及待验收状态随清单保存。本地快照标签为 `checkpoint/cp3-announcement`，状态为 `WAITING_USER_REVIEW`。
+
+- [公告叠加预览](screenshots/cp3/announcement-ui.png)
+- [公告歌词关闭](screenshots/cp3/announcement-ui-lyrics-off.png)
+- [公告验收页面](screenshots/cp3/announcement-review-page.png)
+- [公告窄窗口](screenshots/cp3/announcement-narrow.png)
+
 本轮追加双平台外观统一，抖音由任务公告改为与 B 站相同样式的留言板。两端各自展示本平台静态示例，分别保留专属路由。真实房间地址设置和采集连接按 CP5、CP7 验收，方案与当前接入限制见 `DANMAKU_SOURCES.md`。
 
 [CP3 场景验收页](http://127.0.0.1:3000/scene/review)

@@ -444,6 +444,30 @@
         724
       ],
       "inputSha256": "9101f700067b7f4cbe974086ff03d01cebfa7c0a0ac82ccee6795af17467d530"
+    },
+    {
+      "id": "cp3-announcement-wordmark",
+      "name": "酒馆公告 / ANNOUNCEMENT 艺术字",
+      "path": "assets/generated/cp3/announcement-wordmark.png",
+      "sourcePath": "assets/generated/cp3/announcement-wordmark-source.png",
+      "source": "Original AI-generated asset",
+      "generationMethod": "built-in image_gen with original project wordmarks as style references; nearest-neighbor and V2 palette normalization",
+      "promptFile": "assets/prompts/cp3/announcement-wordmark.md",
+      "referencePaths": [
+        "assets/generated/cp3/comment-wordmark-source.png",
+        "assets/generated/cp3/playing-wordmark-source.png"
+      ],
+      "version": 1,
+      "logicalSize": [288, 96],
+      "kind": "wordmark",
+      "sourceSize": [2172, 724],
+      "sha256": "80994cddff46d384d8567bcde904d56e2b6dd3968c74f198c5039cd0fc0e01a2",
+      "sourceSha256": "6c24d1733f89f5e888d4b97290ca16b3d3323120085821ecd8a72786c2f822a5",
+      "usage": "CP3 announcement component preview",
+      "license": "AI-generated for this project; original project-generated inputs only",
+      "status": "WAITING_USER_REVIEW",
+      "userConfirmed": false,
+      "postprocess": "scripts/prepare-cp2-assets.ps1 -Checkpoint cp3"
     }
   ],
   "note": "CP2 三件独立透明像素素材已于 2026-11-07 获用户验收；CP3 新素材与组合背景待用户验收。",

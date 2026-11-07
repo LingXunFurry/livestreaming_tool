@@ -1,4 +1,5 @@
 export type Platform = 'bilibili' | 'douyin'
+export type BoardMode = 'comments' | 'announcement'
 
 export const platformNames: Record<Platform, string> = {
   bilibili: 'B 站',
@@ -41,6 +42,27 @@ function MessageBoard({ platform, lyrics }: { platform: Platform; lyrics: boolea
   )
 }
 
+function AnnouncementBoard({ platform }: { platform: Platform }) {
+  return (
+    <section className="side-board announcement-board" aria-label={`${platformNames[platform]}酒馆公告`}>
+      <div className="module-heading">
+        <h2>酒馆公告</h2>
+        <span className="sample-tag">示例</span>
+      </div>
+      <p className="module-description">给每位途经酒馆的旅人。</p>
+      <section className="notice">
+        <h3 className="small-label">欢迎歇脚</h3>
+        <p>欢迎来到凌巽的酒馆，歇歇脚，一起聊聊今天的冒险。</p>
+      </section>
+      <section className="notice">
+        <h3 className="small-label">店内小约定</h3>
+        <p>友好交流，尊重彼此。愿每位旅人都能度过轻松的一晚。</p>
+      </section>
+      <div className="board-footnote">公告内容示例 · 欢迎来到酒馆</div>
+    </section>
+  )
+}
+
 function Lyrics() {
   return (
     <section className="lyrics-board" aria-label="示例歌词">
@@ -52,14 +74,14 @@ function Lyrics() {
   )
 }
 
-export function Overlay({ platform, lyrics = true }: { platform: Platform; lyrics?: boolean }) {
+export function Overlay({ platform, lyrics = true, board = 'comments' }: { platform: Platform; lyrics?: boolean; board?: BoardMode }) {
   return (
     <main className="overlay" data-platform={platform} data-lyrics={lyrics ? 'on' : 'off'} aria-label={`${platformNames[platform]}横屏直播装饰`}>
       <header className="stream-header">
         <strong className="tavern-name">凌巽的酒馆</strong>
       </header>
       <aside className={`side-column ${lyrics ? '' : 'without-lyrics'}`}>
-        <MessageBoard platform={platform} lyrics={lyrics} />
+        {board === 'announcement' ? <AnnouncementBoard platform={platform} /> : <MessageBoard platform={platform} lyrics={lyrics} />}
         {lyrics && <Lyrics />}
       </aside>
       <section className="stream-info" aria-label="今日委托">

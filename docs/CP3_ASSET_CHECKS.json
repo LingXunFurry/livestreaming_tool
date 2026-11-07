@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-07T09:40:51.4049568Z",
+  "checkedAt": "2026-11-07T10:32:12.3591849Z",
   "process": "Manifest logical size, center nearest-neighbor sampling, closest V2 RGB color, alpha threshold 128; tiles match opposite edge pixels",
   "assets": [
     {
@@ -482,6 +482,47 @@
       },
       "sha256": "0eaf3cc6cae9352c6ea359a50c611d9cdd5f33c81c3dfcecac4add5683a7c7fa",
       "sourceSha256": "db4948a7765a2d6fb66053794cd095f0ff12ca1aabce807f6f9c123cec8139bc"
+    },
+    {
+      "id": "cp3-announcement-wordmark",
+      "path": "assets/generated/cp3/announcement-wordmark.png",
+      "sourcePath": "assets/generated/cp3/announcement-wordmark-source.png",
+      "sourceSize": [
+        2172,
+        724
+      ],
+      "sourceRegion": [
+        0,
+        0,
+        2172,
+        724
+      ],
+      "logicalSize": [
+        288,
+        96
+      ],
+      "transparentPixels": 15751,
+      "opaquePixels": 11897,
+      "partialAlphaPixels": 0,
+      "palette": [
+        "#142238",
+        "#1E2B45",
+        "#364E6A",
+        "#5A3E2B",
+        "#7083A0",
+        "#8A6547",
+        "#A8C7D1",
+        "#C9A85E",
+        "#F3ECDD"
+      ],
+      "bounds": {
+        "height": 66,
+        "x": 25,
+        "y": 21,
+        "width": 243
+      },
+      "sha256": "80994cddff46d384d8567bcde904d56e2b6dd3968c74f198c5039cd0fc0e01a2",
+      "sourceSha256": "6c24d1733f89f5e888d4b97290ca16b3d3323120085821ecd8a72786c2f822a5"
     }
   ]
 }

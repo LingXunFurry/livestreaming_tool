@@ -1,0 +1,120 @@
+{
+  "checkedAt": "2026-11-07T10:33:30.497Z",
+  "combinations": [
+    {
+      "platform": "bilibili",
+      "board": "comments",
+      "lyrics": true,
+      "height": 576,
+      "width": 528,
+      "overflow": false,
+      "headingImage": true,
+      "headingOffset": -15,
+      "textAligned": true,
+      "contentContained": true
+    },
+    {
+      "platform": "bilibili",
+      "board": "comments",
+      "lyrics": false,
+      "height": 856,
+      "width": 528,
+      "overflow": false,
+      "headingImage": true,
+      "headingOffset": -15,
+      "textAligned": true,
+      "contentContained": true
+    },
+    {
+      "platform": "bilibili",
+      "board": "announcement",
+      "lyrics": true,
+      "height": 576,
+      "width": 528,
+      "overflow": false,
+      "headingImage": true,
+      "headingOffset": -25,
+      "textAligned": true,
+      "contentContained": true
+    },
+    {
+      "platform": "bilibili",
+      "board": "announcement",
+      "lyrics": false,
+      "height": 856,
+      "width": 528,
+      "overflow": false,
+      "headingImage": true,
+      "headingOffset": -25,
+      "textAligned": true,
+      "contentContained": true
+    },
+    {
+      "platform": "douyin",
+      "board": "comments",
+      "lyrics": true,
+      "height": 576,
+      "width": 528,
+      "overflow": false,
+      "headingImage": true,
+      "headingOffset": -15,
+      "textAligned": true,
+      "contentContained": true
+    },
+    {
+      "platform": "douyin",
+      "board": "comments",
+      "lyrics": false,
+      "height": 856,
+      "width": 528,
+      "overflow": false,
+      "headingImage": true,
+      "headingOffset": -15,
+      "textAligned": true,
+      "contentContained": true
+    },
+    {
+      "platform": "douyin",
+      "board": "announcement",
+      "lyrics": true,
+      "height": 576,
+      "width": 528,
+      "overflow": false,
+      "headingImage": true,
+      "headingOffset": -25,
+      "textAligned": true,
+      "contentContained": true
+    },
+    {
+      "platform": "douyin",
+      "board": "announcement",
+      "lyrics": false,
+      "height": 856,
+      "width": 528,
+      "overflow": false,
+      "headingImage": true,
+      "headingOffset": -25,
+      "textAligned": true,
+      "contentContained": true
+    }
+  ],
+  "independentSelections": true,
+  "reloadRetained": true,
+  "hideUI": true,
+  "narrowWidth": 375,
+  "liveSources": "both platforms, lyrics on/off",
+  "download": ".cache/announcement-download.png",
+  "browserErrors": [],
+  "downloadSha256": "80994cddff46d384d8567bcde904d56e2b6dd3968c74f198c5039cd0fc0e01a2",
+  "missingChineseFontGlyphs": [],
+  "titleCanvas": [
+    288,
+    96
+  ],
+  "titleVisibleBounds": {
+    "x": 25,
+    "y": 21,
+    "width": 243,
+    "height": 66
+  }
+}

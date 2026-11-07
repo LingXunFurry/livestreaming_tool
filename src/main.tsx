@@ -1,7 +1,7 @@
 import { StrictMode, useEffect, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Overlay, platformNames } from './Overlay'
-import type { Platform } from './Overlay'
+import type { BoardMode, Platform } from './Overlay'
 import { Admin } from './Admin'
 import { AssetReview } from './AssetReview'
 import sceneLayout from '../assets/layouts/cp3-tavern.json'
@@ -18,6 +18,7 @@ const sceneAssets = [
   { name: '右上酒桶挂杯陈设组', size: '256 × 80', image: new URL('../assets/generated/cp3/tavern-right-rack.png', import.meta.url).href },
   { name: '留言板中英文艺术字', size: '288 × 96', image: new URL('../assets/generated/cp3/comment-wordmark.png', import.meta.url).href },
   { name: '正在播放中英文艺术字', size: '240 × 80', image: new URL('../assets/generated/cp3/playing-wordmark.png', import.meta.url).href },
+  { name: '酒馆公告中英文艺术字', size: '288 × 96', image: new URL('../assets/generated/cp3/announcement-wordmark.png', import.meta.url).href },
   { name: '木墙纹理', size: '64 × 64', image: new URL('../assets/generated/cp3/tavern-wall-tile.png', import.meta.url).href },
   { name: '木地板纹理', size: '64 × 64', image: new URL('../assets/generated/cp3/tavern-floor-tile.png', import.meta.url).href },
   { name: '横向木梁', size: '128 × 32', image: new URL('../assets/generated/cp3/timber-beam.png', import.meta.url).href },
@@ -36,6 +37,10 @@ function Preview({ scene = false }: { scene?: boolean }) {
   const [lyrics, setLyrics] = useState(params.get('lyrics') !== 'off')
   const [guides, setGuides] = useState(!scene)
   const [showUI, setShowUI] = useState(true)
+  const [boards, setBoards] = useState<Record<Platform, BoardMode>>({
+    bilibili: params.get('bilibiliBoard') === 'announcement' ? 'announcement' : 'comments',
+    douyin: params.get('douyinBoard') === 'announcement' ? 'announcement' : 'comments',
+  })
   const [background, setBackground] = useState('transparent')
   const [scale, setScale] = useState(0)
   const stageRef = useRef<HTMLDivElement>(null)
@@ -53,8 +58,12 @@ function Preview({ scene = false }: { scene?: boolean }) {
     const url = new URL(window.location.href)
     url.searchParams.set('platform', platform)
     url.searchParams.set('lyrics', lyrics ? 'on' : 'off')
+    if (scene) {
+      url.searchParams.set('bilibiliBoard', boards.bilibili)
+      url.searchParams.set('douyinBoard', boards.douyin)
+    }
     window.history.replaceState(null, '', url)
-  }, [platform, lyrics])
+  }, [platform, lyrics, scene, boards])
 
   return (
     <div className="review-shell">
@@ -76,6 +85,7 @@ function Preview({ scene = false }: { scene?: boolean }) {
           </div>
           <div className="preview-options">
             {scene && <label><input type="checkbox" checked={showUI} onChange={event => setShowUI(event.target.checked)} />叠加 UI</label>}
+            {scene && <label className="background-picker">右栏预览<select aria-label="右栏预览" value={boards[platform]} onChange={event => setBoards({ ...boards, [platform]: event.target.value as BoardMode })}><option value="comments">酒馆留言板</option><option value="announcement">酒馆公告</option></select></label>}
             <label><input type="checkbox" checked={lyrics} onChange={event => setLyrics(event.target.checked)} />显示歌词</label>
             <label><input type="checkbox" checked={guides} onChange={event => setGuides(event.target.checked)} />尺寸参考</label>
             <label className="background-picker">透明区底图<select aria-label="预览底图" value={background} onChange={event => setBackground(event.target.value)}><option value="transparent">透明棋盘</option><option value="solid">纯色</option></select></label>
@@ -88,7 +98,7 @@ function Preview({ scene = false }: { scene?: boolean }) {
           <div ref={stageRef} className={`preview-stage ${background !== 'solid' ? 'checkerboard' : 'solid-stage'}`}>
             <div className={`scaled-stage ${scene ? 'scene-preview' : ''}`} style={{ transform: `scale(${scale})`, visibility: scale ? 'visible' : 'hidden' }}>
               {scene && <img className="scene-background" src={sceneBackground} width="1920" height="1080" alt="模块化酒馆背景，游戏窗口透明" />}
-              {(!scene || showUI) && <Overlay platform={platform} lyrics={lyrics} />}
+              {(!scene || showUI) && <Overlay platform={platform} lyrics={lyrics} board={scene ? boards[platform] : 'comments'} />}
               {scene && showUI && <img className="scene-title-art" src={sceneTitle} width="384" height="128" alt="凌巽的酒馆" />}
               {(!scene || guides) && <div className={`game-guide ${guides ? 'with-guides' : ''}`} aria-label="仅预览显示的透明游戏区">
                 {guides && <><span className="game-dimension">01 / 游戏画面</span><span className="corner top-left" /><span className="corner top-right" /><span className="corner bottom-left" /><span className="corner bottom-right" /></>}
@@ -102,7 +112,7 @@ function Preview({ scene = false }: { scene?: boolean }) {
       </section>
 
       {scene && <section className="scene-assets" aria-label="CP3 独立场景素材">
-        <div className="scene-assets-heading"><div><p className="eyebrow">CP3 / INDEPENDENT ASSETS</p><h2>梁架、吧台与酒馆字样。</h2><p>前六件为返修新稿，其余为首版独立模块，均等待美术验收。</p></div><a href={`data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify(sceneLayout, null, 2))}`} download="cp3-tavern.json">下载物件布局 JSON ↗</a></div>
+        <div className="scene-assets-heading"><div><p className="eyebrow">CP3 / INDEPENDENT ASSETS</p><h2>梁架、吧台与酒馆字样。</h2><p>前七件为返修新稿，其余为首版独立模块，均等待美术验收。</p></div><a href={`data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify(sceneLayout, null, 2))}`} download="cp3-tavern.json">下载物件布局 JSON ↗</a></div>
         <div className="scene-asset-grid">{sceneAssets.map(asset => <article key={asset.name}>
           <div className="scene-asset-stage checkerboard"><img src={asset.image} alt={`${asset.name}独立像素素材`} /></div>
           <h3>{asset.name}</h3><p>{asset.size} px</p><a href={asset.image} download={`${asset.name}.png`}>下载 PNG ↗</a>

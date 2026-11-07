@@ -8,6 +8,8 @@
 .scene-preview .module-heading h2 { color: #C9A85E; font-size: 30px; line-height: 1.4; font-weight: 400; }
 .scene-preview .module-heading h2 { width: 288px; height: 80px; margin-top: 0; font-size: 0; background: url('../assets/generated/cp3/comment-wordmark.png') -15px center / 288px 96px no-repeat; image-rendering: pixelated; }
 .scene-preview .module-heading .module-index { display: none; }
+.scene-preview .announcement-board .module-heading h2 { background-image: url('../assets/generated/cp3/announcement-wordmark.png'); background-position-x: -25px; }
+.scene-preview .announcement-board .small-label { font-weight: 400; }
 .scene-preview .messages { margin-top: 18px; }
 .scene-preview .message { padding: 14px 0; }
 .scene-preview .lyrics-board { padding: 16px 28px; }
