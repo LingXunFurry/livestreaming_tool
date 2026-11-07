@@ -2,6 +2,41 @@ import { useEffect, useRef, useState } from 'react'
 import { appendSimulatedMessage, eventTimeline, initialMessages, lyricIndexAt, lyricLines, messageLabels } from './simulation'
 import type { SimulatedMessage } from './simulation'
 
+const announcementColors = new Set(['gold', 'red', 'wind', 'cream'])
+
+function renderAnnouncementInline(value: string, keyPrefix = 'text'): React.ReactNode[] {
+  const colorMatch = value.match(/<span\s+style=["']color\s*:\s*(gold|red|wind|cream)\s*["']>([\s\S]*?)<\/span>/i)
+  if (colorMatch && announcementColors.has(colorMatch[1].toLowerCase())) {
+    const start = colorMatch.index ?? 0
+    return [
+      ...renderAnnouncementInline(value.slice(0, start), `${keyPrefix}-before`),
+      <span className={`notice-text--${colorMatch[1].toLowerCase()}`} key={`${keyPrefix}-color`}>
+        {renderAnnouncementInline(colorMatch[2], `${keyPrefix}-color-text`)}
+      </span>,
+      ...renderAnnouncementInline(value.slice(start + colorMatch[0].length), `${keyPrefix}-after`),
+    ]
+  }
+
+  const boldMatch = value.match(/(\*\*|__)(.+?)\1/)
+  if (boldMatch) {
+    const start = boldMatch.index ?? 0
+    return [
+      ...renderAnnouncementInline(value.slice(0, start), `${keyPrefix}-before`),
+      <strong key={`${keyPrefix}-bold`}>{renderAnnouncementInline(boldMatch[2], `${keyPrefix}-bold-text`)}</strong>,
+      ...renderAnnouncementInline(value.slice(start + boldMatch[0].length), `${keyPrefix}-after`),
+    ]
+  }
+
+  return value ? [value] : []
+}
+
+function renderAnnouncement(value: string) {
+  return value.split('\n').flatMap((line, index) => [
+    ...(index ? [<br key={`line-${index}`} />] : []),
+    ...renderAnnouncementInline(line, `line-${index}`),
+  ])
+}
+
 export type Platform = 'bilibili' | 'douyin'
 export type BoardMode = 'comments' | 'announcement'
 
@@ -45,8 +80,7 @@ function MessageBoard({ platform }: { platform: Platform }) {
   return (
     <section className="side-board" aria-label={`${platformNames[platform]}留言板`}>
       <div className="module-heading">
-        <div><span className="module-index">02 / 留言</span><h2>酒馆留言板</h2></div>
-        <span className="sample-tag">示例</span>
+        <div><h2>酒馆留言板</h2></div>
       </div>
       <div className="messages" ref={messagesRef}>
         {messages.map(message => (
@@ -60,21 +94,14 @@ function MessageBoard({ platform }: { platform: Platform }) {
   )
 }
 
-function AnnouncementBoard({ platform }: { platform: Platform }) {
+function AnnouncementBoard({ platform, content }: { platform: Platform; content: string }) {
   return (
     <section className="side-board announcement-board" aria-label={`${platformNames[platform]}酒馆公告`}>
       <div className="module-heading">
         <h2>酒馆公告</h2>
-        <span className="sample-tag">示例</span>
       </div>
-      <p className="module-description">给每位途经酒馆的旅人。</p>
-      <section className="notice">
-        <h3 className="small-label">欢迎歇脚</h3>
-        <p>欢迎来到凌巽的酒馆，歇歇脚，一起聊聊今天的冒险。</p>
-      </section>
-      <section className="notice">
-        <h3 className="small-label">店内小约定</h3>
-        <p>友好交流，尊重彼此。愿每位旅人都能度过轻松的一晚。</p>
+      <section className="notice announcement-content">
+        <p>{renderAnnouncement(content)}</p>
       </section>
     </section>
   )
@@ -93,7 +120,7 @@ function Lyrics() {
 
   return (
     <section className="lyrics-board" aria-label="模拟歌词" data-lyric-index={currentIndex}>
-      <div className="lyrics-heading"><span className="module-index">03 / 正在播放</span><span className="sample-tag">示例</span></div>
+      <div className="lyrics-heading"><span className="module-index">03 / 正在播放</span></div>
       <div className="song-title">酒馆的晚风 <span>模拟播放</span></div>
       <div className="song-progress" role="progressbar" aria-label="模拟歌曲进度" aria-valuemin={0} aria-valuemax={192} aria-valuenow={elapsed}><i style={{ width: `${elapsed / 192 * 100}%` }} /></div>
       <div className="song-time"><span>{formatTime(elapsed)}</span><span>03:12</span></div>
@@ -103,18 +130,18 @@ function Lyrics() {
   )
 }
 
-export function Overlay({ platform, lyrics = true, board = 'comments' }: { platform: Platform; lyrics?: boolean; board?: BoardMode }) {
+export function Overlay({ platform, lyrics = true, board = 'comments', announcementText = '欢迎来到凌巽的酒馆，歇歇脚，一起聊聊今天的冒险。', task = '探索未知，也记得沿途歇脚。' }: { platform: Platform; lyrics?: boolean; board?: BoardMode; announcementText?: string; task?: string }) {
   return (
     <main className="overlay" data-platform={platform} data-lyrics={lyrics ? 'on' : 'off'} aria-label={`${platformNames[platform]}横屏直播装饰`}>
       <header className="stream-header">
         <strong className="tavern-name">凌巽的酒馆</strong>
       </header>
       <aside className={`side-column ${lyrics ? '' : 'without-lyrics'}`}>
-        {board === 'announcement' ? <AnnouncementBoard platform={platform} /> : <MessageBoard platform={platform} />}
+        {board === 'announcement' ? <AnnouncementBoard platform={platform} content={announcementText} /> : <MessageBoard platform={platform} />}
         {lyrics && <Lyrics />}
       </aside>
       <section className="stream-info" aria-label="今日委托">
-        <div className="today-quest"><span className="module-index">04 / 今日委托</span><h2>探索未知，也记得沿途歇脚。</h2></div>
+        <div className="today-quest"><span className="module-index">今日委托</span><h2>{task}</h2></div>
       </section>
     </main>
   )

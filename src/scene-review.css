@@ -20,7 +20,7 @@
 .scene-preview .lyric-line, .scene-preview .lyric-line.current { margin-top: 6px; line-height: 1.5; }
 .scene-preview .module-index, .scene-preview .small-label { font-size: 20px; letter-spacing: 0; }
 .scene-preview .module-description, .scene-preview .quest p, .scene-preview .lyric-line { font-size: 20px; }
-.scene-preview .message-meta, .scene-preview .message-meta > span, .scene-preview .sample-tag,
+.scene-preview .message-meta, .scene-preview .message-meta > span,
 .scene-preview .song-title > span, .scene-preview .quest-count { font-size: 20px; letter-spacing: 0; }
 .scene-preview .message p, .scene-preview .notice p, .scene-preview .song-title { font-size: 20px; }
 .scene-preview .quest h3 { font-size: 30px; font-weight: 400; }
@@ -30,13 +30,14 @@
 .scene-preview .stream-info { background: transparent; border: 0; padding: 0 28px; text-shadow: 2px 2px #142238; }
 .scene-preview .today-quest { position: absolute; top: 40px; max-width: 760px; }
 .scene-preview .today-quest h2 { font-size: 20px; margin-top: 10px; line-height: 1.5; }
+html[data-surface="source"] .scene-preview .today-quest h2 { font-size: 34px; margin-top: 8px; }
 .scene-preview .module-index, .scene-preview .small-label, .scene-preview .message-meta b,
 .scene-preview .module-description, .scene-preview .quest p, .scene-preview .quest-count,
-.scene-preview .sample-tag, .scene-preview .message-meta > span,
+.scene-preview .message-meta > span,
 .scene-preview .song-title > span, .scene-preview .lyric-line { color: #A8C7D1; }
 .scene-preview .lyric-line.current { color: #F3ECDD; }
 .scene-preview .message, .scene-preview .notice, .scene-preview .quest,
-.scene-preview .sample-tag, .scene-preview .message-meta > span { border-color: #364E6A; }
+.scene-preview .message-meta > span { border-color: #364E6A; }
 .scene-preview .messages { display: flex; flex-direction: column; gap: 0; }
 .scene-preview .message { position: relative; }
 .scene-preview .message--gift,

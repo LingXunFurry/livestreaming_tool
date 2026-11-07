@@ -18,15 +18,18 @@ test('配置校验、原子写入与备份', async () => {
     assert.throws(() => validateSettings({ schemaVersion: 2 }, settings), /配置版本/);
     assert.throws(() => validateSettings({ server: 'invalid' }, settings), /JSON 对象/);
     assert.throws(() => validateSettings({ platforms: { bilibili: null } }, settings), /JSON 对象/);
+    assert.equal(validateSettings({ global: { title: '不可编辑' } }, settings).global.title, '凌巽的酒馆');
     assert.throws(() => validateSettings({ platforms: { bilibili: { lyricsEnabled: 'yes' } } }, settings), /布尔/);
-    await saveSettings({ ...settings, global: { ...settings.global, title: '迁移后的酒馆' } });
-    assert.equal((await loadSettings()).global.title, '迁移后的酒馆');
+    await saveSettings({ ...settings, global: { ...settings.global, title: '不可编辑', task: '迁移后的委托' } });
+    assert.equal((await loadSettings()).global.title, '凌巽的酒馆');
+    assert.equal((await loadSettings()).global.task, '迁移后的委托');
     const backups = await readdir(path.join(directory, 'backups'));
     assert.equal(backups.length, 1);
     assert.equal(JSON.parse(await readFile(path.join(directory, 'backups', backups[0]), 'utf8')).global.title, '凌巽的酒馆');
-    const writers = Array.from({ length: 8 }, (_, index) => saveSettings({ ...settings, global: { ...settings.global, title: `酒馆 ${index}` } }));
+    const writers = Array.from({ length: 8 }, (_, index) => saveSettings({ ...settings, global: { ...settings.global, title: `酒馆 ${index}`, task: `委托 ${index}` } }));
     await Promise.all(writers);
-    assert.match((await loadSettings()).global.title, /^酒馆 \d$/);
+    assert.match((await loadSettings()).global.task, /^委托 \d$/);
+    assert.equal((await loadSettings()).global.title, '凌巽的酒馆');
     assert.equal((await readdir(directory)).filter(name => name.endsWith('.tmp')).length, 0);
   } finally {
     if (previousDataDir === undefined) delete process.env.TAVERN_DATA_DIR;

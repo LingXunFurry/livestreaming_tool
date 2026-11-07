@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { once } from 'node:events';
-import { mkdtemp, readFile, writeFile, mkdir, rm, access } from 'node:fs/promises';
+import { mkdtemp, readFile, writeFile, mkdir, rm, access, readdir } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import net from 'node:net';
@@ -31,19 +31,42 @@ async function cli(command, environment) {
   }
 }
 
+async function nextJsonMessage(socket) {
+  const [message] = await once(socket, 'message');
+  return JSON.parse(message.toString());
+}
+
+function nextSettingsUpdate(socket) {
+  return new Promise((resolve, reject) => {
+    const timeout = setTimeout(() => {
+      socket.off('message', onMessage);
+      reject(new Error('等待设置同步超时'));
+    }, 5000);
+    function onMessage(raw) {
+      const message = JSON.parse(raw.toString());
+      if (message.type !== 'settings.updated') return;
+      clearTimeout(timeout);
+      socket.off('message', onMessage);
+      resolve(message);
+    }
+    socket.on('message', onMessage);
+  });
+}
+
 test('真实服务生命周期、并发、关闭、冲突与恢复', { timeout: 120000 }, async context => {
   const directory = await mkdtemp(path.join(os.tmpdir(), '酒馆 runtime 测试 '));
   const port = await unusedPort();
   const environment = { TAVERN_DATA_DIR: directory, TAVERN_PORT: String(port) };
   const origin = `http://127.0.0.1:${port}`;
   let socket;
+  let settingsSocket;
   try {
     await context.test('启动前 STOPPED，后台进程通过真实健康检查', async () => {
       assert.equal((await cli('status', environment)).state, 'STOPPED');
       const result = await cli('start', environment);
       assert.equal(result.exitCode, 0);
       assert.equal(result.state, 'RUNNING');
-      assert.equal(result.checkpoint, 'CP3');
+      assert.equal(result.checkpoint, 'CP5');
       assert.equal(result.port, port);
       assert.equal(result.adapters.music.state, 'DISCONNECTED');
       assert.equal(result.adapters.bilibili.state, 'NOT_CONFIGURED');
@@ -71,6 +94,39 @@ test('真实服务生命周期、并发、关闭、冲突与恢复', { timeout: 
       assert.ok(!publicStatus.includes(projectRoot));
       assert.equal((await fetch(`${origin}/api/runtime/stop`, { method: 'POST' })).status, 403);
       assert.equal((await fetch(`${origin}/api/runtime/stop`, { method: 'POST', headers: { 'x-tavern-control': metadata.controlToken, Origin: 'https://unrelated.example' } })).status, 403);
+    });
+
+    await context.test('后台覆盖全部直播页字段并保持平台设置隔离', async () => {
+      const initial = await (await fetch(`${origin}/api/settings`)).json();
+      assert.deepEqual(Object.keys(initial.settings.global).sort(), ['task']);
+      assert.deepEqual(Object.keys(initial.settings.platforms.bilibili).sort(), ['announcementText', 'boardMode', 'lyricsEnabled']);
+      assert.deepEqual(Object.keys(initial.settings.platforms.douyin).sort(), ['announcementText', 'boardMode', 'lyricsEnabled']);
+      settingsSocket = new WebSocket(`ws://127.0.0.1:${port}/ws`);
+      assert.equal((await nextJsonMessage(settingsSocket)).type, 'runtime.status');
+      const payload = {
+        global: { task: '寻找今晚的风' },
+        platforms: {
+          bilibili: { boardMode: 'announcement', announcementText: 'B 站今晚公告', lyricsEnabled: false },
+          douyin: initial.settings.platforms.douyin,
+        },
+      };
+      const updatePromise = nextSettingsUpdate(settingsSocket);
+      const saved = await fetch(`${origin}/api/settings`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      assert.equal(saved.status, 200);
+      assert.deepEqual((await saved.json()).settings, payload);
+      const update = await updatePromise;
+      assert.equal(update.type, 'settings.updated');
+      assert.equal(update.data.platform, 'bilibili');
+      assert.equal(update.data.global.task, '寻找今晚的风');
+      assert.equal(update.data.platformSettings.boardMode, 'announcement');
+      const afterSave = (await (await fetch(`${origin}/api/settings`)).json()).settings;
+      assert.equal(afterSave.global.task, '寻找今晚的风');
+      assert.equal(afterSave.platforms.douyin.boardMode, initial.settings.platforms.douyin.boardMode);
+      const backupCount = (await readdir(path.join(directory, 'backups'))).length;
+      const invalid = await fetch(`${origin}/api/settings`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...payload, global: { ...payload.global, title: 42 } }) });
+      assert.equal(invalid.status, 400);
+      assert.equal((await (await fetch(`${origin}/api/settings`)).json()).settings.global.task, '寻找今晚的风');
+      assert.equal((await readdir(path.join(directory, 'backups'))).length, backupCount);
     });
 
     await context.test('WebSocket 真实快照与正常关闭', async () => {
@@ -134,6 +190,7 @@ test('真实服务生命周期、并发、关闭、冲突与恢复', { timeout: 
     });
   } finally {
     socket?.terminate();
+    settingsSocket?.terminate();
     await cli('stop', environment);
     await rm(directory, { recursive: true, force: true });
   }

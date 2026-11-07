@@ -69,7 +69,7 @@ export function validateSettings(input, defaults) {
   const settings = {
     schemaVersion: input.schemaVersion ?? 1,
     server: { ...defaults.server, ...input.server },
-    global: { ...defaults.global, ...input.global },
+    global: { title: defaults.global.title, task: input.global?.task ?? defaults.global.task },
     platforms: {
       bilibili: { ...defaults.platforms.bilibili, ...input.platforms?.bilibili },
       douyin: { ...defaults.platforms.douyin, ...input.platforms?.douyin },
@@ -86,12 +86,14 @@ export function validateSettings(input, defaults) {
   }
   if (typeof settings.server.openAdminOnStart !== 'boolean') throw new Error('openAdminOnStart 必须为布尔值');
   for (const platform of Object.values(settings.platforms)) {
+    if (!['comments', 'announcement'].includes(platform.boardMode)) throw new Error('boardMode 必须为 comments 或 announcement');
+    if (typeof platform.announcementText !== 'string' || platform.announcementText.length > 2000) throw new Error('announcementText 必须为 2000 字以内的文本');
     if (typeof platform.lyricsEnabled !== 'boolean') throw new Error('lyricsEnabled 必须为布尔值');
   }
   for (const adapter of Object.values(settings.adapters)) {
     if (typeof adapter.enabled !== 'boolean') throw new Error('适配器 enabled 必须为布尔值');
   }
-  for (const field of ['title', 'task']) {
+  for (const field of ['task']) {
     if (typeof settings.global[field] !== 'string' || settings.global[field].length > 500) {
       throw new Error(`global.${field} 必须为 500 字以内的文本`);
     }

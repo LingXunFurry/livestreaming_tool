@@ -4,7 +4,7 @@ import { readFile, realpath, stat, unlink } from 'node:fs/promises';
 import path from 'node:path';
 import { randomUUID, timingSafeEqual } from 'node:crypto';
 import { WebSocketServer, WebSocket } from 'ws';
-import { atomicWriteJson, getPaths, loadSettings, projectRoot, readJson } from './config.mjs';
+import { atomicWriteJson, getPaths, loadSettings, projectRoot, readJson, saveSettings, validateSettings } from './config.mjs';
 import { createLogger } from './logger.mjs';
 
 const paths = getPaths();
@@ -15,7 +15,7 @@ const startedAt = new Date().toISOString();
 let shuttingDown = false;
 
 try {
-  const settings = await loadSettings({ initialize: true });
+  let settings = await loadSettings({ initialize: true });
   const packageInfo = JSON.parse(await readFile(path.join(projectRoot, 'package.json'), 'utf8'));
   const realDist = await realpath(paths.distDir);
   await stat(path.join(realDist, 'index.html'));
@@ -28,6 +28,7 @@ try {
   const adapters = {
     music: { state: settings.adapters.music.enabled ? 'UNAVAILABLE' : 'DISCONNECTED', configured: settings.adapters.music.enabled, implemented: false },
     bilibili: { state: settings.adapters.bilibili.enabled ? 'UNAVAILABLE' : 'NOT_CONFIGURED', configured: settings.adapters.bilibili.enabled, implemented: false },
+    douyin: { state: 'NOT_CONFIGURED', configured: false, implemented: false },
   };
 
   function runtimeStatus() {
@@ -38,20 +39,64 @@ try {
       instanceId,
       state: degraded ? 'DEGRADED' : 'RUNNING',
       version: packageInfo.version,
-      checkpoint: 'CP3',
+      checkpoint: 'CP5',
       startedAt,
       port,
       host: '127.0.0.1',
       pages: { bilibili: `${origin}/live/bilibili`, douyin: `${origin}/live/douyin`, admin: `${origin}/admin` },
       websocket: { state: 'RUNNING', path: '/ws', clients: sockets.clients.size },
       adapters,
-      configuration: { schemaVersion: settings.schemaVersion, title: settings.global.title },
+      configuration: { schemaVersion: settings.schemaVersion, title: settings.global.title, task: settings.global.task },
     };
   }
 
   function sendJson(response, status, data) {
     response.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' });
     response.end(JSON.stringify(data));
+  }
+
+  function editableSettings() {
+    return {
+      global: { task: settings.global.task },
+      platforms: Object.fromEntries(['bilibili', 'douyin'].map(platform => [platform, {
+        boardMode: settings.platforms[platform].boardMode,
+        announcementText: settings.platforms[platform].announcementText,
+        lyricsEnabled: settings.platforms[platform].lyricsEnabled,
+      }])),
+    };
+  }
+
+  function broadcastMessage(message) {
+    const serialized = JSON.stringify(message);
+    for (const connection of sockets.clients) {
+      if (connection.readyState === WebSocket.OPEN) connection.send(serialized);
+    }
+  }
+
+  async function readSettingsRequest(request) {
+    if (Number(request.headers['content-length']) > 16384) throw Object.assign(new Error('配置请求超过 16 KB'), { status: 413 });
+    const chunks = [];
+    let size = 0;
+    for await (const chunk of request) {
+      size += chunk.length;
+      if (size > 16384) throw Object.assign(new Error('配置请求超过 16 KB'), { status: 413 });
+      chunks.push(chunk);
+    }
+    try { return JSON.parse(Buffer.concat(chunks).toString('utf8')); }
+    catch { throw Object.assign(new Error('请求内容必须为有效 JSON'), { status: 400 }); }
+  }
+
+  function validateEditablePayload(input) {
+    const exactKeys = (value, expected) => value && typeof value === 'object' && !Array.isArray(value)
+      && Object.keys(value).length === expected.length && expected.every(key => Object.hasOwn(value, key));
+    const platformFields = ['boardMode', 'announcementText', 'lyricsEnabled'];
+    if (!exactKeys(input, ['global', 'platforms']) || !exactKeys(input.global, ['task'])
+      || !exactKeys(input.platforms, ['bilibili', 'douyin'])
+      || !exactKeys(input.platforms.bilibili, platformFields)
+      || !exactKeys(input.platforms.douyin, platformFields)) {
+      throw Object.assign(new Error('配置字段不完整或包含不允许的字段'), { status: 400 });
+    }
+    return input;
   }
 
   function validControlToken(value) {
@@ -72,6 +117,44 @@ try {
         return sendJson(response, shuttingDown ? 503 : 200, { service: 'lingxun-tavern', ready: !shuttingDown, instanceId, projectKey: paths.projectKey });
       }
       if (request.method === 'GET' && pathname === '/api/runtime/status') return sendJson(response, 200, runtimeStatus());
+      if (request.method === 'GET' && pathname === '/api/settings') return sendJson(response, 200, { settings: editableSettings() });
+      if (request.method === 'PUT' && pathname === '/api/settings') {
+        if ((request.headers.origin && !allowedOrigins.has(request.headers.origin)) || !String(request.headers['content-type'] || '').toLowerCase().startsWith('application/json')) {
+          return sendJson(response, request.headers.origin && !allowedOrigins.has(request.headers.origin) ? 403 : 415, { error: 'SETTINGS_REQUEST_DENIED' });
+        }
+        let payload;
+        let nextSettings;
+        try {
+          payload = validateEditablePayload(await readSettingsRequest(request));
+          nextSettings = validateSettings({
+            ...settings,
+            global: { ...settings.global, ...payload.global },
+            platforms: {
+              bilibili: { ...settings.platforms.bilibili, ...payload.platforms.bilibili },
+              douyin: { ...settings.platforms.douyin, ...payload.platforms.douyin },
+            },
+          }, settings);
+        } catch (error) {
+          return sendJson(response, error.status || 400, { error: error.message || 'INVALID_SETTINGS' });
+        }
+        const previousSettings = settings;
+        try { settings = await saveSettings(nextSettings); }
+        catch (error) {
+          log('settings_save_error', { code: error.code || 'SAVE_FAILED' });
+          return sendJson(response, 500, { error: 'SETTINGS_SAVE_FAILED' });
+        }
+        const globalChanged = previousSettings.global.task !== settings.global.task;
+        for (const platform of ['bilibili', 'douyin']) {
+          const platformChanged = JSON.stringify(previousSettings.platforms[platform]) !== JSON.stringify(settings.platforms[platform]);
+          if (!globalChanged && !platformChanged) continue;
+          broadcastMessage({ type: 'settings.updated', data: {
+            platform,
+            global: { task: settings.global.task },
+            platformSettings: editableSettings().platforms[platform],
+          } });
+        }
+        return sendJson(response, 200, { settings: editableSettings() });
+      }
       if (request.method === 'POST' && pathname === '/api/runtime/stop') {
         if ((request.headers.origin && !allowedOrigins.has(request.headers.origin)) || !validControlToken(request.headers['x-tavern-control'])) {
           return sendJson(response, 403, { error: 'CONTROL_DENIED' });
@@ -126,9 +209,7 @@ try {
 
   const broadcast = setInterval(() => {
     const message = JSON.stringify({ type: 'runtime.status', data: runtimeStatus() });
-    for (const connection of sockets.clients) {
-      if (connection.readyState === WebSocket.OPEN) connection.send(message);
-    }
+    for (const connection of sockets.clients) if (connection.readyState === WebSocket.OPEN) connection.send(message);
   }, 5000);
   const heartbeat = setInterval(() => {
     for (const connection of sockets.clients) {

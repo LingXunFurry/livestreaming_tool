@@ -1,0 +1,46 @@
+{
+  "checkpoint": "CP5",
+  "checkedAt": "2026-11-07",
+  "browser": "Microsoft Edge via Playwright CLI",
+  "viewport": { "width": 1920, "height": 1080 },
+  "sources": [
+    {
+      "platform": "bilibili",
+      "route": "/live/bilibili",
+      "taskText": "唱歌回~~~",
+      "taskFontSize": "34px",
+      "sampleTagCount": 0,
+      "announcementPlaceholderPresent": false,
+      "screenshot": "screenshots/cp5/bilibili.png"
+    },
+    {
+      "platform": "douyin",
+      "route": "/live/douyin",
+      "taskText": "唱歌回~~~",
+      "taskFontSize": "34px",
+      "sampleTagCount": 0,
+      "announcementPlaceholderPresent": false,
+      "screenshot": "screenshots/cp5/douyin.png"
+    }
+  ],
+  "admin": {
+    "route": "/admin",
+    "editableFields": [
+      "global.task",
+      "platforms.bilibili.boardMode",
+      "platforms.bilibili.announcementText",
+      "platforms.bilibili.lyricsEnabled",
+      "platforms.douyin.boardMode",
+      "platforms.douyin.announcementText",
+      "platforms.douyin.lyricsEnabled"
+    ],
+    "titleEditable": false,
+    "screenshot": "screenshots/cp5/admin.png"
+  },
+  "settings": {
+    "platformsIndependent": true,
+    "markdownBoldRendered": true,
+    "markdownFixedColorRendered": true,
+    "userSettingsPreserved": true
+  }
+}

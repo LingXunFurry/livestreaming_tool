@@ -136,12 +136,76 @@ function Preview({ scene = false }: { scene?: boolean }) {
   )
 }
 
+type SourceSettings = {
+  global: { task: string }
+  platforms: Record<Platform, { boardMode: BoardMode; announcementText: string; lyricsEnabled: boolean }>
+}
+
+const defaultSourceSettings: SourceSettings = {
+  global: { task: '探索未知，也记得沿途歇脚。' },
+  platforms: {
+    bilibili: { boardMode: 'comments', announcementText: '欢迎来到凌巽的酒馆，歇歇脚，一起聊聊今天的冒险。', lyricsEnabled: true },
+    douyin: { boardMode: 'comments', announcementText: '欢迎来到凌巽的酒馆，歇歇脚，一起聊聊今天的冒险。', lyricsEnabled: true },
+  },
+}
+
 function SourcePage({ platform }: { platform: Platform }) {
-  const lyrics = params.get('lyrics') !== 'off'
+  const [settings, setSettings] = useState(defaultSourceSettings)
+
+  useEffect(() => {
+    let disposed = false
+    let receivedSettingsUpdate = false
+    let socket: WebSocket | undefined
+    let retry: ReturnType<typeof setTimeout> | undefined
+    const controller = new AbortController()
+
+    async function readSettings() {
+      try {
+        const response = await fetch('/api/settings', { signal: controller.signal })
+        if (!response.ok) return
+        const result = await response.json()
+        if (!disposed && !receivedSettingsUpdate && result.settings) setSettings(result.settings)
+      } catch { /* Keep the bundled defaults until the local service responds. */ }
+    }
+
+    function connect() {
+      if (disposed) return
+      socket = new WebSocket(`${location.protocol === 'https:' ? 'wss:' : 'ws:'}//${location.host}/ws`)
+      socket.onmessage = event => {
+        try {
+          const message = JSON.parse(event.data)
+          const update = message.data
+          if (!disposed && message.type === 'settings.updated' && update?.platform === platform) {
+            receivedSettingsUpdate = true
+            setSettings(current => ({
+              global: update.global,
+              platforms: { ...current.platforms, [platform]: update.platformSettings },
+            }))
+          }
+        } catch { /* Ignore malformed messages and keep the last valid settings. */ }
+      }
+      socket.onclose = () => {
+        if (disposed) return
+        void readSettings()
+        retry = setTimeout(connect, 2000)
+      }
+    }
+
+    void readSettings()
+    connect()
+    return () => {
+      disposed = true
+      controller.abort()
+      clearTimeout(retry)
+      socket?.close()
+    }
+  }, [platform])
+
+  const platformSettings = settings.platforms[platform]
   return (
     <main className="source-stage scene-preview" aria-label={`${platformNames[platform]}酒馆直播源`}>
       <img className="scene-background" src={sceneBackground} width="1920" height="1080" alt="已验收模块化酒馆背景，游戏窗口透明" />
-      <Overlay platform={platform} lyrics={lyrics} />
+      <Overlay platform={platform} lyrics={platformSettings.lyricsEnabled} board={platformSettings.boardMode} announcementText={platformSettings.announcementText} task={settings.global.task} />
       <img className="scene-title-art" src={sceneTitle} width="384" height="128" alt="凌巽的酒馆" />
     </main>
   )
@@ -152,7 +216,7 @@ function UnavailablePage() {
   return <div className="unavailable-page"><p className="eyebrow">LINGXUN’S TAVERN</p><h1>{admin ? '管理后台还没开工。' : '这扇门还没有打开。'}</h1><p>{admin ? '横屏布局已通过。统一管理后台安排在 CP5。' : '请从布局验收页进入两个直播源。'}</p><a href="/preview">返回布局验收 ↗</a></div>
 }
 
-if (sourcePlatform) document.title = `凌巽的酒馆 · ${platformNames[sourcePlatform]}透明测试页 · CP4`
+if (sourcePlatform) document.title = `凌巽的酒馆 · ${platformNames[sourcePlatform]}透明测试页 · CP5`
 if (path === '/assets/review') document.title = '凌巽的酒馆 · CP2 像素素材验收'
 if (path === '/scene/review') document.title = '凌巽的酒馆 · CP3 场景验收'
 
