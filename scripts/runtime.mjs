@@ -208,7 +208,7 @@ function printResult(result) {
   for (const [name, url] of Object.entries(result.pages || {})) console.log(`${name}: ${url}`);
   if (result.websocket) console.log(`WebSocket: ${result.websocketReachable === false ? 'ERROR' : result.websocket.state}`);
   if (result.adapters) console.log(`Music Adapter: ${result.adapters.music.state}\nBilibili Events: ${result.adapters.bilibili.state}`);
-  if (result.adapters?.music.state === 'UNAVAILABLE') console.log('网易云桥接不可用，请启动本地音乐桥接，并在后台检查连接地址。');
+  if (result.adapters?.music.state === 'UNAVAILABLE') console.log('网易云桥接不可用，请检查本地安装、18726 端口与后台地址，详见 docs/MUSIC_SETUP.md。');
   if (result.pageChecks) console.log(`Pages: ${JSON.stringify(result.pageChecks)}`);
   if (result.message) console.log(result.message);
   console.log(`Logs: ${paths.logsDir}\n`);

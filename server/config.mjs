@@ -72,6 +72,7 @@ export function validateSettings(input, defaults) {
   }
   const settings = {
     schemaVersion: input.schemaVersion ?? 1,
+    announcementMovedToBottom: input.announcementMovedToBottom ?? false,
     server: { ...defaults.server, ...input.server },
     global: {
       title: defaults.global.title,
@@ -88,6 +89,7 @@ export function validateSettings(input, defaults) {
     },
   };
   if (settings.schemaVersion !== 1) throw new Error('不支持此配置版本，请保留文件并按迁移说明升级');
+  if (typeof settings.announcementMovedToBottom !== 'boolean') throw new Error('公告迁移标记必须为布尔值');
   for (const [scope, value] of Object.entries({ global: settings.global, ...settings.platforms })) {
     const allowed = scope === 'global' ? ['task', 'bottomLabel'] : ['comments', 'announcement', 'song', 'lyrics', 'benefits'];
     for (const [field, size] of Object.entries(value.fontSizes)) {
@@ -107,7 +109,7 @@ export function validateSettings(input, defaults) {
     if (typeof platform.lyricsEnabled !== 'boolean') throw new Error('lyricsEnabled 必须为布尔值');
     if (typeof platform.lyricsAutoHide !== 'boolean') throw new Error('lyricsAutoHide 必须为布尔值');
     if (typeof platform.benefitsText !== 'string' || platform.benefitsText.length > 500) throw new Error('benefitsText 必须为 500 字以内的文本');
-    if (typeof platform.bottomAnnouncementText !== 'string' || platform.bottomAnnouncementText.length > 500) throw new Error('bottomAnnouncementText 必须为 500 字以内的文本');
+    if (typeof platform.bottomAnnouncementText !== 'string' || platform.bottomAnnouncementText.length > 2501) throw new Error('bottomAnnouncementText 必须为 2501 字以内的文本');
   }
   for (const adapter of Object.values(settings.adapters)) {
     if (typeof adapter.enabled !== 'boolean') throw new Error('适配器 enabled 必须为布尔值');
@@ -132,6 +134,16 @@ export async function loadSettings({ initialize = false } = {}) {
   const defaults = await readJson(path.join(projectRoot, 'config', 'example.json'));
   const existing = await readJson(paths.settingsFile);
   const settings = validateSettings(existing ?? defaults, defaults);
+  if (initialize && existing && !settings.announcementMovedToBottom) {
+    for (const platform of Object.values(settings.platforms)) {
+      const oldText = platform.announcementText;
+      if (oldText && oldText !== platform.bottomAnnouncementText) {
+        platform.bottomAnnouncementText = [platform.bottomAnnouncementText, oldText].filter(Boolean).join('\n');
+      }
+    }
+    settings.announcementMovedToBottom = true;
+    await saveSettings(settings);
+  }
   if (process.env.TAVERN_PORT !== undefined) {
     const requestedPort = process.env.TAVERN_PORT;
     if (!/^\d+$/.test(requestedPort)) throw new Error('TAVERN_PORT 必须为整数');

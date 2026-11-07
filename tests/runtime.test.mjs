@@ -136,7 +136,7 @@ test('真实服务生命周期、并发、关闭、冲突与恢复', { timeout: 
 
     await context.test('底部公告严格校验，旧后台保存兼容且平台隔离', async () => {
       const { settings } = await (await fetch(`${origin}/api/settings`)).json();
-      for (const bottomAnnouncementText of [null, 42, '告'.repeat(501)]) {
+      for (const bottomAnnouncementText of [null, 42, '告'.repeat(2502)]) {
         const invalid = structuredClone(settings);
         invalid.platforms.douyin.bottomAnnouncementText = bottomAnnouncementText;
         assert.equal((await fetch(`${origin}/api/settings`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(invalid) })).status, 400);

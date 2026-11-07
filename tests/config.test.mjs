@@ -43,7 +43,7 @@ test('配置校验、原子写入与备份', async () => {
       assert.throws(() => validateSettings({ platforms: { bilibili: { benefitsText } } }, settings), /benefitsText/);
     }
     assert.equal(validateSettings({ platforms: { bilibili: { benefitsText: '专属徽章\n一起开黑' } } }, settings).platforms.bilibili.benefitsText, '专属徽章\n一起开黑');
-    for (const bottomAnnouncementText of [null, 42, '告'.repeat(501)]) {
+    for (const bottomAnnouncementText of [null, 42, '告'.repeat(2502)]) {
       assert.throws(() => validateSettings({ platforms: { bilibili: { bottomAnnouncementText } } }, settings), /bottomAnnouncementText/);
     }
     const legacyBenefits = validateSettings({ platforms: { bilibili: { benefitsText: '旧福利' } } }, settings).platforms.bilibili;
@@ -67,6 +67,35 @@ test('配置校验、原子写入与备份', async () => {
     assert.match((await loadSettings()).global.task, /^委托 \d$/);
     assert.equal((await loadSettings()).global.title, '凌巽的酒馆');
     assert.equal((await readdir(directory)).filter(name => name.endsWith('.tmp')).length, 0);
+  } finally {
+    if (previousDataDir === undefined) delete process.env.TAVERN_DATA_DIR;
+    else process.env.TAVERN_DATA_DIR = previousDataDir;
+    await rm(directory, { recursive: true, force: true });
+  }
+});
+
+test('旧右栏公告迁移到底部并保留备份，只迁移一次', async () => {
+  const directory = await mkdtemp(path.join(os.tmpdir(), 'tavern-announcement-'));
+  const previousDataDir = process.env.TAVERN_DATA_DIR;
+  process.env.TAVERN_DATA_DIR = directory;
+  try {
+    const old = JSON.parse(await readFile(new URL('../config/example.json', import.meta.url), 'utf8'));
+    delete old.announcementMovedToBottom;
+    old.platforms.bilibili.bottomAnnouncementText = '现有底部公告';
+    old.platforms.bilibili.announcementText = '**原公告**';
+    old.platforms.douyin.bottomAnnouncementText = '';
+    old.platforms.douyin.announcementText = '抖音原公告';
+    await writeFile(path.join(directory, 'settings.json'), JSON.stringify(old));
+    const migrated = await loadSettings({ initialize: true });
+    assert.equal(migrated.platforms.bilibili.bottomAnnouncementText, '现有底部公告\n**原公告**');
+    assert.equal(migrated.platforms.douyin.bottomAnnouncementText, '抖音原公告');
+    assert.equal(migrated.announcementMovedToBottom, true);
+    const backups = await readdir(path.join(directory, 'backups'));
+    assert.equal(backups.length, 1);
+    assert.deepEqual(JSON.parse(await readFile(path.join(directory, 'backups', backups[0]), 'utf8')), old);
+    migrated.platforms.douyin.bottomAnnouncementText = '';
+    await saveSettings(migrated);
+    assert.equal((await loadSettings({ initialize: true })).platforms.douyin.bottomAnnouncementText, '');
   } finally {
     if (previousDataDir === undefined) delete process.env.TAVERN_DATA_DIR;
     else process.env.TAVERN_DATA_DIR = previousDataDir;

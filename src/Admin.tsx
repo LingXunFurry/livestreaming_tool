@@ -196,23 +196,21 @@ export function Admin() {
               <div className="admin-benefits-field" key={platform}>
                 <label className="admin-field">
                   <span>{platformLabels[platform]}右桌 · 公告</span>
-                  <textarea value={settings.platforms[platform].bottomAnnouncementText} maxLength={500} rows={3}
+                  <textarea value={settings.platforms[platform].bottomAnnouncementText} maxLength={2501} rows={3}
                     onChange={event => { updatePlatform(platform, { bottomAnnouncementText: event.target.value }); setSaveState('') }} />
                 </label>
                 <FontSizeControl name="benefits" label={`${platformLabels[platform]}底部公告字号`} value={settings.platforms[platform].fontSizes.benefits}
                   onChange={size => updateFontSize(platform, 'benefits', size)} />
               </div>
             ))}</div>
-            <p className="admin-field-hint">底部公告在直播页最多显示两行，支持换行，超长省略。留空时只显示栏目名。</p>
+            <p className="admin-field-hint">底部公告支持换行、Markdown 加粗和固定色板文字；直播页最多显示两行，超长省略。留空时只显示栏目名。</p>
           </fieldset>
           <div className="admin-platform-grid">{(['bilibili', 'douyin'] as Platform[]).map(platform => {
             const value = settings.platforms[platform]
             return <fieldset key={platform}><legend>{platformLabels[platform]}专属页面</legend>
-              <label className="admin-field"><span>右栏组件</span><select value={value.boardMode} onChange={event => { updatePlatform(platform, { boardMode: event.target.value as BoardMode }); setSaveState('') }}><option value="comments">留言板</option><option value="announcement">直播间公告</option></select></label>
-              <label className="admin-field"><span>公告正文</span><textarea value={value.announcementText} maxLength={2000} rows={4} onChange={event => { updatePlatform(platform, { announcementText: event.target.value }); setSaveState('') }} /></label>
               <label className="admin-check"><input type="checkbox" checked={value.lyricsEnabled} onChange={event => { updatePlatform(platform, { lyricsEnabled: event.target.checked }); setSaveState('') }} /><span>显示歌词</span></label>
               <label className="admin-check"><input type="checkbox" checked={value.lyricsAutoHide} onChange={event => { updatePlatform(platform, { lyricsAutoHide: event.target.checked }); setSaveState('') }} /><span>暂停或未连接时自动隐藏播放组件</span></label>
-              <div className="admin-font-grid">{([['comments', '评论文字字号'], ['announcement', '公告正文字号'], ['song', '歌曲信息字号'], ['lyrics', '歌词字号']] as const).map(([field, label]) => (
+              <div className="admin-font-grid">{([['comments', '评论文字字号'], ['song', '歌曲信息字号'], ['lyrics', '歌词字号']] as const).map(([field, label]) => (
                 <FontSizeControl key={field} name={field} label={`${platformLabels[platform]}${label}`} value={value.fontSizes[field]}
                   onChange={size => updateFontSize(platform, field, size)} />
               ))}</div>

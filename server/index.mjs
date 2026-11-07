@@ -7,6 +7,7 @@ import { WebSocketServer, WebSocket } from 'ws';
 import { atomicWriteJson, getPaths, loadSettings, projectRoot, readJson, saveSettings, validateSettings } from './config.mjs';
 import { createLogger } from './logger.mjs';
 import { createMusicAdapter } from './music.mjs';
+import { createLocalMusicBridge } from './music-bridge.mjs';
 
 const paths = getPaths();
 const log = createLogger(paths.logsDir);
@@ -26,6 +27,7 @@ try {
   if (port === 80) ['127.0.0.1', 'localhost'].forEach(host => allowedHosts.add(host));
   const allowedOrigins = new Set([origin, `http://localhost:${port}`]);
   const sockets = new WebSocketServer({ noServer: true, maxPayload: 4096 });
+  const localMusicBridge = createLocalMusicBridge(projectRoot, log);
   const adapters = {
     music: { state: 'DISCONNECTED', configured: settings.adapters.music.enabled, implemented: true },
     bilibili: { state: settings.adapters.bilibili.enabled ? 'UNAVAILABLE' : 'NOT_CONFIGURED', configured: settings.adapters.bilibili.enabled, implemented: false },
@@ -84,12 +86,12 @@ try {
   }
 
   async function readSettingsRequest(request) {
-    if (Number(request.headers['content-length']) > 16384) throw Object.assign(new Error('配置请求超过 16 KB'), { status: 413 });
+    if (Number(request.headers['content-length']) > 65536) throw Object.assign(new Error('配置请求超过 64 KB'), { status: 413 });
     const chunks = [];
     let size = 0;
     for await (const chunk of request) {
       size += chunk.length;
-      if (size > 16384) throw Object.assign(new Error('配置请求超过 16 KB'), { status: 413 });
+      if (size > 65536) throw Object.assign(new Error('配置请求超过 64 KB'), { status: 413 });
       chunks.push(chunk);
     }
     try { return JSON.parse(Buffer.concat(chunks).toString('utf8')); }
@@ -169,7 +171,10 @@ try {
         }
         const globalChanged = JSON.stringify(previousSettings.global) !== JSON.stringify(settings.global);
         const musicChanged = JSON.stringify(previousSettings.adapters.music) !== JSON.stringify(settings.adapters.music);
-        if (musicChanged) music.configure(settings.adapters.music);
+        if (musicChanged) {
+          music.configure(settings.adapters.music);
+          void localMusicBridge.start(settings.adapters.music);
+        }
         for (const platform of ['bilibili', 'douyin']) {
           const platformChanged = JSON.stringify(previousSettings.platforms[platform]) !== JSON.stringify(settings.platforms[platform]);
           if (!globalChanged && !platformChanged && !musicChanged) continue;
@@ -259,6 +264,7 @@ try {
     clearInterval(broadcast);
     clearInterval(heartbeat);
     music.close();
+    await localMusicBridge.close();
     for (const connection of sockets.clients) connection.close(1001, 'Service stopping');
     const forceClose = setTimeout(() => {
       for (const connection of sockets.clients) connection.terminate();
@@ -288,6 +294,7 @@ try {
   });
   await atomicWriteJson(paths.metadataFile, { instanceId, controlToken, projectKey: paths.projectKey, pid: process.pid, port, startedAt });
   music.configure(settings.adapters.music);
+  void localMusicBridge.start(settings.adapters.music);
   log('started', { port, version: packageInfo.version });
   log('adapter_status', { music: adapters.music.state, bilibili: adapters.bilibili.state });
 } catch (error) {

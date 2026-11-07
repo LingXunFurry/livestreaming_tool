@@ -39,10 +39,6 @@ function Preview({ scene = false }: { scene?: boolean }) {
   const [lyrics, setLyrics] = useState(params.get('lyrics') !== 'off')
   const [guides, setGuides] = useState(!scene)
   const [showUI, setShowUI] = useState(true)
-  const [boards, setBoards] = useState<Record<Platform, BoardMode>>({
-    bilibili: params.get('bilibiliBoard') === 'announcement' ? 'announcement' : 'comments',
-    douyin: params.get('douyinBoard') === 'announcement' ? 'announcement' : 'comments',
-  })
   const [background, setBackground] = useState('transparent')
   const [scale, setScale] = useState(0)
   const stageRef = useRef<HTMLDivElement>(null)
@@ -60,12 +56,8 @@ function Preview({ scene = false }: { scene?: boolean }) {
     const url = new URL(window.location.href)
     url.searchParams.set('platform', platform)
     url.searchParams.set('lyrics', lyrics ? 'on' : 'off')
-    if (scene) {
-      url.searchParams.set('bilibiliBoard', boards.bilibili)
-      url.searchParams.set('douyinBoard', boards.douyin)
-    }
     window.history.replaceState(null, '', url)
-  }, [platform, lyrics, scene, boards])
+  }, [platform, lyrics])
 
   return (
     <div className="review-shell">
@@ -87,7 +79,6 @@ function Preview({ scene = false }: { scene?: boolean }) {
           </div>
           <div className="preview-options">
             {scene && <label><input type="checkbox" checked={showUI} onChange={event => setShowUI(event.target.checked)} />叠加 UI</label>}
-            {scene && <label className="background-picker">右栏预览<select aria-label="右栏预览" value={boards[platform]} onChange={event => setBoards({ ...boards, [platform]: event.target.value as BoardMode })}><option value="comments">酒馆留言板</option><option value="announcement">酒馆公告</option></select></label>}
             <label><input type="checkbox" checked={lyrics} onChange={event => setLyrics(event.target.checked)} />显示歌词</label>
             <label><input type="checkbox" checked={guides} onChange={event => setGuides(event.target.checked)} />尺寸参考</label>
             <label className="background-picker">透明区底图<select aria-label="预览底图" value={background} onChange={event => setBackground(event.target.value)}><option value="transparent">透明棋盘</option><option value="solid">纯色</option></select></label>
@@ -100,7 +91,7 @@ function Preview({ scene = false }: { scene?: boolean }) {
           <div ref={stageRef} className={`preview-stage ${background !== 'solid' ? 'checkerboard' : 'solid-stage'}`}>
             <div className={`scaled-stage ${scene ? 'scene-preview' : ''}`} style={{ transform: `scale(${scale})`, visibility: scale ? 'visible' : 'hidden' }}>
               {scene && <img className="scene-background" src={sceneBackground} width="1920" height="1080" alt="模块化酒馆背景，游戏窗口透明" />}
-              {(!scene || showUI) && <Overlay platform={platform} lyrics={lyrics} board={scene ? boards[platform] : 'comments'} />}
+              {(!scene || showUI) && <Overlay platform={platform} lyrics={lyrics} />}
               {scene && showUI && <img className="scene-title-art" src={sceneTitle} width="384" height="128" alt="凌巽的酒馆" />}
               {(!scene || guides) && <div className={`game-guide ${guides ? 'with-guides' : ''}`} aria-label="仅预览显示的透明游戏区">
                 {guides && <><span className="game-dimension">01 / 游戏画面</span><span className="corner top-left" /><span className="corner top-right" /><span className="corner bottom-left" /><span className="corner bottom-right" /></>}
@@ -222,7 +213,7 @@ function SourcePage({ platform }: { platform: Platform }) {
   return (
     <main className="source-stage scene-preview" aria-label={`${platformNames[platform]}酒馆直播源`}>
       <img className="scene-background" src={sceneBackground} width="1920" height="1080" alt="已验收模块化酒馆背景，游戏窗口透明" />
-      <Overlay platform={platform} lyrics={showMusic} board={platformSettings.boardMode} announcementText={platformSettings.announcementText} task={settings.global.task} bottomAnnouncementText={platformSettings.bottomAnnouncementText} globalFontSizes={settings.global.fontSizes} fontSizes={platformSettings.fontSizes} music={music} />
+      <Overlay platform={platform} lyrics={showMusic} task={settings.global.task} bottomAnnouncementText={platformSettings.bottomAnnouncementText} globalFontSizes={settings.global.fontSizes} fontSizes={platformSettings.fontSizes} music={music} />
       <img className="scene-title-art" src={sceneTitle} width="384" height="128" alt="凌巽的酒馆" />
     </main>
   )

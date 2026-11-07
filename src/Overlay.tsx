@@ -99,19 +99,6 @@ function MessageBoard({ platform }: { platform: Platform }) {
   )
 }
 
-function AnnouncementBoard({ platform, content }: { platform: Platform; content: string }) {
-  return (
-    <section className="side-board announcement-board" aria-label={`${platformNames[platform]}酒馆公告`}>
-      <div className="module-heading">
-        <h2>酒馆公告</h2>
-      </div>
-      <section className="notice announcement-content">
-        <p>{renderAnnouncement(content)}</p>
-      </section>
-    </section>
-  )
-}
-
 function SimulatedLyrics() {
   const [elapsed, setElapsed] = useState(0)
   const currentIndex = lyricIndexAt(elapsed)
@@ -138,14 +125,12 @@ function SimulatedLyrics() {
 export function Overlay({
   platform,
   lyrics = true,
-  board = 'comments',
-  announcementText = '欢迎来到凌巽的酒馆，歇歇脚，一起聊聊今天的冒险。',
   task = '探索未知，也记得沿途歇脚。',
   bottomAnnouncementText = '',
   globalFontSizes = defaultSettings.global.fontSizes,
   fontSizes = defaultSettings.platforms.bilibili.fontSizes,
   music,
-}: { platform: Platform; lyrics?: boolean; board?: BoardMode; announcementText?: string; task?: string; bottomAnnouncementText?: string; globalFontSizes?: GlobalFontSizes; fontSizes?: PlatformFontSizes; music?: MusicState }) {
+}: { platform: Platform; lyrics?: boolean; task?: string; bottomAnnouncementText?: string; globalFontSizes?: GlobalFontSizes; fontSizes?: PlatformFontSizes; music?: MusicState }) {
   const fontStyle = Object.fromEntries(
     Object.entries({ ...globalFontSizes, ...fontSizes }).map(([field, size]) => [`--font-${field}`, `${size}px`]),
   ) as CSSProperties
@@ -155,7 +140,7 @@ export function Overlay({
         <strong className="tavern-name">凌巽的酒馆</strong>
       </header>
       <aside className={`side-column ${lyrics ? '' : 'without-lyrics'}`}>
-        {board === 'announcement' ? <AnnouncementBoard platform={platform} content={announcementText} /> : <MessageBoard platform={platform} />}
+        <MessageBoard platform={platform} />
         {lyrics && (music ? <MusicPanel music={music} /> : <SimulatedLyrics />)}
       </aside>
       <section className="stream-info" aria-label="底部酒桌">
@@ -163,7 +148,7 @@ export function Overlay({
           <h2 className="module-index">今日委托</h2><p title={task}>{task}</p>
         </section>
         <section className="bottom-table bottom-announcement" aria-label="底部公告">
-          <h2 className="module-index">公告</h2><p title={bottomAnnouncementText}>{bottomAnnouncementText}</p>
+          <h2 className="module-index">公告</h2><p title={bottomAnnouncementText}>{renderAnnouncement(bottomAnnouncementText)}</p>
         </section>
       </section>
     </main>
