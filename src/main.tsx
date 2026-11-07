@@ -42,7 +42,7 @@ function Preview() {
 
       <div className="intro">
         <div><p className="eyebrow">CHECKPOINT 01 / LAYOUT</p><h1>先给冒险，留好位置。</h1><p className="intro-description">这一轮看比例和布局。游戏留在左边，酒馆的故事放在右边。</p></div>
-        <div className="phase-note"><span>当前阶段</span><strong>横屏布局线框</strong><small>像素美术将在布局通过后开始</small></div>
+        <div className="phase-note"><span>当前阶段</span><strong>横屏布局 · 局部装饰试样</strong><small>本轮查看艺术字标题与底部留白</small></div>
       </div>
 
       <section className="review-workspace" aria-label="直播布局预览">

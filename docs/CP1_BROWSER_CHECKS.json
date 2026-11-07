@@ -190,5 +190,91 @@
       }
     },
     "consoleErrors": []
+  },
+  "revision2": {
+    "states": [
+      {
+        "clippedPanels": [],
+        "font": "STKaiti, KaiTi, \"Kaiti SC\", serif",
+        "headerBackground": "rgba(0, 0, 0, 0)",
+        "headerBorder": "0px",
+        "headerText": "凌巽的酒馆",
+        "lyrics": "on",
+        "platform": "bilibili",
+        "sceneryCount": 1,
+        "sceneryHidden": "true"
+      },
+      {
+        "clippedPanels": [],
+        "font": "STKaiti, KaiTi, \"Kaiti SC\", serif",
+        "headerBackground": "rgba(0, 0, 0, 0)",
+        "headerBorder": "0px",
+        "headerText": "凌巽的酒馆",
+        "lyrics": "off",
+        "platform": "bilibili",
+        "sceneryCount": 1,
+        "sceneryHidden": "true"
+      },
+      {
+        "clippedPanels": [],
+        "font": "STKaiti, KaiTi, \"Kaiti SC\", serif",
+        "headerBackground": "rgba(0, 0, 0, 0)",
+        "headerBorder": "0px",
+        "headerText": "凌巽的酒馆",
+        "lyrics": "on",
+        "platform": "douyin",
+        "sceneryCount": 1,
+        "sceneryHidden": "true"
+      },
+      {
+        "clippedPanels": [],
+        "font": "STKaiti, KaiTi, \"Kaiti SC\", serif",
+        "headerBackground": "rgba(0, 0, 0, 0)",
+        "headerBorder": "0px",
+        "headerText": "凌巽的酒馆",
+        "lyrics": "off",
+        "platform": "douyin",
+        "sceneryCount": 1,
+        "sceneryHidden": "true"
+      }
+    ],
+    "source": {
+      "canvas": {
+        "height": 1080,
+        "width": 1920.0001220703125,
+        "x": 0,
+        "y": 0
+      },
+      "clippedPanels": [],
+      "gameOverlaps": [],
+      "lyrics": "on",
+      "lyricsPanel": {
+        "height": 256,
+        "width": 528,
+        "x": 1352,
+        "y": 744.0000610351562
+      },
+      "platform": "bilibili",
+      "previewHelpers": 0,
+      "rootBackgrounds": [
+        "rgba(0, 0, 0, 0)",
+        "rgba(0, 0, 0, 0)",
+        "rgba(0, 0, 0, 0)",
+        "rgba(0, 0, 0, 0)"
+      ],
+      "side": {
+        "height": 576,
+        "width": 528,
+        "x": 1352,
+        "y": 144
+      },
+      "scenery": {
+        "height": 72,
+        "width": 1920.0001220703125,
+        "x": 0,
+        "y": 1008.0000610351562
+      }
+    },
+    "consoleErrors": []
   }
 }

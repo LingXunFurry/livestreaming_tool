@@ -92,8 +92,14 @@ button, a, input { transition: background-color 140ms ease, color 140ms ease; }
 
 /* Always 1920 × 1080, regardless of the embedding viewport. */
 .overlay { position: relative; width: 1920px; height: 1080px; overflow: hidden; color: #353632; font-family: "Microsoft YaHei", "PingFang SC", sans-serif; --panel: #f2f2ed; --panel-line: #95978d; }
-.stream-header { position: absolute; left: 40px; top: 40px; width: 1840px; height: 72px; background: var(--panel); border: 2px solid var(--panel-line); display: flex; align-items: center; justify-content: center; padding: 0 24px; }
-.tavern-name { font-weight: 500; font-size: 32px; letter-spacing: 3px; white-space: nowrap; }
+.stream-header { position: absolute; left: 40px; top: 40px; width: 1840px; height: 72px; display: flex; align-items: center; justify-content: center; }
+.tavern-name { display: inline-flex; align-items: baseline; gap: 4px; color: #65442c; font-family: "STKaiti", "KaiTi", "Kaiti SC", serif; font-size: 72px; line-height: 1; font-weight: 700; white-space: nowrap; -webkit-text-stroke: .6px #503422; text-shadow: 0 2px 0 #efd9ac, 2px 4px 0 #694a2b26; }
+.tavern-name > span { display: inline-block; transform: rotate(-3deg); }
+.tavern-name > span:nth-child(2) { transform: translateY(-3px) rotate(2deg); }
+.tavern-name > span:nth-child(3) { font-size: .64em; margin: 0 6px; transform: translateY(-2px) rotate(-5deg); }
+.tavern-name > span:nth-child(4) { transform: translateY(1px) rotate(-2deg); }
+.tavern-name > span:nth-child(5) { transform: translateY(-2px) rotate(3deg); }
+.tavern-scenery { position: absolute; left: 0; top: 1008px; width: 1920px; height: 72px; pointer-events: none; }
 .side-column { position: absolute; left: 1352px; top: 144px; width: 528px; height: 856px; display: grid; grid-template-rows: minmax(0, 576px) 256px; gap: 24px; }
 .side-column.without-lyrics { grid-template-rows: minmax(0, 1fr); }
 .side-board, .lyrics-board { background: var(--panel); border: 2px solid var(--panel-line); min-height: 0; overflow: hidden; }
