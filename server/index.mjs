@@ -38,7 +38,7 @@ try {
       instanceId,
       state: degraded ? 'DEGRADED' : 'RUNNING',
       version: packageInfo.version,
-      checkpoint: 'CP2',
+      checkpoint: 'CP3',
       startedAt,
       port,
       host: '127.0.0.1',
@@ -61,7 +61,7 @@ try {
     return received.length === expected.length && timingSafeEqual(received, expected);
   }
 
-  const applicationRoutes = new Set(['/', '/preview', '/assets/review', '/admin', '/live/bilibili', '/live/douyin']);
+  const applicationRoutes = new Set(['/', '/preview', '/assets/review', '/scene/review', '/admin', '/live/bilibili', '/live/douyin']);
   const mimeTypes = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.json': 'application/json', '.png': 'image/png', '.jpg': 'image/jpeg', '.svg': 'image/svg+xml', '.woff2': 'font/woff2' };
 
   const server = http.createServer(async (request, response) => {

@@ -128,6 +128,7 @@ export function Admin() {
         <a href={status?.pages.bilibili || '/live/bilibili'} target="_blank" rel="noreferrer">B 站透明测试页 ↗</a>
         <a href={status?.pages.douyin || '/live/douyin'} target="_blank" rel="noreferrer">抖音透明测试页 ↗</a>
         <a href="/preview">布局线框预览 ↗</a>
+        <a href="/scene/review">CP3 场景验收 ↗</a>
       </section>
     </main>
   )

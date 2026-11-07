@@ -1,0 +1,327 @@
+{
+  "checkedAt": "2026-11-07T08:32:44.711Z",
+  "browser": "Microsoft Edge",
+  "images": [
+    {
+      "name": "木墙纹理独立像素素材",
+      "size": [
+        64,
+        64
+      ],
+      "display": [
+        128,
+        128
+      ],
+      "rendering": "pixelated",
+      "loaded": true
+    },
+    {
+      "name": "木地板纹理独立像素素材",
+      "size": [
+        64,
+        64
+      ],
+      "display": [
+        128,
+        128
+      ],
+      "rendering": "pixelated",
+      "loaded": true
+    },
+    {
+      "name": "横向木梁独立像素素材",
+      "size": [
+        128,
+        32
+      ],
+      "display": [
+        256,
+        64
+      ],
+      "rendering": "pixelated",
+      "loaded": true
+    },
+    {
+      "name": "挂灯独立像素素材",
+      "size": [
+        32,
+        64
+      ],
+      "display": [
+        64,
+        128
+      ],
+      "rendering": "pixelated",
+      "loaded": true
+    },
+    {
+      "name": "酒瓶架独立像素素材",
+      "size": [
+        128,
+        64
+      ],
+      "display": [
+        256,
+        128
+      ],
+      "rendering": "pixelated",
+      "loaded": true
+    },
+    {
+      "name": "酒桶独立像素素材",
+      "size": [
+        64,
+        64
+      ],
+      "display": [
+        128,
+        128
+      ],
+      "rendering": "pixelated",
+      "loaded": true
+    }
+  ],
+  "sceneGeometry": {
+    "header": [
+      40,
+      40,
+      1840,
+      72
+    ],
+    "mainPanel": [
+      0,
+      0,
+      528,
+      576
+    ],
+    "lyrics": [
+      0,
+      600,
+      528,
+      256
+    ],
+    "quest": [
+      40,
+      888,
+      1280,
+      112
+    ]
+  },
+  "png": {
+    "size": [
+      1920,
+      1080
+    ],
+    "gameCoveredPixels": 0
+  },
+  "toggles": {
+    "ui": true,
+    "lyrics": true,
+    "platform": true,
+    "guides": true,
+    "backdrop": true
+  },
+  "downloads": [
+    "cp3-tavern.png",
+    "cp3-tavern.json",
+    "木墙纹理.png",
+    "木地板纹理.png",
+    "横向木梁.png",
+    "挂灯.png",
+    "酒瓶架.png",
+    "酒桶.png"
+  ],
+  "narrow": {
+    "viewport": 375,
+    "scrollWidth": 375
+  },
+  "concurrentSources": 2,
+  "sources": [
+    {
+      "platform": "bilibili",
+      "lyricsState": "on",
+      "canvas": [
+        0,
+        0,
+        1920,
+        1080
+      ],
+      "header": [
+        40,
+        40,
+        1840,
+        72
+      ],
+      "mainPanel": [
+        1352,
+        144,
+        528,
+        576
+      ],
+      "lyrics": [
+        1352,
+        744,
+        528,
+        256
+      ],
+      "quest": [
+        40,
+        888,
+        1280,
+        112
+      ],
+      "images": 0,
+      "rootBackgrounds": [
+        "rgba(0, 0, 0, 0)",
+        "rgba(0, 0, 0, 0)",
+        "rgba(0, 0, 0, 0)",
+        "rgba(0, 0, 0, 0)"
+      ]
+    },
+    {
+      "platform": "douyin",
+      "lyricsState": "on",
+      "canvas": [
+        0,
+        0,
+        1920,
+        1080
+      ],
+      "header": [
+        40,
+        40,
+        1840,
+        72
+      ],
+      "mainPanel": [
+        1352,
+        144,
+        528,
+        576
+      ],
+      "lyrics": [
+        1352,
+        744,
+        528,
+        256
+      ],
+      "quest": [
+        40,
+        888,
+        1280,
+        112
+      ],
+      "images": 0,
+      "rootBackgrounds": [
+        "rgba(0, 0, 0, 0)",
+        "rgba(0, 0, 0, 0)",
+        "rgba(0, 0, 0, 0)",
+        "rgba(0, 0, 0, 0)"
+      ]
+    },
+    {
+      "platform": "bilibili",
+      "lyricsState": "off",
+      "canvas": [
+        0,
+        0,
+        1920,
+        1080
+      ],
+      "header": [
+        40,
+        40,
+        1840,
+        72
+      ],
+      "mainPanel": [
+        1352,
+        144,
+        528,
+        856
+      ],
+      "lyrics": null,
+      "quest": [
+        40,
+        888,
+        1280,
+        112
+      ],
+      "images": 0,
+      "rootBackgrounds": [
+        "rgba(0, 0, 0, 0)",
+        "rgba(0, 0, 0, 0)",
+        "rgba(0, 0, 0, 0)",
+        "rgba(0, 0, 0, 0)"
+      ]
+    },
+    {
+      "platform": "douyin",
+      "lyricsState": "off",
+      "canvas": [
+        0,
+        0,
+        1920,
+        1080
+      ],
+      "header": [
+        40,
+        40,
+        1840,
+        72
+      ],
+      "mainPanel": [
+        1352,
+        144,
+        528,
+        856
+      ],
+      "lyrics": null,
+      "quest": [
+        40,
+        888,
+        1280,
+        112
+      ],
+      "images": 0,
+      "rootBackgrounds": [
+        "rgba(0, 0, 0, 0)",
+        "rgba(0, 0, 0, 0)",
+        "rgba(0, 0, 0, 0)",
+        "rgba(0, 0, 0, 0)"
+      ]
+    }
+  ],
+  "errors": [],
+  "warnings": [],
+  "downloadVerification": {
+    "layoutContentMatches": true,
+    "assets": [
+      {
+        "sha256MatchesRepository": true,
+        "file": "木墙纹理.png"
+      },
+      {
+        "sha256MatchesRepository": true,
+        "file": "木地板纹理.png"
+      },
+      {
+        "sha256MatchesRepository": true,
+        "file": "横向木梁.png"
+      },
+      {
+        "sha256MatchesRepository": true,
+        "file": "挂灯.png"
+      },
+      {
+        "sha256MatchesRepository": true,
+        "file": "酒瓶架.png"
+      },
+      {
+        "sha256MatchesRepository": true,
+        "file": "酒桶.png"
+      }
+    ],
+    "backgroundHashMatches": true
+  }
+}

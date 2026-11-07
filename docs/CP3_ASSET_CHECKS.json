@@ -1,0 +1,202 @@
+{
+  "checkedAt": "2026-11-07T08:23:47.0504102Z",
+  "process": "Manifest logical size, center nearest-neighbor sampling, closest V2 RGB color, alpha threshold 128; tiles match opposite edge pixels",
+  "assets": [
+    {
+      "id": "cp3-tavern-wall-tile",
+      "path": "assets/generated/cp3/tavern-wall-tile.png",
+      "sourcePath": "assets/generated/cp3/tavern-wall-tile-source.png",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "logicalSize": [
+        64,
+        64
+      ],
+      "transparentPixels": 0,
+      "opaquePixels": 4096,
+      "partialAlphaPixels": 0,
+      "palette": [
+        "#142238",
+        "#1E2B45",
+        "#364E6A"
+      ],
+      "bounds": {
+        "width": 64,
+        "height": 64,
+        "y": 0,
+        "x": 0
+      },
+      "sha256": "8aba0638bd36d6c425332599d0515b9f69e0dd58d49c759a398dd6118de9131f",
+      "sourceSha256": "eb2ce6687bffcf2612a815609de32f01e15cbccfd21e133fdfe91db2f916684d"
+    },
+    {
+      "id": "cp3-tavern-floor-tile",
+      "path": "assets/generated/cp3/tavern-floor-tile.png",
+      "sourcePath": "assets/generated/cp3/tavern-floor-tile-source.png",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "logicalSize": [
+        64,
+        64
+      ],
+      "transparentPixels": 0,
+      "opaquePixels": 4096,
+      "partialAlphaPixels": 0,
+      "palette": [
+        "#142238",
+        "#1E2B45",
+        "#5A3E2B",
+        "#8A6547"
+      ],
+      "bounds": {
+        "width": 64,
+        "height": 64,
+        "y": 0,
+        "x": 0
+      },
+      "sha256": "e71516e8aeaec64284594b5f73412a26ab895f754dbf3a3d14d0e75660809948",
+      "sourceSha256": "3cac74be7e1e381e1257d5a8fbc6df01b090f18dae7238ae07ec6439ba6c4312"
+    },
+    {
+      "id": "cp3-timber-beam",
+      "path": "assets/generated/cp3/timber-beam.png",
+      "sourcePath": "assets/generated/cp3/timber-beam-source.png",
+      "sourceSize": [
+        2172,
+        724
+      ],
+      "logicalSize": [
+        128,
+        32
+      ],
+      "transparentPixels": 2524,
+      "opaquePixels": 1572,
+      "partialAlphaPixels": 0,
+      "palette": [
+        "#142238",
+        "#5A3E2B",
+        "#8A6547",
+        "#C9A85E"
+      ],
+      "bounds": {
+        "width": 126,
+        "height": 13,
+        "y": 10,
+        "x": 1
+      },
+      "sha256": "964d7b51f9afb6b33c9faf1bf929cc1e87f02d295d698786b4ca3d2fc5131261",
+      "sourceSha256": "676f595dc6a110280b0f00bb03e47499e56a01e036edd87e78fc440a12ef790b"
+    },
+    {
+      "id": "cp3-hanging-lantern",
+      "path": "assets/generated/cp3/hanging-lantern.png",
+      "sourcePath": "assets/generated/cp3/hanging-lantern-source.png",
+      "sourceSize": [
+        887,
+        1774
+      ],
+      "logicalSize": [
+        32,
+        64
+      ],
+      "transparentPixels": 1360,
+      "opaquePixels": 688,
+      "partialAlphaPixels": 0,
+      "palette": [
+        "#142238",
+        "#1E2B45",
+        "#364E6A",
+        "#5A3E2B",
+        "#7083A0",
+        "#8A6547",
+        "#A8C7D1",
+        "#C9A85E",
+        "#D24943",
+        "#F3ECDD"
+      ],
+      "bounds": {
+        "width": 24,
+        "height": 47,
+        "y": 9,
+        "x": 4
+      },
+      "sha256": "0c1cfd5061d0f9ba4662837eceeb36e4a26e9b9d58ffa8f39f1731055718c578",
+      "sourceSha256": "84b8346090b54d64bd465f9e81e4b35df9b7988145a1c69946bb0d8ded812c77"
+    },
+    {
+      "id": "cp3-bottle-shelf",
+      "path": "assets/generated/cp3/bottle-shelf.png",
+      "sourcePath": "assets/generated/cp3/bottle-shelf-source.png",
+      "sourceSize": [
+        1774,
+        887
+      ],
+      "logicalSize": [
+        128,
+        64
+      ],
+      "transparentPixels": 5386,
+      "opaquePixels": 2806,
+      "partialAlphaPixels": 0,
+      "palette": [
+        "#142238",
+        "#1E2B45",
+        "#364E6A",
+        "#5A3E2B",
+        "#7083A0",
+        "#8A6547",
+        "#A8C7D1",
+        "#C9A85E",
+        "#D24943",
+        "#F3ECDD"
+      ],
+      "bounds": {
+        "width": 96,
+        "height": 57,
+        "y": 5,
+        "x": 16
+      },
+      "sha256": "a37865eef9e7f066f56f5298ae214436d7627e9827762793fe6a993f687dc1de",
+      "sourceSha256": "cd7897c0f16857621560b494cef8816f9480a583e970bde2b0837f29e16f6c89"
+    },
+    {
+      "id": "cp3-barrel",
+      "path": "assets/generated/cp3/barrel.png",
+      "sourcePath": "assets/generated/cp3/barrel-source.png",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "logicalSize": [
+        64,
+        64
+      ],
+      "transparentPixels": 2005,
+      "opaquePixels": 2091,
+      "partialAlphaPixels": 0,
+      "palette": [
+        "#142238",
+        "#1E2B45",
+        "#364E6A",
+        "#5A3E2B",
+        "#7083A0",
+        "#8A6547",
+        "#A8C7D1",
+        "#C9A85E",
+        "#F3ECDD"
+      ],
+      "bounds": {
+        "width": 44,
+        "height": 57,
+        "y": 5,
+        "x": 10
+      },
+      "sha256": "0314314ba30d19511b26291e457f6c0d19be1a761030ad63f40ca1a3fd4bf156",
+      "sourceSha256": "ac1ae0dafabf5a80dd85a110648b4d8d4f241fafd2315cf8318a2d07a9f658d8"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+.scene-background { position: absolute; inset: 0; image-rendering: pixelated; }
+.scene-preview .overlay { --panel: #142238; --panel-line: #7083A0; color: #F3ECDD; }
+.scene-preview .stream-header { background: transparent; border: 0; }
+.scene-preview .tavern-name { font-family: KaiTi, STKaiti, "Microsoft YaHei", serif; font-size: 54px; font-weight: 700; letter-spacing: 10px; color: #C9A85E; text-shadow: 3px 3px #142238; }
+.scene-preview .module-index, .scene-preview .small-label, .scene-preview .message-meta b,
+.scene-preview .module-description, .scene-preview .quest p, .scene-preview .quest-count,
+.scene-preview .board-footnote, .scene-preview .sample-tag, .scene-preview .message-meta > span,
+.scene-preview .song-title > span, .scene-preview .lyric-line { color: #A8C7D1; }
+.scene-preview .lyric-line.current { color: #F3ECDD; }
+.scene-preview .message, .scene-preview .notice, .scene-preview .quest,
+.scene-preview .board-footnote, .scene-preview .sample-tag, .scene-preview .message-meta > span { border-color: #364E6A; }
+.scene-preview .quest-progress { background: #364E6A; }
+.scene-preview .quest-progress i { background: #C9A85E; }
+.scene-assets { padding: 36px 0; border-bottom: 1px solid var(--line); }
+.scene-assets-heading { display: flex; justify-content: space-between; align-items: end; gap: 20px; flex-wrap: wrap; margin-bottom: 24px; }
+.scene-assets-heading h2 { font-size: 24px; font-weight: 500; margin: 8px 0; }
+.scene-assets-heading p:not(.eyebrow) { font-size: 13px; color: var(--muted); line-height: 1.8; }
+.scene-assets-heading a, .scene-asset-grid a { display: inline-flex; align-items: center; min-height: 44px; font-size: 12px; }
+.scene-asset-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+.scene-asset-grid article { min-width: 0; }
+.scene-asset-stage { height: 160px; display: grid; place-items: center; border: 1px solid var(--line); }
+.scene-asset-stage img { image-rendering: pixelated; transform: scale(2); }
+.scene-asset-grid h3 { font-size: 16px; font-weight: 500; margin: 12px 0 6px; }
+.scene-asset-grid p { font-size: 12px; color: var(--muted); }

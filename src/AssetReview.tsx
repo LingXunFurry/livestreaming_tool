@@ -16,7 +16,7 @@ export function AssetReview() {
       <div className="asset-review-inner">
         <header className="asset-review-header">
           <a href="/preview">凌巽的酒馆</a>
-          <span>CP2 · 等待美术验收</span>
+          <span>CP2 · 已通过美术验收</span>
         </header>
         <section className="asset-intro">
           <p className="asset-eyebrow">CHECKPOINT 02 / PIXEL PROPS</p>
@@ -44,7 +44,7 @@ export function AssetReview() {
               <div className="asset-caption">
                 <span className="asset-number">0{index + 1}</span>
                 <h2>{sample.name}</h2>
-                <span className="asset-pending">待验收</span>
+                <span className="asset-pending">已通过</span>
               </div>
               <p className="asset-description">{sample.detail}</p>
               <div className="asset-original">
@@ -61,7 +61,8 @@ export function AssetReview() {
           <ul>{manifest.palette.map(color => <li key={color}><span style={{ backgroundColor: color }} /><code>{color}</code></li>)}</ul>
         </section>
         <footer className="asset-review-footer">
-          <p>内置生图制作独立源稿，离线统一为 64 × 64、V2 十色和硬透明边缘。三件的造型与风格等待你确认。</p>
+          <p>三件素材已由你确认，采用 64 × 64、V2 十色和硬透明边缘。</p>
+          <a href="/scene/review">查看 CP3 场景组合 ↗</a>
           <a href="/preview">查看已通过的布局 ↗</a>
         </footer>
       </div>

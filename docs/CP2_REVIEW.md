@@ -1,6 +1,6 @@
 # V2 CP2 像素素材样板验收
 
-2026-11-07，香港时间。状态为 `WAITING_USER_REVIEW`。
+2026-11-07，香港时间。用户已明确通过，状态为 `APPROVED`。
 
 ## 交付
 
@@ -56,4 +56,4 @@
 - `AGENTS.md`、`README.md`、`docs/PROJECT_SPEC.md`、`docs/DESIGN_SYSTEM.md`、`docs/ASSET_POLICY.md`、`docs/ARCHITECTURE.md`、`docs/CHECKPOINTS.md`、`docs/DECISIONS.md`、`docs/TEST_PLAN.md`、`docs/CP1_V2_REVIEW.md`。
 - 本报告、两个 CP2 检查 JSON 和 `docs/screenshots/cp2/`。
 
-本地快照使用标签 `checkpoint/cp2-assets`，提交号随聊天交付。用户确认状态全部为 `false`，当前等待 CP2 美术验收。
+本地快照标签：`checkpoint/cp2-assets`，提交 ID：`fa3f57e`。用户于 2026-11-07 明确确认 CP2 美术通过，manifest 已据此更新三个素材的用户确认状态。没有推送 GitHub，也没有执行直播客户端实机测试。

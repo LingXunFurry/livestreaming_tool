@@ -4,7 +4,9 @@
 
 ## 路由和数据流
 
-CP2 展示板 `/assets/review` 复用现有静态服务。三件独立 PNG 由 Vite 构建为页面资源，来源与归一化过程记录在 manifest 和提示词中。制作脚本是离线 Windows 工具，运行服务使用交付 PNG。
+CP2 展示板 `/assets/review` 复用现有静态服务。CP3 验收页 `/scene/review` 将 1920×1080 无 UI 背景与既有 `Overlay` 叠加，仅供场景验收，不改变直播源路由。独立 PNG、提示词和归一化记录登记在 manifest；`assets/layouts/cp3-tavern.json` 驱动离线背景组合，脚本生成的背景 PNG 和场景预览图随项目保存。
+
+CP3 制作复用 `scripts/prepare-cp2-assets.ps1` 的取样与色板流程，通过 `-Checkpoint cp3` 选择六件新模块。`scripts/compose-cp3-scene.ps1` 校验离线布局的素材引用、坐标、整数比例、旋转、平铺区域和固定游戏窗口，临时 PNG 经逐像素校验后替换交付文件。场景布局是受 Git 管理的美术配方，运行设置继续由 `server/config.mjs` 统一处理。
 
 `/live/bilibili` 与 `/live/douyin` 分别渲染共享装饰组件，平台身份由路由确定。预览页平台选择只影响预览。`/admin` 在 CP0 读取 `/api/runtime/status` 并订阅 `/ws` 的运行状态快照。`/health` 供启动器判断就绪。
 

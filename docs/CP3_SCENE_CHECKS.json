@@ -1,0 +1,31 @@
+{
+  "partialAlphaPixels": 0,
+  "outputPath": "assets/backgrounds/cp3-tavern.png",
+  "transparentPixels": 921600,
+  "paletteOnly": true,
+  "layerCount": 18,
+  "assets": [
+    "cp2-candle",
+    "cp2-tavern-mug",
+    "cp2-wooden-table",
+    "cp3-barrel",
+    "cp3-bottle-shelf",
+    "cp3-hanging-lantern",
+    "cp3-tavern-floor-tile",
+    "cp3-tavern-wall-tile",
+    "cp3-timber-beam"
+  ],
+  "sha256": "1e2440e2f950de8cf9b5df38e081f39ded91af63c5679d35bb2c6b017728b586",
+  "layoutPath": "assets/layouts/cp3-tavern.json",
+  "checkedAt": "2026-11-07T08:30:40.2955021Z",
+  "gameWindow": {
+    "x": 40,
+    "y": 144,
+    "width": 1280,
+    "height": 720
+  },
+  "canvas": [
+    1920,
+    1080
+  ]
+}

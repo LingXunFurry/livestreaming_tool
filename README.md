@@ -1,7 +1,7 @@
 # 凌巽的酒馆
 
 本地双平台直播装饰系统，使用 React、TypeScript、Vite 和 Node.js。
-CP0、CP1 已通过验收。CP2 的酒杯、木桌、蜡烛三个独立透明像素样板已完成制作，等待美术验收。展示板提供 1×、4× 预览、底色切换与 PNG 下载。
+CP0、CP1、CP2 已通过验收。CP3 提供六件新增像素模块、无 UI 背景、可编辑布局及 UI 叠加预览，当前等待场景美术验收。
 
 ## 首次初始化
 
@@ -23,6 +23,7 @@ CP0、CP1 已通过验收。CP2 的酒杯、木桌、蜡烛三个独立透明像
 - 基础后台为 <http://127.0.0.1:3000/admin>。
 - 线框预览为 <http://127.0.0.1:3000/preview>。
 - CP2 素材展示板为 <http://127.0.0.1:3000/assets/review>。
+- CP3 场景验收页为 <http://127.0.0.1:3000/scene/review>。
 
 两个源均设为 1920×1080。游戏捕获由直播软件负责，游戏区域位于 X=40、Y=144，大小 1280×720。首次连接时在直播软件中把游戏源放到装修网页下层。
 
@@ -56,4 +57,15 @@ CP0 提供统一运行管理、健康接口、基础状态 WebSocket、双平台
 
 CP2 源稿、64×64 交付 PNG 和提示词分别位于 `assets/generated/cp2/`、`assets/prompts/cp2/`，清单位于 `assets/manifest.json`。离线制作命令 `pwsh -File scripts/prepare-cp2-assets.ps1` 通过 Windows 自带的 System.Drawing 统一像素与固定色板，并写出检查记录。日常服务直接使用已交付 PNG。验收结果和文件清单见 `docs/CP2_REVIEW.md`。
 
-V2 前的美术草稿保存在本地 `data/backups/pre-v2-draft/`，旧规范保存在 `docs/history/`。CP2 完成后等待用户验收，再进入下一阶段。
+CP3 新素材及源稿位于 `assets/generated/cp3/`，六份生图提示词位于 `assets/prompts/cp3/`，无 UI 背景位于 `assets/backgrounds/cp3-tavern.png`。验收页可切换 UI、平台、歌词、参考线和透明区底色，并下载背景、独立 PNG 和布局 JSON。
+
+修改 `assets/layouts/cp3-tavern.json` 中的 `layers` 后运行以下命令重组背景，再构建网页。`x`、`y` 使用最终画布像素坐标，`scale` 是 1–8 的整数，`rotation` 是 0/90/180/270，`repeat` 是可选的平铺区域宽高。图层按数组顺序绘制。画布和游戏窗口由脚本锁定为已验收尺寸。此文件属于离线美术配方，网页设置由现有配置模块管理。
+
+```powershell
+pwsh -File scripts/compose-cp3-scene.ps1
+npm run build
+```
+
+重新处理 CP3 生图源稿时运行 `pwsh -File scripts/prepare-cp2-assets.ps1 -Checkpoint cp3`。脚本使用 Windows 自带的 System.Drawing。运行服务直接加载交付 PNG。实际检查及文件清单见 `docs/CP3_REVIEW.md`。
+
+V2 前的美术草稿保存在本地 `data/backups/pre-v2-draft/`，旧规范保存在 `docs/history/`。CP3 完成后等待用户验收，再进入下一阶段。

@@ -13,10 +13,10 @@
         64,
         64
       ],
-      "usage": "CP2 review board only",
+      "usage": "CP2 approved asset; reusable in CP3 scene compositions",
       "license": "AI-generated for this project; no third-party input assets; no external asset license assigned",
-      "status": "WAITING_USER_REVIEW",
-      "userConfirmed": false,
+      "status": "APPROVED",
+      "userConfirmed": true,
       "sourcePath": "assets/generated/cp2/tavern-mug-source.png",
       "sourceSize": [
         1254,
@@ -37,10 +37,10 @@
         64,
         64
       ],
-      "usage": "CP2 review board only",
+      "usage": "CP2 approved asset; reusable in CP3 scene compositions",
       "license": "AI-generated for this project; no third-party input assets; no external asset license assigned",
-      "status": "WAITING_USER_REVIEW",
-      "userConfirmed": false,
+      "status": "APPROVED",
+      "userConfirmed": true,
       "sourcePath": "assets/generated/cp2/wooden-table-source.png",
       "sourceSize": [
         1254,
@@ -61,10 +61,10 @@
         64,
         64
       ],
-      "usage": "CP2 review board only",
+      "usage": "CP2 approved asset; reusable in CP3 scene compositions",
       "license": "AI-generated for this project; no third-party input assets; no external asset license assigned",
-      "status": "WAITING_USER_REVIEW",
-      "userConfirmed": false,
+      "status": "APPROVED",
+      "userConfirmed": true,
       "sourcePath": "assets/generated/cp2/candle-source.png",
       "sourceSize": [
         1254,
@@ -72,9 +72,199 @@
       ],
       "postprocess": "scripts/prepare-cp2-assets.ps1",
       "sha256": "5f8a347b438e5849a023f62a0a2d58a88d2789562e894d9a85be2ce74a6583c2"
+    },
+    {
+      "id": "cp3-tavern-wall-tile",
+      "name": "木墙纹理",
+      "path": "assets/generated/cp3/tavern-wall-tile.png",
+      "sourcePath": "assets/generated/cp3/tavern-wall-tile-source.png",
+      "source": "Original AI-generated asset",
+      "generationMethod": "built-in image_gen, text-only, nearest-neighbor and V2 palette normalization",
+      "promptFile": "assets/prompts/cp3/tavern-wall-tile.md",
+      "version": 1,
+      "logicalSize": [
+        64,
+        64
+      ],
+      "kind": "tile",
+      "usage": "CP3 scene review and offline background composition",
+      "license": "AI-generated for this project; no third-party input assets; no external asset license assigned",
+      "status": "WAITING_USER_REVIEW",
+      "userConfirmed": false,
+      "postprocess": "scripts/prepare-cp2-assets.ps1 -Checkpoint cp3",
+      "paletteMap": {
+        "#C9A85E": "#7083A0",
+        "#8A6547": "#364E6A",
+        "#5A3E2B": "#1E2B45"
+      },
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sha256": "8aba0638bd36d6c425332599d0515b9f69e0dd58d49c759a398dd6118de9131f",
+      "sourceSha256": "eb2ce6687bffcf2612a815609de32f01e15cbccfd21e133fdfe91db2f916684d"
+    },
+    {
+      "id": "cp3-tavern-floor-tile",
+      "name": "木地板纹理",
+      "path": "assets/generated/cp3/tavern-floor-tile.png",
+      "sourcePath": "assets/generated/cp3/tavern-floor-tile-source.png",
+      "source": "Original AI-generated asset",
+      "generationMethod": "built-in image_gen, text-only, nearest-neighbor and V2 palette normalization",
+      "promptFile": "assets/prompts/cp3/tavern-floor-tile.md",
+      "version": 1,
+      "logicalSize": [
+        64,
+        64
+      ],
+      "kind": "tile",
+      "usage": "CP3 scene review and offline background composition",
+      "license": "AI-generated for this project; no third-party input assets; no external asset license assigned",
+      "status": "WAITING_USER_REVIEW",
+      "userConfirmed": false,
+      "postprocess": "scripts/prepare-cp2-assets.ps1 -Checkpoint cp3",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sha256": "e71516e8aeaec64284594b5f73412a26ab895f754dbf3a3d14d0e75660809948",
+      "sourceSha256": "3cac74be7e1e381e1257d5a8fbc6df01b090f18dae7238ae07ec6439ba6c4312"
+    },
+    {
+      "id": "cp3-timber-beam",
+      "name": "横向木梁",
+      "path": "assets/generated/cp3/timber-beam.png",
+      "sourcePath": "assets/generated/cp3/timber-beam-source.png",
+      "source": "Original AI-generated asset",
+      "generationMethod": "built-in image_gen, text-only, nearest-neighbor and V2 palette normalization",
+      "promptFile": "assets/prompts/cp3/timber-beam.md",
+      "version": 1,
+      "logicalSize": [
+        128,
+        32
+      ],
+      "kind": "prop",
+      "usage": "CP3 scene review and offline background composition",
+      "license": "AI-generated for this project; no third-party input assets; no external asset license assigned",
+      "status": "WAITING_USER_REVIEW",
+      "userConfirmed": false,
+      "postprocess": "scripts/prepare-cp2-assets.ps1 -Checkpoint cp3",
+      "sourceSize": [
+        2172,
+        724
+      ],
+      "sha256": "964d7b51f9afb6b33c9faf1bf929cc1e87f02d295d698786b4ca3d2fc5131261",
+      "sourceSha256": "676f595dc6a110280b0f00bb03e47499e56a01e036edd87e78fc440a12ef790b"
+    },
+    {
+      "id": "cp3-hanging-lantern",
+      "name": "挂灯",
+      "path": "assets/generated/cp3/hanging-lantern.png",
+      "sourcePath": "assets/generated/cp3/hanging-lantern-source.png",
+      "source": "Original AI-generated asset",
+      "generationMethod": "built-in image_gen, text-only, nearest-neighbor and V2 palette normalization",
+      "promptFile": "assets/prompts/cp3/hanging-lantern.md",
+      "version": 1,
+      "logicalSize": [
+        32,
+        64
+      ],
+      "kind": "prop",
+      "usage": "CP3 scene review and offline background composition",
+      "license": "AI-generated for this project; no third-party input assets; no external asset license assigned",
+      "status": "WAITING_USER_REVIEW",
+      "userConfirmed": false,
+      "postprocess": "scripts/prepare-cp2-assets.ps1 -Checkpoint cp3",
+      "sourceSize": [
+        887,
+        1774
+      ],
+      "sha256": "0c1cfd5061d0f9ba4662837eceeb36e4a26e9b9d58ffa8f39f1731055718c578",
+      "sourceSha256": "84b8346090b54d64bd465f9e81e4b35df9b7988145a1c69946bb0d8ded812c77"
+    },
+    {
+      "id": "cp3-bottle-shelf",
+      "name": "酒瓶架",
+      "path": "assets/generated/cp3/bottle-shelf.png",
+      "sourcePath": "assets/generated/cp3/bottle-shelf-source.png",
+      "source": "Original AI-generated asset",
+      "generationMethod": "built-in image_gen, text-only, nearest-neighbor and V2 palette normalization",
+      "promptFile": "assets/prompts/cp3/bottle-shelf.md",
+      "version": 1,
+      "logicalSize": [
+        128,
+        64
+      ],
+      "kind": "prop",
+      "usage": "CP3 scene review and offline background composition",
+      "license": "AI-generated for this project; no third-party input assets; no external asset license assigned",
+      "status": "WAITING_USER_REVIEW",
+      "userConfirmed": false,
+      "postprocess": "scripts/prepare-cp2-assets.ps1 -Checkpoint cp3",
+      "sourceSize": [
+        1774,
+        887
+      ],
+      "sha256": "a37865eef9e7f066f56f5298ae214436d7627e9827762793fe6a993f687dc1de",
+      "sourceSha256": "cd7897c0f16857621560b494cef8816f9480a583e970bde2b0837f29e16f6c89"
+    },
+    {
+      "id": "cp3-barrel",
+      "name": "酒桶",
+      "path": "assets/generated/cp3/barrel.png",
+      "sourcePath": "assets/generated/cp3/barrel-source.png",
+      "source": "Original AI-generated asset",
+      "generationMethod": "built-in image_gen, text-only, nearest-neighbor and V2 palette normalization",
+      "promptFile": "assets/prompts/cp3/barrel.md",
+      "version": 1,
+      "logicalSize": [
+        64,
+        64
+      ],
+      "kind": "prop",
+      "usage": "CP3 scene review and offline background composition",
+      "license": "AI-generated for this project; no third-party input assets; no external asset license assigned",
+      "status": "WAITING_USER_REVIEW",
+      "userConfirmed": false,
+      "postprocess": "scripts/prepare-cp2-assets.ps1 -Checkpoint cp3",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sha256": "0314314ba30d19511b26291e457f6c0d19be1a761030ad63f40ca1a3fd4bf156",
+      "sourceSha256": "ac1ae0dafabf5a80dd85a110648b4d8d4f241fafd2315cf8318a2d07a9f658d8"
+    },
+    {
+      "id": "scene-cp3-tavern",
+      "name": "CP3 酒馆无 UI 背景",
+      "path": "assets/backgrounds/cp3-tavern.png",
+      "source": "Offline composition of nine project modules",
+      "generationMethod": "scripts/compose-cp3-scene.ps1",
+      "layoutPath": "assets/layouts/cp3-tavern.json",
+      "version": 1,
+      "logicalSize": [
+        1920,
+        1080
+      ],
+      "usage": "CP3 standalone scene review and UI composite preview",
+      "license": "Composed from project AI-generated modules; no third-party input assets",
+      "status": "WAITING_USER_REVIEW",
+      "userConfirmed": false,
+      "sha256": "1e2440e2f950de8cf9b5df38e081f39ded91af63c5679d35bb2c6b017728b586",
+      "dependencies": [
+        "cp2-candle",
+        "cp2-tavern-mug",
+        "cp2-wooden-table",
+        "cp3-barrel",
+        "cp3-bottle-shelf",
+        "cp3-hanging-lantern",
+        "cp3-tavern-floor-tile",
+        "cp3-tavern-wall-tile",
+        "cp3-timber-beam"
+      ]
     }
   ],
-  "note": "CP2 三件独立透明像素素材待用户验收，生成源稿和提示词随项目保存。",
+  "note": "CP2 三件独立透明像素素材已于 2026-11-07 获用户验收；CP3 新素材与组合背景待用户验收。",
   "palette": [
     "#1E2B45",
     "#142238",

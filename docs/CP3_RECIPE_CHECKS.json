@@ -1,0 +1,34 @@
+{
+  "movedObjectChangesOutput": true,
+  "cp2HashesUnchanged": true,
+  "invalidRecipes": [
+    {
+      "case": "window",
+      "rejected": true,
+      "outputPreserved": true
+    },
+    {
+      "case": "unknown-asset",
+      "rejected": true,
+      "outputPreserved": true
+    },
+    {
+      "case": "fractional-scale",
+      "rejected": true,
+      "outputPreserved": true
+    },
+    {
+      "case": "negative-position",
+      "rejected": true,
+      "outputPreserved": true
+    },
+    {
+      "case": "overflow",
+      "rejected": true,
+      "outputPreserved": true
+    }
+  ],
+  "checkedAt": "2026-11-07T08:30:41.8288716Z",
+  "deterministicRebuild": true,
+  "originalSha256": "1e2440e2f950de8cf9b5df38e081f39ded91af63c5679d35bb2c6b017728b586"
+}
