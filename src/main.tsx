@@ -37,12 +37,12 @@ function Preview() {
     <div className="review-shell">
       <header className="review-header">
         <a className="project-brand" href="/preview" aria-label="凌巽的酒馆布局验收首页"><span className="brand-grid" aria-hidden="true"><i /><i /><i /><i /></span><span>凌巽的酒馆 <small>OVERLAY WORKSHOP</small></span></a>
-        <span className="checkpoint-status"><span /> CP1 · 待验收</span>
+        <span className="checkpoint-status"><span /> CP1 · 布局已通过</span>
       </header>
 
       <div className="intro">
-        <div><p className="eyebrow">CHECKPOINT 01 / LAYOUT</p><h1>先给冒险，留好位置。</h1><p className="intro-description">这一轮看比例和布局。游戏留在左边，酒馆的故事放在右边。</p></div>
-        <div className="phase-note"><span>当前阶段</span><strong>横屏布局 · 局部装饰试样</strong><small>本轮查看艺术字标题与底部留白</small></div>
+        <div><p className="eyebrow">CHECKPOINT 01 / LAYOUT</p><h1>先给冒险，留好位置。</h1><p className="intro-description">横屏布局已通过。标题、配色、材质与装饰将在美术阶段继续打磨。</p></div>
+        <div className="phase-note"><span>当前状态</span><strong>布局已确认 · 美术未验收</strong><small>当前艺术字与摆件均为可修改试样</small></div>
       </div>
 
       <section className="review-workspace" aria-label="直播布局预览">
@@ -76,7 +76,7 @@ function Preview() {
       </section>
 
       <div className="review-details">
-        <section className="layout-notes" aria-labelledby="layout-notes-title"><p className="eyebrow">THE LAYOUT</p><h2 id="layout-notes-title">这一版，先看三个地方。</h2>
+        <section className="layout-notes" aria-labelledby="layout-notes-title"><p className="eyebrow">THE LAYOUT</p><h2 id="layout-notes-title">已确认的布局基准。</h2>
           <ol><li><span>01</span><div><h3>游戏区的占比</h3><p>保留完整 16:9，文字和装饰都在游戏画面之外。</p></div></li><li><span>02</span><div><h3>右侧的阅读空间</h3><p>宽 528px；B 站放留言，抖音放任务和公告。</p></div></li><li><span>03</span><div><h3>歌词开关后的平衡</h3><p>关掉歌词，右侧功能区自然展开，不留空洞。</p></div></li></ol>
         </section>
         <section className="source-notes" aria-labelledby="source-notes-title"><p className="eyebrow">TWO INDEPENDENT SOURCES</p><h2 id="source-notes-title">同一间酒馆，两个窗口。</h2><p>这两个地址可同时打开。直播软件中的网页素材尺寸均设为 1920 × 1080。</p>
@@ -85,14 +85,14 @@ function Preview() {
           <small>当前为线框与示例内容，尚未接入平台互动或音乐。</small>
         </section>
       </div>
-      <footer className="review-footer"><span>01 布局线框 <b>→</b> 02 像素酒馆美术 <b>→</b> 03 右侧功能区</span><span>本阶段验收后，再继续下一步。</span></footer>
+      <footer className="review-footer"><span>01 布局线框 <b>→</b> 02 像素酒馆美术 <b>→</b> 03 右侧功能区</span><span>布局已通过，美术尚未验收。</span></footer>
     </div>
   )
 }
 
 function UnavailablePage() {
   const admin = path === '/admin'
-  return <div className="unavailable-page"><p className="eyebrow">LINGXUN’S TAVERN</p><h1>{admin ? '管理后台还没开工。' : '这扇门还没有打开。'}</h1><p>{admin ? '当前停在 CP1 布局验收。统一管理后台安排在 CP5。' : '请从布局验收页进入两个直播源。'}</p><a href="/preview">返回布局验收 ↗</a></div>
+  return <div className="unavailable-page"><p className="eyebrow">LINGXUN’S TAVERN</p><h1>{admin ? '管理后台还没开工。' : '这扇门还没有打开。'}</h1><p>{admin ? '横屏布局已通过。统一管理后台安排在 CP5。' : '请从布局验收页进入两个直播源。'}</p><a href="/preview">返回布局验收 ↗</a></div>
 }
 
 if (sourcePlatform) document.title = `凌巽的酒馆 · ${platformNames[sourcePlatform]}透明源 · CP1`
