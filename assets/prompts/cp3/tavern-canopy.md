@@ -1,0 +1,9 @@
+# tavern-canopy
+
+内置 imagegen，纯文字生成，真实透明背景。2026-11-07。
+
+Use case: stylized-concept. Asset type: independent transparent architectural sprite module, a shallow horizontal fantasy tavern eave with an attached back-bar shelf.
+Create a single cohesive side-view timber canopy section from a cozy adventure tavern. A long gently sagging dark wooden beam runs horizontally, supported by short decorative curved braces at each end. From it a rope holds a little asymmetrical line of muted red and navy triangular pennants. On the LEFT, two squat blue ceramic bottles and a red stoppered bottle sit securely in one wall shelf built into the beam. On the RIGHT, a small golden lantern hangs naturally on a short hook. All the fixtures must physically connect to the canopy. Richly designed silhouette, handcrafted knots and bracket details. Make the assembly wide and shallow, artwork width-to-height about 5:1, centered in a wide canvas with transparent margin above and below. Do not fill the entire canvas height.
+Strict pixel art, coarse consistent grid, sharp stepped silhouettes, low-resolution 16-bit RPG environment sprite suitable for reduction to 320x64 logical pixels. Frontal elevation with only slight visible top planes, warm lighting from upper left. Cohesive controlled detailing and dark interior-game atmosphere.
+Use only colors #1E2B45 #142238 #7083A0 #364E6A #F3ECDD #C9A85E #D24943 #A8C7D1 #5A3E2B #8A6547. Navy dominates, aged timber structure, gold small lamp highlights and muted red fabric. No green.
+Actual transparent alpha outside the architectural assembly. No wall rectangle, no floor, no UI, no text, no lettering, no characters, no game screen, no entire room, no gradient, blur or realistic rendering. This is one reusable transparent scene-group sprite, not a full background.

@@ -1,0 +1,343 @@
+{
+  "checkedAt": "2026-11-07T09:47:04.194Z",
+  "preview": [
+    {
+      "platform": "bilibili",
+      "lyricsOn": true,
+      "canvas": [
+        0,
+        0,
+        1920,
+        1080
+      ],
+      "titleRegion": [
+        40,
+        40,
+        1840,
+        72
+      ],
+      "column": [
+        1352,
+        144,
+        528,
+        856
+      ],
+      "board": [
+        0,
+        0,
+        528,
+        576
+      ],
+      "today": [
+        40,
+        888,
+        1280,
+        112
+      ],
+      "titleLoaded": true,
+      "font": "\"Fusion Pixel\", \"Microsoft YaHei\", sans-serif",
+      "questBottom": 68,
+      "imagesLoaded": true,
+      "artwork": {
+        "comments": "url(\"http://127.0.0.1:3000/assets/comment-wordmark-BdBQVmJn.png\")",
+        "playing": "url(\"data:image/png;",
+        "playingLoaded": true
+      },
+      "fit": {
+        "todayFits": true,
+        "boardOverflow": 0,
+        "musicFits": true
+      },
+      "headingAlignment": [
+        {
+          "alphaLeft": 15,
+          "shift": -15,
+          "visibleLeftDelta": 0
+        },
+        {
+          "alphaLeft": 11,
+          "shift": -11,
+          "visibleLeftDelta": 0
+        }
+      ],
+      "lyricsRect": [
+        0,
+        600,
+        528,
+        256
+      ]
+    },
+    {
+      "platform": "bilibili",
+      "lyricsOn": false,
+      "canvas": [
+        0,
+        0,
+        1920,
+        1080
+      ],
+      "titleRegion": [
+        40,
+        40,
+        1840,
+        72
+      ],
+      "column": [
+        1352,
+        144,
+        528,
+        856
+      ],
+      "board": [
+        0,
+        0,
+        528,
+        856
+      ],
+      "today": [
+        40,
+        888,
+        1280,
+        112
+      ],
+      "titleLoaded": true,
+      "font": "\"Fusion Pixel\", \"Microsoft YaHei\", sans-serif",
+      "questBottom": 68,
+      "imagesLoaded": true,
+      "artwork": {
+        "comments": "url(\"http://127.0.0.1:3000/assets/comment-wordmark-BdBQVmJn.png\")",
+        "playing": null
+      },
+      "fit": {
+        "todayFits": true,
+        "boardOverflow": 0,
+        "musicFits": true
+      },
+      "headingAlignment": [
+        {
+          "alphaLeft": 15,
+          "shift": -15,
+          "visibleLeftDelta": 0
+        }
+      ],
+      "lyricsRect": null
+    },
+    {
+      "platform": "douyin",
+      "lyricsOn": true,
+      "canvas": [
+        0,
+        0,
+        1920,
+        1080
+      ],
+      "titleRegion": [
+        40,
+        40,
+        1840,
+        72
+      ],
+      "column": [
+        1352,
+        144,
+        528,
+        856
+      ],
+      "board": [
+        0,
+        0,
+        528,
+        576
+      ],
+      "today": [
+        40,
+        888,
+        1280,
+        112
+      ],
+      "titleLoaded": true,
+      "font": "\"Fusion Pixel\", \"Microsoft YaHei\", sans-serif",
+      "questBottom": 68,
+      "imagesLoaded": true,
+      "artwork": {
+        "comments": "none",
+        "playing": "url(\"data:image/png;",
+        "playingLoaded": true
+      },
+      "fit": {
+        "todayFits": true,
+        "boardOverflow": 0,
+        "musicFits": true
+      },
+      "headingAlignment": [
+        {
+          "alphaLeft": 11,
+          "shift": -11,
+          "visibleLeftDelta": 0
+        }
+      ],
+      "lyricsRect": [
+        0,
+        600,
+        528,
+        256
+      ]
+    },
+    {
+      "platform": "douyin",
+      "lyricsOn": false,
+      "canvas": [
+        0,
+        0,
+        1920,
+        1080
+      ],
+      "titleRegion": [
+        40,
+        40,
+        1840,
+        72
+      ],
+      "column": [
+        1352,
+        144,
+        528,
+        856
+      ],
+      "board": [
+        0,
+        0,
+        528,
+        856
+      ],
+      "today": [
+        40,
+        888,
+        1280,
+        112
+      ],
+      "titleLoaded": true,
+      "font": "\"Fusion Pixel\", \"Microsoft YaHei\", sans-serif",
+      "questBottom": 68,
+      "imagesLoaded": true,
+      "artwork": {
+        "comments": "none",
+        "playing": null
+      },
+      "fit": {
+        "todayFits": true,
+        "boardOverflow": 0,
+        "musicFits": true
+      },
+      "headingAlignment": [],
+      "lyricsRect": null
+    }
+  ],
+  "downloads": [
+    {
+      "sha256": "eca6a86b0049aba062d6133d0fc68e91e5d01d7d862140633d3b23f89bfe475a",
+      "bytes": 114724
+    },
+    {
+      "sha256": "a472a14e65e2eadb40efe7518a97ae48d2afed304843355add1f50f7d135a831",
+      "bytes": 8509
+    },
+    {
+      "sha256": "6286d436070db78f31af5e6ba9d742cb6a3a4a6d15308636af0c0837f8e64994",
+      "bytes": 5115
+    },
+    {
+      "sha256": "4e7dda0bf6b233a628645207fcf215532ec353d5e97c1a3042d82cfdf64614d3",
+      "bytes": 12023
+    },
+    {
+      "sha256": "553abf2cccdf58e4ba95ac95e6ec6c55bdfba5365001bb46beffed249bb15ce9",
+      "bytes": 3612
+    },
+    {
+      "sha256": "4fb934273b5ffbad7e21619468313abe1f16c38d800cff1299dfe88969ff62dd",
+      "bytes": 4886
+    },
+    {
+      "sha256": "0eaf3cc6cae9352c6ea359a50c611d9cdd5f33c81c3dfcecac4add5683a7c7fa",
+      "bytes": 3625
+    },
+    {
+      "sha256": "8aba0638bd36d6c425332599d0515b9f69e0dd58d49c759a398dd6118de9131f",
+      "bytes": 749
+    },
+    {
+      "sha256": "e71516e8aeaec64284594b5f73412a26ab895f754dbf3a3d14d0e75660809948",
+      "bytes": 403
+    },
+    {
+      "sha256": "964d7b51f9afb6b33c9faf1bf929cc1e87f02d295d698786b4ca3d2fc5131261",
+      "bytes": 409
+    },
+    {
+      "sha256": "0c1cfd5061d0f9ba4662837eceeb36e4a26e9b9d58ffa8f39f1731055718c578",
+      "bytes": 614
+    },
+    {
+      "sha256": "a37865eef9e7f066f56f5298ae214436d7627e9827762793fe6a993f687dc1de",
+      "bytes": 1513
+    },
+    {
+      "sha256": "0314314ba30d19511b26291e457f6c0d19be1a761030ad63f40ca1a3fd4bf156",
+      "bytes": 1115
+    }
+  ],
+  "sources": [
+    {
+      "platform": "bilibili",
+      "lyrics": true,
+      "width": 1920,
+      "height": 1080,
+      "boardHeight": 576,
+      "rootBackground": "rgba(0, 0, 0, 0)",
+      "sceneAssets": 0,
+      "font": "\"Microsoft YaHei\", \"PingFang SC\", sans-serif"
+    },
+    {
+      "platform": "douyin",
+      "lyrics": true,
+      "width": 1920,
+      "height": 1080,
+      "boardHeight": 576,
+      "rootBackground": "rgba(0, 0, 0, 0)",
+      "sceneAssets": 0,
+      "font": "\"Microsoft YaHei\", \"PingFang SC\", sans-serif"
+    },
+    {
+      "platform": "bilibili",
+      "lyrics": false,
+      "width": 1920,
+      "height": 1080,
+      "boardHeight": 856,
+      "rootBackground": "rgba(0, 0, 0, 0)",
+      "sceneAssets": 0,
+      "font": "\"Microsoft YaHei\", \"PingFang SC\", sans-serif"
+    },
+    {
+      "platform": "douyin",
+      "lyrics": false,
+      "width": 1920,
+      "height": 1080,
+      "boardHeight": 856,
+      "rootBackground": "rgba(0, 0, 0, 0)",
+      "sceneAssets": 0,
+      "font": "\"Microsoft YaHei\", \"PingFang SC\", sans-serif"
+    }
+  ],
+  "errors": [],
+  "layoutDownload": true,
+  "font": {
+    "loaded": true,
+    "licenseDownloads": 4
+  },
+  "narrow": {
+    "viewport": 375,
+    "scrollWidth": 375
+  },
+  "concurrentSources": 2
+}

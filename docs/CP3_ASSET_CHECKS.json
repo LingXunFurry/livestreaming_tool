@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-07T08:23:47.0504102Z",
+  "checkedAt": "2026-11-07T09:40:51.4049568Z",
   "process": "Manifest logical size, center nearest-neighbor sampling, closest V2 RGB color, alpha threshold 128; tiles match opposite edge pixels",
   "assets": [
     {
@@ -7,6 +7,12 @@
       "path": "assets/generated/cp3/tavern-wall-tile.png",
       "sourcePath": "assets/generated/cp3/tavern-wall-tile-source.png",
       "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceRegion": [
+        0,
+        0,
         1254,
         1254
       ],
@@ -23,8 +29,8 @@
         "#364E6A"
       ],
       "bounds": {
-        "width": 64,
         "height": 64,
+        "width": 64,
         "y": 0,
         "x": 0
       },
@@ -36,6 +42,12 @@
       "path": "assets/generated/cp3/tavern-floor-tile.png",
       "sourcePath": "assets/generated/cp3/tavern-floor-tile-source.png",
       "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceRegion": [
+        0,
+        0,
         1254,
         1254
       ],
@@ -53,8 +65,8 @@
         "#8A6547"
       ],
       "bounds": {
-        "width": 64,
         "height": 64,
+        "width": 64,
         "y": 0,
         "x": 0
       },
@@ -66,6 +78,12 @@
       "path": "assets/generated/cp3/timber-beam.png",
       "sourcePath": "assets/generated/cp3/timber-beam-source.png",
       "sourceSize": [
+        2172,
+        724
+      ],
+      "sourceRegion": [
+        0,
+        0,
         2172,
         724
       ],
@@ -83,8 +101,8 @@
         "#C9A85E"
       ],
       "bounds": {
-        "width": 126,
         "height": 13,
+        "width": 126,
         "y": 10,
         "x": 1
       },
@@ -96,6 +114,12 @@
       "path": "assets/generated/cp3/hanging-lantern.png",
       "sourcePath": "assets/generated/cp3/hanging-lantern-source.png",
       "sourceSize": [
+        887,
+        1774
+      ],
+      "sourceRegion": [
+        0,
+        0,
         887,
         1774
       ],
@@ -119,8 +143,8 @@
         "#F3ECDD"
       ],
       "bounds": {
-        "width": 24,
         "height": 47,
+        "width": 24,
         "y": 9,
         "x": 4
       },
@@ -132,6 +156,12 @@
       "path": "assets/generated/cp3/bottle-shelf.png",
       "sourcePath": "assets/generated/cp3/bottle-shelf-source.png",
       "sourceSize": [
+        1774,
+        887
+      ],
+      "sourceRegion": [
+        0,
+        0,
         1774,
         887
       ],
@@ -155,8 +185,8 @@
         "#F3ECDD"
       ],
       "bounds": {
-        "width": 96,
         "height": 57,
+        "width": 96,
         "y": 5,
         "x": 16
       },
@@ -168,6 +198,12 @@
       "path": "assets/generated/cp3/barrel.png",
       "sourcePath": "assets/generated/cp3/barrel-source.png",
       "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceRegion": [
+        0,
+        0,
         1254,
         1254
       ],
@@ -190,13 +226,262 @@
         "#F3ECDD"
       ],
       "bounds": {
-        "width": 44,
         "height": 57,
+        "width": 44,
         "y": 5,
         "x": 10
       },
       "sha256": "0314314ba30d19511b26291e457f6c0d19be1a761030ad63f40ca1a3fd4bf156",
       "sourceSha256": "ac1ae0dafabf5a80dd85a110648b4d8d4f241fafd2315cf8318a2d07a9f658d8"
+    },
+    {
+      "id": "cp3-tavern-wordmark",
+      "path": "assets/generated/cp3/tavern-wordmark.png",
+      "sourcePath": "assets/generated/cp3/tavern-wordmark-source.png",
+      "sourceSize": [
+        2172,
+        724
+      ],
+      "sourceRegion": [
+        0,
+        0,
+        2172,
+        724
+      ],
+      "logicalSize": [
+        384,
+        128
+      ],
+      "transparentPixels": 27365,
+      "opaquePixels": 21787,
+      "partialAlphaPixels": 0,
+      "palette": [
+        "#142238",
+        "#1E2B45",
+        "#364E6A",
+        "#5A3E2B",
+        "#7083A0",
+        "#8A6547",
+        "#A8C7D1",
+        "#C9A85E",
+        "#F3ECDD"
+      ],
+      "bounds": {
+        "height": 96,
+        "width": 377,
+        "y": 15,
+        "x": 4
+      },
+      "sha256": "a472a14e65e2eadb40efe7518a97ae48d2afed304843355add1f50f7d135a831",
+      "sourceSha256": "2c6c3d6ad4cd1f911b6306df267bc5072149e9d94793f90b5817f3458a43f59e"
+    },
+    {
+      "id": "cp3-tavern-canopy",
+      "path": "assets/generated/cp3/tavern-canopy.png",
+      "sourcePath": "assets/generated/cp3/tavern-canopy-source.png",
+      "sourceSize": [
+        2172,
+        724
+      ],
+      "sourceRegion": [
+        0,
+        94,
+        2172,
+        543
+      ],
+      "logicalSize": [
+        320,
+        80
+      ],
+      "transparentPixels": 14289,
+      "opaquePixels": 11311,
+      "partialAlphaPixels": 0,
+      "palette": [
+        "#142238",
+        "#1E2B45",
+        "#364E6A",
+        "#5A3E2B",
+        "#7083A0",
+        "#8A6547",
+        "#A8C7D1",
+        "#C9A85E",
+        "#D24943",
+        "#F3ECDD"
+      ],
+      "bounds": {
+        "height": 64,
+        "width": 314,
+        "y": 8,
+        "x": 3
+      },
+      "sha256": "6286d436070db78f31af5e6ba9d742cb6a3a4a6d15308636af0c0837f8e64994",
+      "sourceSha256": "00618da8b9ff8dcba97e6cf435ba4102025974455462e36da1666988526b077e"
+    },
+    {
+      "id": "cp3-tavern-counter",
+      "path": "assets/generated/cp3/tavern-counter.png",
+      "sourcePath": "assets/generated/cp3/tavern-counter-source.png",
+      "sourceSize": [
+        2172,
+        724
+      ],
+      "sourceRegion": [
+        0,
+        136,
+        2172,
+        448
+      ],
+      "logicalSize": [
+        640,
+        128
+      ],
+      "transparentPixels": 23799,
+      "opaquePixels": 58121,
+      "partialAlphaPixels": 0,
+      "palette": [
+        "#142238",
+        "#1E2B45",
+        "#364E6A",
+        "#5A3E2B",
+        "#7083A0",
+        "#8A6547",
+        "#A8C7D1",
+        "#C9A85E",
+        "#D24943",
+        "#F3ECDD"
+      ],
+      "bounds": {
+        "height": 124,
+        "width": 630,
+        "y": 3,
+        "x": 5
+      },
+      "sha256": "4e7dda0bf6b233a628645207fcf215532ec353d5e97c1a3042d82cfdf64614d3",
+      "sourceSha256": "b4ac47ab5e783a81b916606fd0840654ac934efe5514d52456f62e902bb71ec3"
+    },
+    {
+      "id": "cp3-tavern-right-rack",
+      "path": "assets/generated/cp3/tavern-right-rack.png",
+      "sourcePath": "assets/generated/cp3/tavern-right-rack-source.png",
+      "sourceSize": [
+        2172,
+        724
+      ],
+      "sourceRegion": [
+        0,
+        0,
+        2172,
+        724
+      ],
+      "logicalSize": [
+        256,
+        80
+      ],
+      "transparentPixels": 12900,
+      "opaquePixels": 7580,
+      "partialAlphaPixels": 0,
+      "palette": [
+        "#142238",
+        "#1E2B45",
+        "#364E6A",
+        "#5A3E2B",
+        "#7083A0",
+        "#8A6547",
+        "#A8C7D1",
+        "#C9A85E",
+        "#D24943",
+        "#F3ECDD"
+      ],
+      "bounds": {
+        "height": 62,
+        "width": 242,
+        "y": 11,
+        "x": 7
+      },
+      "sha256": "553abf2cccdf58e4ba95ac95e6ec6c55bdfba5365001bb46beffed249bb15ce9",
+      "sourceSha256": "dc8e05adb67e3021a1b8e97655e170fea3e36056edef32e68a74dfa2f3f178ab"
+    },
+    {
+      "id": "cp3-comment-wordmark",
+      "path": "assets/generated/cp3/comment-wordmark.png",
+      "sourcePath": "assets/generated/cp3/comment-wordmark-source.png",
+      "sourceSize": [
+        2172,
+        724
+      ],
+      "sourceRegion": [
+        0,
+        0,
+        2172,
+        724
+      ],
+      "logicalSize": [
+        288,
+        96
+      ],
+      "transparentPixels": 15328,
+      "opaquePixels": 12320,
+      "partialAlphaPixels": 0,
+      "palette": [
+        "#142238",
+        "#1E2B45",
+        "#364E6A",
+        "#5A3E2B",
+        "#7083A0",
+        "#8A6547",
+        "#A8C7D1",
+        "#C9A85E",
+        "#F3ECDD"
+      ],
+      "bounds": {
+        "height": 68,
+        "width": 263,
+        "y": 21,
+        "x": 15
+      },
+      "sha256": "4fb934273b5ffbad7e21619468313abe1f16c38d800cff1299dfe88969ff62dd",
+      "sourceSha256": "35adbb211661dd71c1d304afc8494d6187e282e9a75e22287099b105f51c93b0"
+    },
+    {
+      "id": "cp3-playing-wordmark",
+      "path": "assets/generated/cp3/playing-wordmark.png",
+      "sourcePath": "assets/generated/cp3/playing-wordmark-source.png",
+      "sourceSize": [
+        2172,
+        724
+      ],
+      "sourceRegion": [
+        0,
+        0,
+        2172,
+        724
+      ],
+      "logicalSize": [
+        240,
+        80
+      ],
+      "transparentPixels": 9760,
+      "opaquePixels": 9440,
+      "partialAlphaPixels": 0,
+      "palette": [
+        "#142238",
+        "#1E2B45",
+        "#364E6A",
+        "#5A3E2B",
+        "#7083A0",
+        "#8A6547",
+        "#A8C7D1",
+        "#C9A85E",
+        "#F3ECDD"
+      ],
+      "bounds": {
+        "height": 59,
+        "width": 221,
+        "y": 16,
+        "x": 11
+      },
+      "sha256": "0eaf3cc6cae9352c6ea359a50c611d9cdd5f33c81c3dfcecac4add5683a7c7fa",
+      "sourceSha256": "db4948a7765a2d6fb66053794cd095f0ff12ca1aabce807f6f9c123cec8139bc"
     }
   ]
 }

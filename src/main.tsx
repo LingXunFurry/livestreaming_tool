@@ -9,8 +9,15 @@ import './scene-review.css'
 import './styles.css'
 
 const sceneBackground = new URL('../assets/backgrounds/cp3-tavern.png', import.meta.url).href
+const sceneTitle = new URL('../assets/generated/cp3/tavern-wordmark.png', import.meta.url).href
 
 const sceneAssets = [
+  { name: '酒馆标题艺术字', size: '384 × 128', image: sceneTitle },
+  { name: '梁架与悬挂陈设组', size: '320 × 80', image: new URL('../assets/generated/cp3/tavern-canopy.png', import.meta.url).href },
+  { name: '吧台与供酒陈设组', size: '640 × 128', image: new URL('../assets/generated/cp3/tavern-counter.png', import.meta.url).href },
+  { name: '右上酒桶挂杯陈设组', size: '256 × 80', image: new URL('../assets/generated/cp3/tavern-right-rack.png', import.meta.url).href },
+  { name: '留言板中英文艺术字', size: '288 × 96', image: new URL('../assets/generated/cp3/comment-wordmark.png', import.meta.url).href },
+  { name: '正在播放中英文艺术字', size: '240 × 80', image: new URL('../assets/generated/cp3/playing-wordmark.png', import.meta.url).href },
   { name: '木墙纹理', size: '64 × 64', image: new URL('../assets/generated/cp3/tavern-wall-tile.png', import.meta.url).href },
   { name: '木地板纹理', size: '64 × 64', image: new URL('../assets/generated/cp3/tavern-floor-tile.png', import.meta.url).href },
   { name: '横向木梁', size: '128 × 32', image: new URL('../assets/generated/cp3/timber-beam.png', import.meta.url).href },
@@ -57,7 +64,7 @@ function Preview({ scene = false }: { scene?: boolean }) {
       </header>
 
       <div className="intro">
-        <div><p className="eyebrow">{scene ? 'CHECKPOINT 03 / TAVERN SCENE' : 'CHECKPOINT 01 / LAYOUT'}</p><h1>凌巽的酒馆 · {scene ? '像素场景组合' : '横屏布局线框'}</h1><p className="intro-description">{scene ? '深蓝木墙、酒瓶与灯火。切换背景和 UI，检查这间酒馆的整体效果。' : '复核 1920 × 1080 双平台布局，保留已确认的区域位置与比例。'}</p></div>
+        <div><p className="eyebrow">{scene ? 'CHECKPOINT 03 / TAVERN SCENE' : 'CHECKPOINT 01 / LAYOUT'}</p><h1>凌巽的酒馆 · {scene ? '像素场景返修' : '横屏布局线框'}</h1><p className="intro-description">{scene ? '梁架、旗帜与供酒吧台。切换 UI，查看独立背景与艺术字叠加的效果。' : '复核 1920 × 1080 双平台布局，保留已确认的区域位置与比例。'}</p></div>
         <div className="phase-note"><span>当前阶段</span><strong>{scene ? 'CP3 · 酒馆场景' : 'CP1 · 横屏布局'}</strong><small>{scene ? '布局已通过 · 场景等待验收' : '美术与场景素材另行验收'}</small></div>
       </div>
 
@@ -82,6 +89,7 @@ function Preview({ scene = false }: { scene?: boolean }) {
             <div className={`scaled-stage ${scene ? 'scene-preview' : ''}`} style={{ transform: `scale(${scale})`, visibility: scale ? 'visible' : 'hidden' }}>
               {scene && <img className="scene-background" src={sceneBackground} width="1920" height="1080" alt="模块化酒馆背景，游戏窗口透明" />}
               {(!scene || showUI) && <Overlay platform={platform} lyrics={lyrics} />}
+              {scene && showUI && <img className="scene-title-art" src={sceneTitle} width="384" height="128" alt="凌巽的酒馆" />}
               {(!scene || guides) && <div className={`game-guide ${guides ? 'with-guides' : ''}`} aria-label="仅预览显示的透明游戏区">
                 {guides && <><span className="game-dimension">01 / 游戏画面</span><span className="corner top-left" /><span className="corner top-right" /><span className="corner bottom-left" /><span className="corner bottom-right" /></>}
                 <div className="game-guide-content"><span className="crosshair" aria-hidden="true" /><h2>把游戏，放在这里。</h2><p>1280 × 720 <span>·</span> 16:9 透明区域</p><small>游戏由直播软件捕获，本页只叠加装饰。</small></div>
@@ -94,12 +102,14 @@ function Preview({ scene = false }: { scene?: boolean }) {
       </section>
 
       {scene && <section className="scene-assets" aria-label="CP3 独立场景素材">
-        <div className="scene-assets-heading"><div><p className="eyebrow">SIX INDEPENDENT MODULES</p><h2>逐件制作，组合成景。</h2><p>下方六件为本阶段新增素材，均等待美术验收。酒杯、木桌与蜡烛沿用 CP2。</p></div><a href={`data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify(sceneLayout, null, 2))}`} download="cp3-tavern.json">下载物件布局 JSON ↗</a></div>
+        <div className="scene-assets-heading"><div><p className="eyebrow">CP3 / INDEPENDENT ASSETS</p><h2>梁架、吧台与酒馆字样。</h2><p>前六件为返修新稿，其余为首版独立模块，均等待美术验收。</p></div><a href={`data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify(sceneLayout, null, 2))}`} download="cp3-tavern.json">下载物件布局 JSON ↗</a></div>
         <div className="scene-asset-grid">{sceneAssets.map(asset => <article key={asset.name}>
           <div className="scene-asset-stage checkerboard"><img src={asset.image} alt={`${asset.name}独立像素素材`} /></div>
-          <h3>{asset.name}</h3><p>{asset.size} px · 2×</p><a href={asset.image} download={`${asset.name}.png`}>下载 PNG ↗</a>
+          <h3>{asset.name}</h3><p>{asset.size} px</p><a href={asset.image} download={`${asset.name}.png`}>下载 PNG ↗</a>
         </article>)}</div>
       </section>}
+
+      {scene && <p className="scene-font-note">栏目文字采用 Fusion Pixel Font 10px 简中比例版 · TakWolf · OFL-1.1。<a href={new URL('../assets/fonts/fusion-pixel/OFL.txt', import.meta.url).href}>字体许可</a> · <a href={new URL('../assets/fonts/fusion-pixel/LICENSES/ark-pixel/OFL.txt', import.meta.url).href}>Ark Pixel</a> · <a href={new URL('../assets/fonts/fusion-pixel/LICENSES/boutique-bitmap-9x9/OFL.txt', import.meta.url).href}>Boutique Bitmap</a> · <a href={new URL('../assets/fonts/fusion-pixel/LICENSES/galmuri/LICENSE.txt', import.meta.url).href}>Galmuri</a></p>}
 
       <div className="review-details">
         <section className="layout-notes" aria-labelledby="layout-notes-title"><p className="eyebrow">APPROVED LAYOUT</p><h2 id="layout-notes-title">已确认的区域比例。</h2>

@@ -238,10 +238,10 @@
       "id": "scene-cp3-tavern",
       "name": "CP3 酒馆无 UI 背景",
       "path": "assets/backgrounds/cp3-tavern.png",
-      "source": "Offline composition of nine project modules",
+      "source": "Offline composition of six project modules",
       "generationMethod": "scripts/compose-cp3-scene.ps1",
       "layoutPath": "assets/layouts/cp3-tavern.json",
-      "version": 1,
+      "version": 2,
       "logicalSize": [
         1920,
         1080
@@ -250,18 +250,200 @@
       "license": "Composed from project AI-generated modules; no third-party input assets",
       "status": "WAITING_USER_REVIEW",
       "userConfirmed": false,
-      "sha256": "1e2440e2f950de8cf9b5df38e081f39ded91af63c5679d35bb2c6b017728b586",
+      "sha256": "eca6a86b0049aba062d6133d0fc68e91e5d01d7d862140633d3b23f89bfe475a",
       "dependencies": [
-        "cp2-candle",
-        "cp2-tavern-mug",
-        "cp2-wooden-table",
-        "cp3-barrel",
-        "cp3-bottle-shelf",
-        "cp3-hanging-lantern",
+        "cp3-tavern-canopy",
+        "cp3-tavern-counter",
         "cp3-tavern-floor-tile",
+        "cp3-tavern-right-rack",
         "cp3-tavern-wall-tile",
         "cp3-timber-beam"
       ]
+    },
+    {
+      "id": "cp3-tavern-wordmark",
+      "name": "凌巽的酒馆艺术字",
+      "path": "assets/generated/cp3/tavern-wordmark.png",
+      "sourcePath": "assets/generated/cp3/tavern-wordmark-source.png",
+      "source": "Original AI-generated asset",
+      "generationMethod": "built-in image_gen, text-only; nearest-neighbor crop and V2 palette normalization",
+      "promptFile": "assets/prompts/cp3/tavern-wordmark.md",
+      "version": 1,
+      "logicalSize": [
+        384,
+        128
+      ],
+      "kind": "wordmark",
+      "usage": "CP3 revision scene review",
+      "license": "AI-generated for this project; no input images",
+      "status": "WAITING_USER_REVIEW",
+      "userConfirmed": false,
+      "postprocess": "scripts/prepare-cp2-assets.ps1 -Checkpoint cp3",
+      "sha256": "a472a14e65e2eadb40efe7518a97ae48d2afed304843355add1f50f7d135a831",
+      "sourceSha256": "2c6c3d6ad4cd1f911b6306df267bc5072149e9d94793f90b5817f3458a43f59e",
+      "sourceSize": [
+        2172,
+        724
+      ]
+    },
+    {
+      "id": "cp3-tavern-canopy",
+      "name": "酒馆梁架与悬挂陈设组",
+      "path": "assets/generated/cp3/tavern-canopy.png",
+      "sourcePath": "assets/generated/cp3/tavern-canopy-source.png",
+      "source": "Original AI-generated asset",
+      "generationMethod": "built-in image_gen, text-only; nearest-neighbor crop and V2 palette normalization",
+      "promptFile": "assets/prompts/cp3/tavern-canopy.md",
+      "version": 1,
+      "logicalSize": [
+        320,
+        80
+      ],
+      "kind": "scene-group",
+      "usage": "CP3 revision scene review",
+      "license": "AI-generated for this project; no input images",
+      "status": "WAITING_USER_REVIEW",
+      "userConfirmed": false,
+      "postprocess": "scripts/prepare-cp2-assets.ps1 -Checkpoint cp3",
+      "sourceRegion": [
+        0,
+        94,
+        2172,
+        543
+      ],
+      "sha256": "6286d436070db78f31af5e6ba9d742cb6a3a4a6d15308636af0c0837f8e64994",
+      "sourceSha256": "00618da8b9ff8dcba97e6cf435ba4102025974455462e36da1666988526b077e",
+      "sourceSize": [
+        2172,
+        724
+      ]
+    },
+    {
+      "id": "cp3-tavern-counter",
+      "name": "连贯吧台与供酒陈设组",
+      "path": "assets/generated/cp3/tavern-counter.png",
+      "sourcePath": "assets/generated/cp3/tavern-counter-source.png",
+      "source": "Original AI-generated asset",
+      "generationMethod": "built-in image_gen, text-only; nearest-neighbor crop and V2 palette normalization",
+      "promptFile": "assets/prompts/cp3/tavern-counter.md",
+      "version": 1,
+      "logicalSize": [
+        640,
+        128
+      ],
+      "kind": "scene-group",
+      "usage": "CP3 revision scene review",
+      "license": "AI-generated for this project; no input images",
+      "status": "WAITING_USER_REVIEW",
+      "userConfirmed": false,
+      "postprocess": "scripts/prepare-cp2-assets.ps1 -Checkpoint cp3",
+      "sourceRegion": [
+        0,
+        136,
+        2172,
+        448
+      ],
+      "sha256": "4e7dda0bf6b233a628645207fcf215532ec353d5e97c1a3042d82cfdf64614d3",
+      "sourceSha256": "b4ac47ab5e783a81b916606fd0840654ac934efe5514d52456f62e902bb71ec3",
+      "sourceSize": [
+        2172,
+        724
+      ]
+    },
+    {
+      "id": "font-fusion-pixel",
+      "name": "Fusion Pixel 10px 简中比例版",
+      "path": "assets/fonts/fusion-pixel/fusion-pixel-10px-proportional-zh_hans.otf.woff2",
+      "source": "https://github.com/TakWolf/fusion-pixel-font/releases/tag/2026.10.25",
+      "version": "2026.10.25",
+      "license": "SIL Open Font License 1.1",
+      "licensePath": "assets/fonts/fusion-pixel/OFL.txt",
+      "usage": "CP3 preview UI text",
+      "status": "WAITING_USER_REVIEW",
+      "userConfirmed": false,
+      "sha256": "37c5b5f15a84fda5f41f8592970cb0dbb7d2bb3b0d004c18006375dc36803c12"
+    },
+    {
+      "id": "cp3-tavern-right-rack",
+      "name": "右上酒桶挂杯陈设组",
+      "path": "assets/generated/cp3/tavern-right-rack.png",
+      "sourcePath": "assets/generated/cp3/tavern-right-rack-source.png",
+      "source": "Original AI-generated asset",
+      "generationMethod": "built-in image_gen; nearest-neighbor and V2 palette normalization",
+      "promptFile": "assets/prompts/cp3/tavern-right-rack.md",
+      "version": 1,
+      "logicalSize": [
+        256,
+        80
+      ],
+      "kind": "scene-group",
+      "usage": "CP3 revision review",
+      "license": "AI-generated for this project; original project-generated inputs only",
+      "status": "WAITING_USER_REVIEW",
+      "userConfirmed": false,
+      "postprocess": "scripts/prepare-cp2-assets.ps1 -Checkpoint cp3",
+      "sha256": "553abf2cccdf58e4ba95ac95e6ec6c55bdfba5365001bb46beffed249bb15ce9",
+      "sourceSha256": "dc8e05adb67e3021a1b8e97655e170fea3e36056edef32e68a74dfa2f3f178ab",
+      "sourceSize": [
+        2172,
+        724
+      ]
+    },
+    {
+      "id": "cp3-comment-wordmark",
+      "name": "酒馆留言板 / COMMENT 艺术字",
+      "path": "assets/generated/cp3/comment-wordmark.png",
+      "sourcePath": "assets/generated/cp3/comment-wordmark-source.png",
+      "source": "Original AI-generated asset",
+      "generationMethod": "built-in image_gen; nearest-neighbor and V2 palette normalization",
+      "promptFile": "assets/prompts/cp3/comment-wordmark.md",
+      "version": 1,
+      "logicalSize": [
+        288,
+        96
+      ],
+      "kind": "wordmark",
+      "usage": "CP3 revision review",
+      "license": "AI-generated for this project; original project-generated inputs only",
+      "status": "WAITING_USER_REVIEW",
+      "userConfirmed": false,
+      "postprocess": "scripts/prepare-cp2-assets.ps1 -Checkpoint cp3",
+      "inputPath": "assets/generated/cp3/comment-wordmark-input.png",
+      "sha256": "4fb934273b5ffbad7e21619468313abe1f16c38d800cff1299dfe88969ff62dd",
+      "sourceSha256": "35adbb211661dd71c1d304afc8494d6187e282e9a75e22287099b105f51c93b0",
+      "sourceSize": [
+        2172,
+        724
+      ],
+      "inputSha256": "7af432affbe50cefd2762e37e004996304e86bbe7e79d24e43cb279d054a7352"
+    },
+    {
+      "id": "cp3-playing-wordmark",
+      "name": "正在播放 / NOW PLAYING 艺术字",
+      "path": "assets/generated/cp3/playing-wordmark.png",
+      "sourcePath": "assets/generated/cp3/playing-wordmark-source.png",
+      "source": "Original AI-generated asset",
+      "generationMethod": "built-in image_gen; nearest-neighbor and V2 palette normalization",
+      "promptFile": "assets/prompts/cp3/playing-wordmark.md",
+      "version": 1,
+      "logicalSize": [
+        240,
+        80
+      ],
+      "kind": "wordmark",
+      "usage": "CP3 revision review",
+      "license": "AI-generated for this project; original project-generated inputs only",
+      "status": "WAITING_USER_REVIEW",
+      "userConfirmed": false,
+      "postprocess": "scripts/prepare-cp2-assets.ps1 -Checkpoint cp3",
+      "inputPath": "assets/generated/cp3/playing-wordmark-input.png",
+      "sha256": "0eaf3cc6cae9352c6ea359a50c611d9cdd5f33c81c3dfcecac4add5683a7c7fa",
+      "sourceSha256": "db4948a7765a2d6fb66053794cd095f0ff12ca1aabce807f6f9c123cec8139bc",
+      "sourceSize": [
+        2172,
+        724
+      ],
+      "inputSha256": "9101f700067b7f4cbe974086ff03d01cebfa7c0a0ac82ccee6795af17467d530"
     }
   ],
   "note": "CP2 三件独立透明像素素材已于 2026-11-07 获用户验收；CP3 新素材与组合背景待用户验收。",

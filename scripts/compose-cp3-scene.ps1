@@ -17,7 +17,7 @@ $usedAssets = [System.Collections.Generic.HashSet[string]]::new()
 try {
     foreach ($layer in $layout.layers) {
         $asset = $manifest.assets | Where-Object id -eq $layer.asset
-        if (@($asset).Count -ne 1 -or $asset.id -notmatch '^cp[23]-') { throw "Unknown scene asset: $($layer.asset)" }
+        if (@($asset).Count -ne 1 -or $asset.id -notmatch '^cp[23]-' -or $asset.kind -eq 'wordmark') { throw "Invalid background asset: $($layer.asset)" }
         foreach ($value in @($layer.x, $layer.y, $layer.scale)) {
             if ($null -eq $value -or $value -isnot [ValueType] -or [double]$value -ne [Math]::Floor([double]$value)) { throw 'Positions and scales must be integers.' }
         }
@@ -29,6 +29,17 @@ try {
         if (!$assetPath.StartsWith($assetRoot, [StringComparison]::OrdinalIgnoreCase)) { throw 'Asset path escapes the project asset directory.' }
         $bitmap = [System.Drawing.Bitmap]::new($assetPath)
         try {
+            if ($null -ne $layer.sourceRegion) {
+                $sourceRegion = @($layer.sourceRegion)
+                if ($sourceRegion.Count -ne 4) { throw 'Source region must contain x, y, width, height.' }
+                foreach ($value in $sourceRegion) {
+                    if ($value -isnot [ValueType] -or $value -ne [Math]::Floor([double]$value)) { throw 'Source region values must be integers.' }
+                }
+                if ($sourceRegion[0] -lt 0 -or $sourceRegion[1] -lt 0 -or $sourceRegion[2] -lt 1 -or $sourceRegion[3] -lt 1 -or $sourceRegion[0] + $sourceRegion[2] -gt $bitmap.Width -or $sourceRegion[1] + $sourceRegion[3] -gt $bitmap.Height) { throw 'Source region exceeds the asset.' }
+                $cropped = $bitmap.Clone([System.Drawing.Rectangle]::new($sourceRegion[0], $sourceRegion[1], $sourceRegion[2], $sourceRegion[3]), [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
+                $bitmap.Dispose()
+                $bitmap = $cropped
+            }
             $bitmap.RotateFlip([System.Drawing.RotateFlipType]([int]($rotation / 90)))
             $width = $bitmap.Width * $layer.scale
             $height = $bitmap.Height * $layer.scale

@@ -5,7 +5,7 @@ $projectRoot = Split-Path -Parent $PSScriptRoot
 $manifest = Get-Content (Join-Path $projectRoot 'assets/manifest.json') -Raw | ConvertFrom-Json
 $palette = @($manifest.palette | ForEach-Object { [System.Drawing.ColorTranslator]::FromHtml($_) })
 $assets = @($manifest.assets | Where-Object { $_.id.StartsWith("$Checkpoint-") })
-if ($assets.Count -ne $(if ($Checkpoint -eq 'cp2') { 3 } else { 6 }) -or $palette.Count -ne 10) { throw 'Unexpected asset count or palette.' }
+if (($Checkpoint -eq 'cp2' -and $assets.Count -ne 3) -or $assets.Count -lt 1 -or $palette.Count -ne 10) { throw 'Unexpected asset count or palette.' }
 $checks = @()
 
 foreach ($asset in $assets) {
@@ -18,10 +18,16 @@ foreach ($asset in $assets) {
     try {
         if ($source.Width -lt $width -or $source.Height -lt $height) { throw "Invalid source dimensions for $($asset.id)" }
         if (!$tile -and $source.GetPixel(0, 0).A -ne 0) { throw "Source lacks a transparent corner for $($asset.id)" }
+        $region = if ($asset.sourceRegion) { @($asset.sourceRegion) } else { @(0, 0, $source.Width, $source.Height) }
+        if ($region.Count -ne 4) { throw 'Source region must contain x, y, width, height.' }
+        foreach ($value in $region) {
+            if ($value -isnot [ValueType] -or $value -ne [Math]::Floor([double]$value)) { throw 'Source region values must be integers.' }
+        }
+        if ($region[0] -lt 0 -or $region[1] -lt 0 -or $region[2] -lt 1 -or $region[3] -lt 1 -or $region[0] + $region[2] -gt $source.Width -or $region[1] + $region[3] -gt $source.Height) { throw 'Source region exceeds the image.' }
         for ($y = 0; $y -lt $height; $y++) {
             for ($x = 0; $x -lt $width; $x++) {
-                $sourceX = [int][Math]::Floor(($x + 0.5) * $source.Width / $width)
-                $sourceY = [int][Math]::Floor(($y + 0.5) * $source.Height / $height)
+                $sourceX = $region[0] + [int][Math]::Floor(($x + 0.5) * $region[2] / $width)
+                $sourceY = $region[1] + [int][Math]::Floor(($y + 0.5) * $region[3] / $height)
                 $pixel = $source.GetPixel($sourceX, $sourceY)
                 if ($tile -and $pixel.A -ne 255) { throw "Transparent texture source for $($asset.id)" }
                 if ($pixel.A -lt 128) { continue }
@@ -87,6 +93,7 @@ foreach ($asset in $assets) {
             path = $asset.path
             sourcePath = $asset.sourcePath
             sourceSize = $sourceSize
+            sourceRegion = $region
             logicalSize = @($saved.Width, $saved.Height)
             transparentPixels = $transparent
             opaquePixels = $opaque

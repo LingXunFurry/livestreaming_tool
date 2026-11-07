@@ -1,7 +1,31 @@
+.scene-title-art { position: absolute; left: 768px; top: 12px; image-rendering: pixelated; pointer-events: none; }
+@font-face { font-family: 'Fusion Pixel'; src: url('../assets/fonts/fusion-pixel/fusion-pixel-10px-proportional-zh_hans.otf.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
 .scene-background { position: absolute; inset: 0; image-rendering: pixelated; }
-.scene-preview .overlay { --panel: #142238; --panel-line: #7083A0; color: #F3ECDD; }
+.scene-preview .overlay { --panel: #142238; --panel-line: #8A6547; color: #F3ECDD; font-family: 'Fusion Pixel', 'Microsoft YaHei', sans-serif; font-synthesis: none; text-rendering: geometricPrecision; }
 .scene-preview .stream-header { background: transparent; border: 0; }
-.scene-preview .tavern-name { font-family: KaiTi, STKaiti, "Microsoft YaHei", serif; font-size: 54px; font-weight: 700; letter-spacing: 10px; color: #C9A85E; text-shadow: 3px 3px #142238; }
+.scene-preview .tavern-name { visibility: hidden; }
+.scene-preview .side-board, .scene-preview .lyrics-board { border-width: 4px; box-shadow: inset 0 0 0 4px #1E2B45, 0 4px #142238; }
+.scene-preview .module-heading h2 { color: #C9A85E; font-size: 30px; line-height: 1.4; font-weight: 400; }
+.scene-preview [data-platform='bilibili'] .module-heading h2 { width: 288px; height: 80px; margin-top: 0; font-size: 0; background: url('../assets/generated/cp3/comment-wordmark.png') -15px center / 288px 96px no-repeat; image-rendering: pixelated; }
+.scene-preview [data-platform='bilibili'] .module-heading .module-index { display: none; }
+.scene-preview [data-platform='bilibili'] .messages { margin-top: 18px; }
+.scene-preview [data-platform='bilibili'] .message { padding: 14px 0; }
+.scene-preview .lyrics-board { padding: 16px 28px; }
+.scene-preview .lyrics-heading .module-index { display: block; width: 240px; height: 72px; font-size: 0; background: url('../assets/generated/cp3/playing-wordmark.png') -11px center / 240px 80px no-repeat; image-rendering: pixelated; }
+.scene-preview .song-title { margin-top: 6px; }
+.scene-preview .lyric-line, .scene-preview .lyric-line.current { margin-top: 6px; line-height: 1.5; }
+.scene-preview .module-index, .scene-preview .small-label { font-size: 20px; letter-spacing: 0; }
+.scene-preview .module-description, .scene-preview .quest p, .scene-preview .lyric-line { font-size: 20px; }
+.scene-preview .message-meta, .scene-preview .message-meta > span, .scene-preview .sample-tag,
+.scene-preview .song-title > span, .scene-preview .quest-count, .scene-preview .board-footnote { font-size: 20px; letter-spacing: 0; }
+.scene-preview .message p, .scene-preview .notice p, .scene-preview .song-title { font-size: 20px; }
+.scene-preview .quest h3 { font-size: 30px; font-weight: 400; }
+.scene-preview .quest { margin-top: 20px; padding-top: 18px; }
+.scene-preview .notice { margin-top: 18px; padding-top: 16px; }
+.scene-preview .lyric-line.current { font-size: 20px; }
+.scene-preview .stream-info { background: transparent; border: 0; padding: 0 28px; text-shadow: 2px 2px #142238; }
+.scene-preview .today-quest { position: absolute; top: 40px; max-width: 760px; }
+.scene-preview .today-quest h2 { font-size: 20px; margin-top: 10px; line-height: 1.5; }
 .scene-preview .module-index, .scene-preview .small-label, .scene-preview .message-meta b,
 .scene-preview .module-description, .scene-preview .quest p, .scene-preview .quest-count,
 .scene-preview .board-footnote, .scene-preview .sample-tag, .scene-preview .message-meta > span,
@@ -19,6 +43,7 @@
 .scene-asset-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
 .scene-asset-grid article { min-width: 0; }
 .scene-asset-stage { height: 160px; display: grid; place-items: center; border: 1px solid var(--line); }
-.scene-asset-stage img { image-rendering: pixelated; transform: scale(2); }
+.scene-asset-stage img { image-rendering: pixelated; max-width: 100%; max-height: 144px; object-fit: contain; }
 .scene-asset-grid h3 { font-size: 16px; font-weight: 500; margin: 12px 0 6px; }
 .scene-asset-grid p { font-size: 12px; color: var(--muted); }
+.scene-font-note { font-size: 12px; color: var(--muted); line-height: 2; padding-top: 20px; }

@@ -1,0 +1,48 @@
+{
+  "gameWindow": [
+    40,
+    144,
+    1280,
+    720
+  ],
+  "frameInnerEdges": [
+    40,
+    144,
+    1320,
+    864
+  ],
+  "frameAdjacentPixels": 4000,
+  "opaqueTimberEdges": true,
+  "counterVisibleSpan": [
+    40,
+    1320
+  ],
+  "counterParts": [
+    [
+      40,
+      840
+    ],
+    [
+      840,
+      860
+    ],
+    [
+      860,
+      1320
+    ]
+  ],
+  "checkedAt": "2026-11-07T09:44:55.965642+00:00",
+  "rightDecorationVisibleSpan": [
+    1396,
+    1880
+  ],
+  "rightDecorationVisibleBottom": 140,
+  "commentsIndexHidden": true,
+  "headingVisibleLeft": 1384,
+  "commentAlphaLeft": 15,
+  "playingAlphaLeft": 11,
+  "headingBackgroundOffsets": [
+    -15,
+    -11
+  ]
+}
