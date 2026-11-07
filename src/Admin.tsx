@@ -80,7 +80,7 @@ export function Admin() {
     <main className="admin-shell">
       <header className="admin-header">
         <div>
-          <p className="eyebrow">CP0 / LOCAL RUNTIME</p>
+          <p className="eyebrow">SYSTEM / LOCAL RUNTIME</p>
           <h1>凌巽的酒馆 · 系统状态</h1>
         </div>
         <span className="admin-state">{displayState}</span>
@@ -103,7 +103,7 @@ export function Admin() {
             <dt>WebSocket 服务</dt><dd>{status?.websocket.state || '等待响应'}</dd>
             <dt>当前页面连接</dt><dd>{connection}</dd>
             <dt>连接数量</dt><dd>{status?.websocket.clients ?? '—'}</dd>
-            <dt>当前阶段</dt><dd>{status?.checkpoint || 'CP0'}</dd>
+            <dt>当前阶段</dt><dd>{status?.checkpoint || 'CP1'}</dd>
           </dl>
         </div>
         <div>

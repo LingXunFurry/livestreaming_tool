@@ -43,6 +43,7 @@ test('真实服务生命周期、并发、关闭、冲突与恢复', { timeout: 
       const result = await cli('start', environment);
       assert.equal(result.exitCode, 0);
       assert.equal(result.state, 'RUNNING');
+      assert.equal(result.checkpoint, 'CP1');
       assert.equal(result.port, port);
       assert.equal(result.adapters.music.state, 'DISCONNECTED');
       assert.equal(result.adapters.bilibili.state, 'NOT_CONFIGURED');

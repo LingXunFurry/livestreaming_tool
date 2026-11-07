@@ -38,7 +38,7 @@ try {
       instanceId,
       state: degraded ? 'DEGRADED' : 'RUNNING',
       version: packageInfo.version,
-      checkpoint: 'CP0',
+      checkpoint: 'CP1',
       startedAt,
       port,
       host: '127.0.0.1',

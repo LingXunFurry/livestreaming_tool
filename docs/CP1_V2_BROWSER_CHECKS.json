@@ -1,0 +1,75 @@
+{
+  "checkedAt": "2026-11-07T07:08:46Z",
+  "viewport": {
+    "width": 1920,
+    "height": 1080
+  },
+  "runtime": {
+    "state": "RUNNING",
+    "checkpoint": "CP1",
+    "pageChecks": {
+      "bilibili": true,
+      "douyin": true,
+      "admin": true
+    },
+    "websocketReachable": true
+  },
+  "concurrentSourceTabs": [
+    "/live/douyin?lyrics=off",
+    "/live/bilibili?lyrics=off"
+  ],
+  "states": {
+    "bilibiliOn": {
+      "canvas": { "x": 0, "y": 0, "width": 1920, "height": 1080 },
+      "header": { "x": 40, "y": 40, "width": 1840, "height": 72 },
+      "game": { "x": 40, "y": 144, "width": 1280, "height": 720 },
+      "mainPanel": { "x": 1352, "y": 144, "width": 528, "height": 576 },
+      "lyricsPanel": { "x": 1352, "y": 744, "width": 528, "height": 256 },
+      "quest": { "x": 40, "y": 888, "width": 1280, "height": 112 },
+      "board": "酒馆留言板",
+      "previewHelpers": 0
+    },
+    "bilibiliOff": {
+      "canvas": { "x": 0, "y": 0, "width": 1920, "height": 1080 },
+      "header": { "x": 40, "y": 40, "width": 1840, "height": 72 },
+      "game": { "x": 40, "y": 144, "width": 1280, "height": 720 },
+      "mainPanel": { "x": 1352, "y": 144, "width": 528, "height": 856 },
+      "lyricsPanel": null,
+      "quest": { "x": 40, "y": 888, "width": 1280, "height": 112 },
+      "board": "酒馆留言板",
+      "previewHelpers": 0
+    },
+    "douyinOn": {
+      "canvas": { "x": 0, "y": 0, "width": 1920, "height": 1080 },
+      "header": { "x": 40, "y": 40, "width": 1840, "height": 72 },
+      "game": { "x": 40, "y": 144, "width": 1280, "height": 720 },
+      "mainPanel": { "x": 1352, "y": 144, "width": 528, "height": 576 },
+      "lyricsPanel": { "x": 1352, "y": 744, "width": 528, "height": 256 },
+      "quest": { "x": 40, "y": 888, "width": 1280, "height": 112 },
+      "board": "公会告示板",
+      "previewHelpers": 0
+    },
+    "douyinOff": {
+      "canvas": { "x": 0, "y": 0, "width": 1920, "height": 1080 },
+      "header": { "x": 40, "y": 40, "width": 1840, "height": 72 },
+      "game": { "x": 40, "y": 144, "width": 1280, "height": 720 },
+      "mainPanel": { "x": 1352, "y": 144, "width": 528, "height": 856 },
+      "lyricsPanel": null,
+      "quest": { "x": 40, "y": 888, "width": 1280, "height": 112 },
+      "board": "公会告示板",
+      "previewHelpers": 0
+    }
+  },
+  "transparentBackgrounds": [
+    "rgba(0, 0, 0, 0)",
+    "rgba(0, 0, 0, 0)",
+    "rgba(0, 0, 0, 0)",
+    "rgba(0, 0, 0, 0)"
+  ],
+  "browserConsoleErrors": [],
+  "screenshots": [
+    "screenshots/cp1/preview.png",
+    "screenshots/cp1/bilibili.png",
+    "screenshots/cp1/douyin.png"
+  ]
+}

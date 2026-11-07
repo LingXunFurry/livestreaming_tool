@@ -38,12 +38,12 @@ function Preview() {
     <div className="review-shell">
       <header className="review-header">
         <a className="project-brand" href="/preview" aria-label="凌巽的酒馆布局预览首页"><span className="brand-grid" aria-hidden="true"><i /><i /><i /><i /></span><span>凌巽的酒馆 <small>OVERLAY WORKSHOP</small></span></a>
-        <span className="checkpoint-status"><span /> V2 CP0 · 待验收</span>
+        <span className="checkpoint-status"><span /> V2 CP1 · 待验收</span>
       </header>
 
       <div className="intro">
-        <div><p className="eyebrow">CHECKPOINT 00 / RUNTIME</p><h1>凌巽的酒馆 · 布局线框</h1><p className="intro-description">当前验证统一启动与双平台运行，页面使用灰度线框。</p></div>
-        <div className="phase-note"><span>当前阶段</span><strong>CP0 · 运行基础</strong><small>历史布局已确认 · 美术待后续验收</small></div>
+        <div><p className="eyebrow">CHECKPOINT 01 / LAYOUT</p><h1>凌巽的酒馆 · 横屏布局线框</h1><p className="intro-description">复核 1920 × 1080 双平台布局，保留已确认的区域位置与比例。</p></div>
+        <div className="phase-note"><span>当前阶段</span><strong>CP1 · 横屏布局</strong><small>美术与场景素材另行验收</small></div>
       </div>
 
       <section className="review-workspace" aria-label="直播布局预览">
@@ -86,7 +86,7 @@ function Preview() {
           <small>当前为美术原型与示例内容，尚未接入平台互动或音乐。</small>
         </section>
       </div>
-      <footer className="review-footer"><span>CP0 运行基础 <b>→</b> CP1 布局复核 <b>→</b> CP2 独立素材</span><a href="/admin">查看实际系统状态 ↗</a></footer>
+      <footer className="review-footer"><span>CP0 已通过 <b>→</b> CP1 待验收 <b>→</b> CP2 独立像素素材</span><a href="/admin">查看实际系统状态 ↗</a></footer>
     </div>
   )
 }
@@ -96,7 +96,7 @@ function UnavailablePage() {
   return <div className="unavailable-page"><p className="eyebrow">LINGXUN’S TAVERN</p><h1>{admin ? '管理后台还没开工。' : '这扇门还没有打开。'}</h1><p>{admin ? '横屏布局已通过。统一管理后台安排在 CP5。' : '请从布局验收页进入两个直播源。'}</p><a href="/preview">返回布局验收 ↗</a></div>
 }
 
-if (sourcePlatform) document.title = `凌巽的酒馆 · ${platformNames[sourcePlatform]}透明测试页 · CP0`
+if (sourcePlatform) document.title = `凌巽的酒馆 · ${platformNames[sourcePlatform]}透明测试页 · CP1`
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
