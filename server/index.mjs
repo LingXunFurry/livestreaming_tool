@@ -61,6 +61,7 @@ try {
       platforms: Object.fromEntries(['bilibili', 'douyin'].map(platform => [platform, {
         boardMode: settings.platforms[platform].boardMode,
         announcementText: settings.platforms[platform].announcementText,
+        benefitsText: settings.platforms[platform].benefitsText,
         lyricsEnabled: settings.platforms[platform].lyricsEnabled,
       }])),
     };
@@ -87,13 +88,14 @@ try {
   }
 
   function validateEditablePayload(input) {
-    const exactKeys = (value, expected) => value && typeof value === 'object' && !Array.isArray(value)
-      && Object.keys(value).length === expected.length && expected.every(key => Object.hasOwn(value, key));
+    const exactKeys = (value, expected, optional = []) => value && typeof value === 'object' && !Array.isArray(value)
+      && expected.every(key => Object.hasOwn(value, key))
+      && Object.keys(value).every(key => expected.includes(key) || optional.includes(key));
     const platformFields = ['boardMode', 'announcementText', 'lyricsEnabled'];
     if (!exactKeys(input, ['global', 'platforms']) || !exactKeys(input.global, ['task'])
       || !exactKeys(input.platforms, ['bilibili', 'douyin'])
-      || !exactKeys(input.platforms.bilibili, platformFields)
-      || !exactKeys(input.platforms.douyin, platformFields)) {
+      || !exactKeys(input.platforms.bilibili, platformFields, ['benefitsText'])
+      || !exactKeys(input.platforms.douyin, platformFields, ['benefitsText'])) {
       throw Object.assign(new Error('配置字段不完整或包含不允许的字段'), { status: 400 });
     }
     return input;

@@ -89,6 +89,7 @@ export function validateSettings(input, defaults) {
     if (!['comments', 'announcement'].includes(platform.boardMode)) throw new Error('boardMode 必须为 comments 或 announcement');
     if (typeof platform.announcementText !== 'string' || platform.announcementText.length > 2000) throw new Error('announcementText 必须为 2000 字以内的文本');
     if (typeof platform.lyricsEnabled !== 'boolean') throw new Error('lyricsEnabled 必须为布尔值');
+    if (typeof platform.benefitsText !== 'string' || platform.benefitsText.length > 500) throw new Error('benefitsText 必须为 500 字以内的文本');
   }
   for (const adapter of Object.values(settings.adapters)) {
     if (typeof adapter.enabled !== 'boolean') throw new Error('适配器 enabled 必须为布尔值');

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import type { BoardMode, Platform } from './Overlay'
+import { benefitsTitles, type BoardMode, type Platform } from './Overlay'
 
 interface RuntimeStatus {
   service: string
@@ -16,7 +16,7 @@ interface RuntimeStatus {
 
 interface EditableSettings {
   global: { task: string }
-  platforms: Record<Platform, { boardMode: BoardMode; announcementText: string; lyricsEnabled: boolean }>
+  platforms: Record<Platform, { boardMode: BoardMode; announcementText: string; lyricsEnabled: boolean; benefitsText: string }>
 }
 
 const platformLabels: Record<Platform, string> = { bilibili: 'B 站', douyin: '抖音' }
@@ -124,7 +124,7 @@ export function Admin() {
         <div><p className="eyebrow">SYSTEM / CP5 CONTROL</p><h1>凌巽的酒馆 · 管理后台</h1></div>
         <span className="admin-state">{displayState}</span>
       </header>
-      <p className="admin-intro">这里显示本地服务的实际状态，并保存两个直播页面各自的右栏设置。</p>
+      <p className="admin-intro">这里显示本地服务的实际状态，管理底部酒桌与两个平台各自的右栏设置。</p>
       {error && <p className="admin-error" role="alert">{error}</p>}
 
       <section className="admin-grid" aria-label="本地系统状态">
@@ -137,7 +137,17 @@ export function Admin() {
       <section className="admin-settings" aria-labelledby="admin-settings-title">
         <div className="admin-settings-heading"><div><p className="eyebrow">EDITABLE SETTINGS</p><h2 id="admin-settings-title">双平台独立设置</h2></div><button type="button" onClick={() => void save()} disabled={!settings || saveState === '保存中'}>{saveState || '保存设置'}</button></div>
         {settings ? <>
-          <div className="admin-global-fields"><label className="admin-field admin-task"><span>全局今日委托</span><input value={settings.global.task} maxLength={500} onChange={event => { setSettings({ ...settings, global: { ...settings.global, task: event.target.value } }); setSaveState('') }} /></label></div>
+          <fieldset className="admin-bottom-settings"><legend>底部酒桌</legend>
+            <label className="admin-field admin-task"><span>左桌 · 全局今日委托</span><input value={settings.global.task} maxLength={500} onChange={event => { setSettings({ ...settings, global: { ...settings.global, task: event.target.value } }); setSaveState('') }} /></label>
+            <div className="admin-platform-grid">{(['bilibili', 'douyin'] as Platform[]).map(platform => (
+              <label className="admin-field" key={platform}>
+                <span>{platformLabels[platform]}右桌 · {benefitsTitles[platform]}</span>
+                <textarea value={settings.platforms[platform].benefitsText} maxLength={500} rows={3}
+                  onChange={event => { updatePlatform(platform, { benefitsText: event.target.value }); setSaveState('') }} />
+              </label>
+            ))}</div>
+            <p className="admin-field-hint">福利正文在直播页最多显示两行，支持换行，超长省略。留空时只显示栏目名。</p>
+          </fieldset>
           <div className="admin-platform-grid">{(['bilibili', 'douyin'] as Platform[]).map(platform => {
             const value = settings.platforms[platform]
             return <fieldset key={platform}><legend>{platformLabels[platform]}专属页面</legend>

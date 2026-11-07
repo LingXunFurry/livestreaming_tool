@@ -99,14 +99,14 @@ test('真实服务生命周期、并发、关闭、冲突与恢复', { timeout: 
     await context.test('后台覆盖全部直播页字段并保持平台设置隔离', async () => {
       const initial = await (await fetch(`${origin}/api/settings`)).json();
       assert.deepEqual(Object.keys(initial.settings.global).sort(), ['task']);
-      assert.deepEqual(Object.keys(initial.settings.platforms.bilibili).sort(), ['announcementText', 'boardMode', 'lyricsEnabled']);
-      assert.deepEqual(Object.keys(initial.settings.platforms.douyin).sort(), ['announcementText', 'boardMode', 'lyricsEnabled']);
+      assert.deepEqual(Object.keys(initial.settings.platforms.bilibili).sort(), ['announcementText', 'benefitsText', 'boardMode', 'lyricsEnabled']);
+      assert.deepEqual(Object.keys(initial.settings.platforms.douyin).sort(), ['announcementText', 'benefitsText', 'boardMode', 'lyricsEnabled']);
       settingsSocket = new WebSocket(`ws://127.0.0.1:${port}/ws`);
       assert.equal((await nextJsonMessage(settingsSocket)).type, 'runtime.status');
       const payload = {
         global: { task: '寻找今晚的风' },
         platforms: {
-          bilibili: { boardMode: 'announcement', announcementText: 'B 站今晚公告', lyricsEnabled: false },
+          bilibili: { boardMode: 'announcement', announcementText: 'B 站今晚公告', lyricsEnabled: false, benefitsText: '上舰福利第一行\n第二行' },
           douyin: initial.settings.platforms.douyin,
         },
       };
@@ -119,14 +119,37 @@ test('真实服务生命周期、并发、关闭、冲突与恢复', { timeout: 
       assert.equal(update.data.platform, 'bilibili');
       assert.equal(update.data.global.task, '寻找今晚的风');
       assert.equal(update.data.platformSettings.boardMode, 'announcement');
+      assert.equal(update.data.platformSettings.benefitsText, '上舰福利第一行\n第二行');
       const afterSave = (await (await fetch(`${origin}/api/settings`)).json()).settings;
       assert.equal(afterSave.global.task, '寻找今晚的风');
       assert.equal(afterSave.platforms.douyin.boardMode, initial.settings.platforms.douyin.boardMode);
+      assert.equal(afterSave.platforms.douyin.benefitsText, '');
       const backupCount = (await readdir(path.join(directory, 'backups'))).length;
       const invalid = await fetch(`${origin}/api/settings`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...payload, global: { ...payload.global, title: 42 } }) });
       assert.equal(invalid.status, 400);
       assert.equal((await (await fetch(`${origin}/api/settings`)).json()).settings.global.task, '寻找今晚的风');
       assert.equal((await readdir(path.join(directory, 'backups'))).length, backupCount);
+    });
+
+    await context.test('福利严格校验，旧后台保存兼容且平台隔离', async () => {
+      const { settings } = await (await fetch(`${origin}/api/settings`)).json();
+      for (const benefitsText of [null, 42, '福'.repeat(501)]) {
+        const invalid = structuredClone(settings);
+        invalid.platforms.douyin.benefitsText = benefitsText;
+        assert.equal((await fetch(`${origin}/api/settings`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(invalid) })).status, 400);
+      }
+      const legacyPayload = structuredClone(settings);
+      delete legacyPayload.platforms.bilibili.benefitsText;
+      legacyPayload.platforms.douyin.benefitsText = '灯牌福利';
+      const updatePromise = nextSettingsUpdate(settingsSocket);
+      const saved = await fetch(`${origin}/api/settings`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(legacyPayload) });
+      assert.equal(saved.status, 200);
+      const result = (await saved.json()).settings;
+      assert.equal(result.platforms.bilibili.benefitsText, settings.platforms.bilibili.benefitsText);
+      assert.equal(result.platforms.douyin.benefitsText, '灯牌福利');
+      const update = await updatePromise;
+      assert.equal(update.data.platform, 'douyin');
+      assert.equal(update.data.platformSettings.benefitsText, '灯牌福利');
     });
 
     await context.test('WebSocket 真实快照与正常关闭', async () => {
@@ -150,6 +173,9 @@ test('真实服务生命周期、并发、关闭、冲突与恢复', { timeout: 
       const results = await Promise.all([cli('start', environment), cli('start', environment)]);
       assert.ok(results.every(result => result.state === 'RUNNING'));
       assert.equal(results[0].instanceId, results[1].instanceId);
+      const { settings } = await (await fetch(`${origin}/api/settings`)).json();
+      assert.equal(settings.platforms.bilibili.benefitsText, '上舰福利第一行\n第二行');
+      assert.equal(settings.platforms.douyin.benefitsText, '灯牌福利');
       assert.deepEqual(results.map(result => result.reused).sort(), [false, true]);
       await cli('stop', environment);
     });

@@ -1,0 +1,161 @@
+{
+  "checkedAt": "2026-11-07T15:03:05.106Z",
+  "origin": "http://127.0.0.1:3001",
+  "testDataOnly": true,
+  "geometry": [
+    {
+      "platform": "bilibili",
+      "bottom": {
+        "x": 40,
+        "y": 912,
+        "width": 1280,
+        "height": 112
+      },
+      "left": {
+        "x": 40,
+        "y": 912,
+        "width": 628,
+        "height": 112
+      },
+      "right": {
+        "x": 692,
+        "y": 912,
+        "width": 628,
+        "height": 112
+      },
+      "board": {
+        "x": 1352,
+        "y": 144,
+        "width": 528,
+        "height": 856
+      },
+      "task": "唱歌聊天回~~~",
+      "benefitTitle": "上舰福利",
+      "benefit": "上舰福利内容在后台填写\n此处为排版测试文案",
+      "benefitBox": {
+        "x": 720,
+        "y": 960,
+        "width": 572,
+        "height": 56
+      },
+      "taskFont": "34px",
+      "benefitsFont": "24px",
+      "lineClamp": "2",
+      "taskLabel": {
+        "x": 68,
+        "y": 928,
+        "width": 572,
+        "height": 24
+      },
+      "benefitsLabel": {
+        "x": 720,
+        "y": 928,
+        "width": 572,
+        "height": 24
+      },
+      "taskBody": {
+        "x": 68,
+        "y": 960,
+        "width": 572,
+        "height": 48
+      },
+      "rootBackground": "rgba(0, 0, 0, 0)"
+    },
+    {
+      "platform": "douyin",
+      "bottom": {
+        "x": 40,
+        "y": 912,
+        "width": 1280,
+        "height": 112
+      },
+      "left": {
+        "x": 40,
+        "y": 912,
+        "width": 628,
+        "height": 112
+      },
+      "right": {
+        "x": 692,
+        "y": 912,
+        "width": 628,
+        "height": 112
+      },
+      "board": {
+        "x": 1352,
+        "y": 144,
+        "width": 528,
+        "height": 856
+      },
+      "task": "唱歌聊天回~~~",
+      "benefitTitle": "灯牌福利",
+      "benefit": "灯牌福利内容在后台填写\n此处为排版测试文案",
+      "benefitBox": {
+        "x": 720,
+        "y": 960,
+        "width": 572,
+        "height": 56
+      },
+      "taskFont": "34px",
+      "benefitsFont": "24px",
+      "lineClamp": "2",
+      "taskLabel": {
+        "x": 68,
+        "y": 928,
+        "width": 572,
+        "height": 24
+      },
+      "benefitsLabel": {
+        "x": 720,
+        "y": 928,
+        "width": 572,
+        "height": 24
+      },
+      "taskBody": {
+        "x": 68,
+        "y": 960,
+        "width": 572,
+        "height": 48
+      },
+      "rootBackground": "rgba(0, 0, 0, 0)"
+    }
+  ],
+  "overflow": {
+    "height": 56,
+    "scrollHeight": 478,
+    "inside": true,
+    "executed": false
+  },
+  "settingsSynced": true,
+  "platformIsolation": true,
+  "emptyText": true,
+  "lyricsGeometry": true,
+  "reloadPersistence": true,
+  "narrowAdmin": true,
+  "errors": [],
+  "serviceRestart": {
+    "checkedAt": "2026-11-07T14:58:10.335Z",
+    "reconnectedWithoutReload": true,
+    "expectedConnectionRefusedLogs": 2
+  },
+  "userSettings": {
+    "fileHashBefore": "bccdf91ff0a07581c1e65211231775fd817b2464fe6a7f6a187574eadcba11c5",
+    "fileHashAfter": "bccdf91ff0a07581c1e65211231775fd817b2464fe6a7f6a187574eadcba11c5",
+    "benefitsDefaultEmpty": true
+  },
+  "productionOrigin": "http://127.0.0.1:3000",
+  "nodeTests": {
+    "passed": 15,
+    "failed": 0
+  },
+  "scene": {
+    "sha256": "74396083fa3d693870d89270e4128b7a6368a713cf54714a6d3b2ee07d1fc296",
+    "transparentPixels": 921600,
+    "paletteOnly": true
+  },
+  "alignment": {
+    "shiftDownPx": 24,
+    "labelTop": 928,
+    "bodyTop": 960
+  }
+}

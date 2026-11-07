@@ -45,6 +45,11 @@ export const platformNames: Record<Platform, string> = {
   douyin: '抖音',
 }
 
+export const benefitsTitles: Record<Platform, string> = {
+  bilibili: '上舰福利',
+  douyin: '灯牌福利',
+}
+
 function MessageBoard({ platform }: { platform: Platform }) {
   const [messages, setMessages] = useState(() => initialMessages[platform])
   const messagesRef = useRef<HTMLDivElement>(null)
@@ -130,7 +135,14 @@ function Lyrics() {
   )
 }
 
-export function Overlay({ platform, lyrics = true, board = 'comments', announcementText = '欢迎来到凌巽的酒馆，歇歇脚，一起聊聊今天的冒险。', task = '探索未知，也记得沿途歇脚。' }: { platform: Platform; lyrics?: boolean; board?: BoardMode; announcementText?: string; task?: string }) {
+export function Overlay({
+  platform,
+  lyrics = true,
+  board = 'comments',
+  announcementText = '欢迎来到凌巽的酒馆，歇歇脚，一起聊聊今天的冒险。',
+  task = '探索未知，也记得沿途歇脚。',
+  benefitsText = '',
+}: { platform: Platform; lyrics?: boolean; board?: BoardMode; announcementText?: string; task?: string; benefitsText?: string }) {
   return (
     <main className="overlay" data-platform={platform} data-lyrics={lyrics ? 'on' : 'off'} aria-label={`${platformNames[platform]}横屏直播装饰`}>
       <header className="stream-header">
@@ -140,8 +152,13 @@ export function Overlay({ platform, lyrics = true, board = 'comments', announcem
         {board === 'announcement' ? <AnnouncementBoard platform={platform} content={announcementText} /> : <MessageBoard platform={platform} />}
         {lyrics && <Lyrics />}
       </aside>
-      <section className="stream-info" aria-label="今日委托">
-        <div className="today-quest"><span className="module-index">今日委托</span><h2>{task}</h2></div>
+      <section className="stream-info" aria-label="底部酒桌">
+        <section className="bottom-table today-quest" aria-label="今日委托">
+          <h2 className="module-index">今日委托</h2><p title={task}>{task}</p>
+        </section>
+        <section className="bottom-table fan-benefits" aria-label={benefitsTitles[platform]}>
+          <h2 className="module-index">{benefitsTitles[platform]}</h2><p title={benefitsText}>{benefitsText}</p>
+        </section>
       </section>
     </main>
   )

@@ -138,14 +138,14 @@ function Preview({ scene = false }: { scene?: boolean }) {
 
 type SourceSettings = {
   global: { task: string }
-  platforms: Record<Platform, { boardMode: BoardMode; announcementText: string; lyricsEnabled: boolean }>
+  platforms: Record<Platform, { boardMode: BoardMode; announcementText: string; lyricsEnabled: boolean; benefitsText: string }>
 }
 
 const defaultSourceSettings: SourceSettings = {
   global: { task: '探索未知，也记得沿途歇脚。' },
   platforms: {
-    bilibili: { boardMode: 'comments', announcementText: '欢迎来到凌巽的酒馆，歇歇脚，一起聊聊今天的冒险。', lyricsEnabled: true },
-    douyin: { boardMode: 'comments', announcementText: '欢迎来到凌巽的酒馆，歇歇脚，一起聊聊今天的冒险。', lyricsEnabled: true },
+    bilibili: { boardMode: 'comments', announcementText: '欢迎来到凌巽的酒馆，歇歇脚，一起聊聊今天的冒险。', lyricsEnabled: true, benefitsText: '' },
+    douyin: { boardMode: 'comments', announcementText: '欢迎来到凌巽的酒馆，歇歇脚，一起聊聊今天的冒险。', lyricsEnabled: true, benefitsText: '' },
   },
 }
 
@@ -171,6 +171,10 @@ function SourcePage({ platform }: { platform: Platform }) {
     function connect() {
       if (disposed) return
       socket = new WebSocket(`${location.protocol === 'https:' ? 'wss:' : 'ws:'}//${location.host}/ws`)
+      socket.onopen = () => {
+        receivedSettingsUpdate = false
+        void readSettings()
+      }
       socket.onmessage = event => {
         try {
           const message = JSON.parse(event.data)
@@ -205,7 +209,7 @@ function SourcePage({ platform }: { platform: Platform }) {
   return (
     <main className="source-stage scene-preview" aria-label={`${platformNames[platform]}酒馆直播源`}>
       <img className="scene-background" src={sceneBackground} width="1920" height="1080" alt="已验收模块化酒馆背景，游戏窗口透明" />
-      <Overlay platform={platform} lyrics={platformSettings.lyricsEnabled} board={platformSettings.boardMode} announcementText={platformSettings.announcementText} task={settings.global.task} />
+      <Overlay platform={platform} lyrics={platformSettings.lyricsEnabled} board={platformSettings.boardMode} announcementText={platformSettings.announcementText} task={settings.global.task} benefitsText={platformSettings.benefitsText} />
       <img className="scene-title-art" src={sceneTitle} width="384" height="128" alt="凌巽的酒馆" />
     </main>
   )

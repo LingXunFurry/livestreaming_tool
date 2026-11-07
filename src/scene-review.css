@@ -27,10 +27,8 @@
 .scene-preview .quest { margin-top: 20px; padding-top: 18px; }
 .scene-preview .notice { margin-top: 18px; padding-top: 16px; }
 .scene-preview .lyric-line.current { font-size: 20px; }
-.scene-preview .stream-info { background: transparent; border: 0; padding: 0 28px; text-shadow: 2px 2px #142238; }
-.scene-preview .today-quest { position: absolute; top: 40px; max-width: 760px; }
-.scene-preview .today-quest h2 { font-size: 20px; margin-top: 10px; line-height: 1.5; }
-html[data-surface="source"] .scene-preview .today-quest h2 { font-size: 34px; margin-top: 8px; }
+.scene-preview .stream-info { top: 912px; text-shadow: 2px 2px #142238; }
+.scene-preview .bottom-table { background: transparent; border: 0; padding-top: 16px; }
 .scene-preview .module-index, .scene-preview .small-label, .scene-preview .message-meta b,
 .scene-preview .module-description, .scene-preview .quest p, .scene-preview .quest-count,
 .scene-preview .message-meta > span,

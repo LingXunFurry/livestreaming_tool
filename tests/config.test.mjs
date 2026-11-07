@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, readFile, readdir, rm } from 'node:fs/promises';
+import { mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { loadSettings, saveSettings, validateSettings } from '../server/config.mjs';
@@ -13,6 +13,17 @@ test('配置校验、原子写入与备份', async () => {
   try {
     const settings = await loadSettings({ initialize: true });
     assert.equal(settings.server.host, '127.0.0.1');
+    const legacySettings = JSON.parse(await readFile(path.join(directory, 'settings.json'), 'utf8'));
+    delete legacySettings.platforms.bilibili.benefitsText;
+    delete legacySettings.platforms.douyin.benefitsText;
+    await writeFile(path.join(directory, 'settings.json'), JSON.stringify(legacySettings));
+    assert.equal((await loadSettings()).platforms.bilibili.benefitsText, '');
+    assert.equal((await loadSettings()).platforms.douyin.benefitsText, '');
+    assert.deepEqual(JSON.parse(await readFile(path.join(directory, 'settings.json'), 'utf8')), legacySettings);
+    for (const benefitsText of [null, 42, '福'.repeat(501)]) {
+      assert.throws(() => validateSettings({ platforms: { bilibili: { benefitsText } } }, settings), /benefitsText/);
+    }
+    assert.equal(validateSettings({ platforms: { bilibili: { benefitsText: '专属徽章\n一起开黑' } } }, settings).platforms.bilibili.benefitsText, '专属徽章\n一起开黑');
     assert.throws(() => validateSettings({ server: { host: '0.0.0.0' } }, settings), /127.0.0.1/);
     assert.throws(() => validateSettings({ server: { port: 70000 } }, settings), /65535/);
     assert.throws(() => validateSettings({ schemaVersion: 2 }, settings), /配置版本/);

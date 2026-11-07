@@ -11,9 +11,10 @@
     {"asset": "cp3-timber-beam", "x": 1320, "y": 144, "scale": 2, "rotation": 90, "sourceRegion": [16, 10, 96, 12], "repeat": [24, 720]},
     {"asset": "cp3-tavern-canopy", "x": 0, "y": 0, "scale": 2, "repeat": [640, 144]},
     {"asset": "cp3-tavern-right-rack", "x": 1382, "y": 0, "scale": 2, "sourceRegion": [0, 3, 256, 77], "repeat": [512, 144]},
-    {"asset": "cp3-tavern-counter", "x": 40, "y": 864, "scale": 2, "sourceRegion": [5, 0, 400, 128], "repeat": [800, 216]},
-    {"asset": "cp3-tavern-counter", "x": 840, "y": 864, "scale": 2, "sourceRegion": [405, 0, 10, 128], "repeat": [20, 216]},
-    {"asset": "cp3-tavern-counter", "x": 860, "y": 864, "scale": 2, "sourceRegion": [405, 0, 230, 128], "repeat": [460, 216]},
+    {"asset": "cp3-tavern-counter", "x": 40, "y": 864, "scale": 2, "sourceRegion": [5, 0, 309, 128], "repeat": [618, 216]},
+    {"asset": "cp3-tavern-counter", "x": 658, "y": 864, "scale": 2, "sourceRegion": [630, 0, 5, 128], "repeat": [10, 216]},
+    {"asset": "cp3-tavern-counter", "x": 692, "y": 864, "scale": 2, "sourceRegion": [5, 0, 134, 128], "repeat": [268, 216]},
+    {"asset": "cp3-tavern-counter", "x": 960, "y": 864, "scale": 2, "sourceRegion": [455, 0, 180, 128], "repeat": [360, 216]},
     {"asset": "cp3-timber-beam", "x": 1320, "y": 1048, "scale": 1, "repeat": [600, 32]}
   ]
 }

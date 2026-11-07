@@ -241,16 +241,16 @@
       "source": "Offline composition of six project modules",
       "generationMethod": "scripts/compose-cp3-scene.ps1",
       "layoutPath": "assets/layouts/cp3-tavern.json",
-      "version": 2,
+      "version": 3,
       "logicalSize": [
         1920,
         1080
       ],
-      "usage": "CP3 standalone scene review and UI composite preview",
+      "usage": "CP5 dual bottom tables and shared live-source background",
       "license": "Composed from project AI-generated modules; no third-party input assets",
       "status": "WAITING_USER_REVIEW",
       "userConfirmed": false,
-      "sha256": "eca6a86b0049aba062d6133d0fc68e91e5d01d7d862140633d3b23f89bfe475a",
+      "sha256": "74396083fa3d693870d89270e4128b7a6368a713cf54714a6d3b2ee07d1fc296",
       "dependencies": [
         "cp3-tavern-canopy",
         "cp3-tavern-counter",

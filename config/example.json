@@ -13,11 +13,13 @@
     "bilibili": {
       "boardMode": "comments",
       "announcementText": "欢迎来到凌巽的酒馆，歇歇脚，一起聊聊今天的冒险。",
+      "benefitsText": "",
       "lyricsEnabled": true
     },
     "douyin": {
       "boardMode": "comments",
       "announcementText": "欢迎来到凌巽的酒馆，歇歇脚，一起聊聊今天的冒险。",
+      "benefitsText": "",
       "lyricsEnabled": true
     }
   },
