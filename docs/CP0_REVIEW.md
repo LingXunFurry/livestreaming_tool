@@ -105,6 +105,6 @@ V2 原任务书另保存于 `docs/V2_BRIEF.md`。
 
 ## 版本与下一步
 
-本次使用本地标签 `checkpoint/cp0-runtime` 标记，精确提交号在聊天交付中给出，也可执行 `git rev-parse checkpoint/cp0-runtime` 查询。
+运行实现快照使用本地标签 `checkpoint/cp0-runtime` 标记。当前交付提交另包含完整 1080P 截图，精确提交号在聊天交付中给出，也可执行 `git rev-parse HEAD` 查询。
 
 当前停止等待 CP0 确认。下一步 CP1 复核已确认的 1280×720 游戏区、528px 右栏、标题和委托位置，检查 V2 统一服务下的两端线框。美术仍单独验收，后续 CP2 从酒杯、木桌、蜡烛三个独立透明像素样板开始。
