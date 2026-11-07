@@ -1,0 +1,112 @@
+{
+  "checkedAt": "2026-11-07T07:52:56.4490431Z",
+  "process": "64x64 center nearest-neighbor sampling, closest V2 RGB color, alpha threshold 128",
+  "assets": [
+    {
+      "id": "cp2-tavern-mug",
+      "path": "assets/generated/cp2/tavern-mug.png",
+      "sourcePath": "assets/generated/cp2/tavern-mug-source.png",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "logicalSize": [
+        64,
+        64
+      ],
+      "transparentPixels": 2252,
+      "opaquePixels": 1844,
+      "partialAlphaPixels": 0,
+      "palette": [
+        "#142238",
+        "#1E2B45",
+        "#364E6A",
+        "#5A3E2B",
+        "#7083A0",
+        "#8A6547",
+        "#A8C7D1",
+        "#C9A85E",
+        "#D24943",
+        "#F3ECDD"
+      ],
+      "bounds": {
+        "width": 46,
+        "y": 8,
+        "x": 10,
+        "height": 52
+      },
+      "sha256": "d22ec1a9161bfbde06349197dc735ad8e6637b0f3c332b91ce5510ee7a0e1eec",
+      "sourceSha256": "6da4bf8f1fbf235a291878f05a3ecf96d85fd88f2a6083c9c2a12c92007d0e1f"
+    },
+    {
+      "id": "cp2-wooden-table",
+      "path": "assets/generated/cp2/wooden-table.png",
+      "sourcePath": "assets/generated/cp2/wooden-table-source.png",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "logicalSize": [
+        64,
+        64
+      ],
+      "transparentPixels": 2558,
+      "opaquePixels": 1538,
+      "partialAlphaPixels": 0,
+      "palette": [
+        "#142238",
+        "#1E2B45",
+        "#364E6A",
+        "#5A3E2B",
+        "#7083A0",
+        "#8A6547",
+        "#C9A85E",
+        "#F3ECDD"
+      ],
+      "bounds": {
+        "width": 52,
+        "y": 8,
+        "x": 6,
+        "height": 51
+      },
+      "sha256": "f29ee3742e33ec631e4bdb6f4825cade44782ce328335ab7a8e5ccb4b2a832da",
+      "sourceSha256": "1975d0cb1ed4f41e549ad916ce492251ad1c1efd88c36da470865df0ce8109e5"
+    },
+    {
+      "id": "cp2-candle",
+      "path": "assets/generated/cp2/candle.png",
+      "sourcePath": "assets/generated/cp2/candle-source.png",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "logicalSize": [
+        64,
+        64
+      ],
+      "transparentPixels": 3438,
+      "opaquePixels": 658,
+      "partialAlphaPixels": 0,
+      "palette": [
+        "#142238",
+        "#1E2B45",
+        "#364E6A",
+        "#5A3E2B",
+        "#7083A0",
+        "#8A6547",
+        "#A8C7D1",
+        "#C9A85E",
+        "#D24943",
+        "#F3ECDD"
+      ],
+      "bounds": {
+        "width": 33,
+        "y": 13,
+        "x": 17,
+        "height": 40
+      },
+      "sha256": "5f8a347b438e5849a023f62a0a2d58a88d2789562e894d9a85be2ce74a6583c2",
+      "sourceSha256": "9f72bed4215873d034c9d7a49554347ad44b90d8ede87c4e5f97d3984ed55fdd"
+    }
+  ]
+}

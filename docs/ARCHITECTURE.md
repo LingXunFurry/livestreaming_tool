@@ -4,6 +4,8 @@
 
 ## 路由和数据流
 
+CP2 展示板 `/assets/review` 复用现有静态服务。三件独立 PNG 由 Vite 构建为页面资源，来源与归一化过程记录在 manifest 和提示词中。制作脚本是离线 Windows 工具，运行服务使用交付 PNG。
+
 `/live/bilibili` 与 `/live/douyin` 分别渲染共享装饰组件，平台身份由路由确定。预览页平台选择只影响预览。`/admin` 在 CP0 读取 `/api/runtime/status` 并订阅 `/ws` 的运行状态快照。`/health` 供启动器判断就绪。
 
 普通配置经 `server/config.mjs` 统一校验和持久化。CP0 建立配置和运行状态骨架。CP5 再将后台编辑经服务端验证、原子保存和 WebSocket 广播应用到对应页面，平台专属字段与全局字段独立。

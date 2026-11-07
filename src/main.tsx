@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { Overlay, platformNames } from './Overlay'
 import type { Platform } from './Overlay'
 import { Admin } from './Admin'
+import { AssetReview } from './AssetReview'
 import './styles.css'
 
 const params = new URLSearchParams(window.location.search)
@@ -38,7 +39,7 @@ function Preview() {
     <div className="review-shell">
       <header className="review-header">
         <a className="project-brand" href="/preview" aria-label="凌巽的酒馆布局预览首页"><span className="brand-grid" aria-hidden="true"><i /><i /><i /><i /></span><span>凌巽的酒馆 <small>OVERLAY WORKSHOP</small></span></a>
-        <span className="checkpoint-status"><span /> V2 CP1 · 待验收</span>
+        <span className="checkpoint-status"><span /> V2 CP1 · 已通过</span>
       </header>
 
       <div className="intro">
@@ -86,7 +87,7 @@ function Preview() {
           <small>当前为美术原型与示例内容，尚未接入平台互动或音乐。</small>
         </section>
       </div>
-      <footer className="review-footer"><span>CP0 已通过 <b>→</b> CP1 待验收 <b>→</b> CP2 独立像素素材</span><a href="/admin">查看实际系统状态 ↗</a></footer>
+      <footer className="review-footer"><span>CP0 已通过 <b>→</b> CP1 已通过 <b>→</b> CP2 独立像素素材</span><a href="/assets/review">查看 CP2 素材样板 ↗</a><a href="/admin">查看实际系统状态 ↗</a></footer>
     </div>
   )
 }
@@ -97,9 +98,10 @@ function UnavailablePage() {
 }
 
 if (sourcePlatform) document.title = `凌巽的酒馆 · ${platformNames[sourcePlatform]}透明测试页 · CP1`
+if (path === '/assets/review') document.title = '凌巽的酒馆 · CP2 像素素材验收'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    {sourcePlatform ? <Overlay platform={sourcePlatform} lyrics={params.get('lyrics') !== 'off'} /> : path === '/admin' ? <Admin /> : (path === '/' || path === '/preview') ? <Preview /> : <UnavailablePage />}
+    {sourcePlatform ? <Overlay platform={sourcePlatform} lyrics={params.get('lyrics') !== 'off'} /> : path === '/assets/review' ? <AssetReview /> : path === '/admin' ? <Admin /> : (path === '/' || path === '/preview') ? <Preview /> : <UnavailablePage />}
   </StrictMode>,
 )

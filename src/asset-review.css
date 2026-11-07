@@ -1,0 +1,44 @@
+.asset-review { background: #142238; color: #F3ECDD; min-height: 100vh; font-family: "Microsoft YaHei", sans-serif; }
+.asset-review-inner { max-width: 1200px; margin: auto; padding: 0 32px; }
+.asset-review-header { display: flex; justify-content: space-between; align-items: center; gap: 20px; min-height: 88px; border-bottom: 1px solid #364E6A; }
+.asset-review-header a { font-size: 18px; font-weight: 600; text-decoration: none; }
+.asset-review-header > span, .asset-pending { color: #C9A85E; font-size: 12px; }
+.asset-intro { padding: 44px 0 32px; }
+.asset-eyebrow { font: 11px/1.8 Consolas, monospace; letter-spacing: 2px; color: #A8C7D1; }
+.asset-intro h1 { font-size: 32px; line-height: 1.5; margin: 12px 0; font-weight: 500; }
+.asset-intro > p:last-child { color: #A8C7D1; font-size: 14px; line-height: 1.9; max-width: 740px; }
+.asset-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; padding: 16px 0; border-top: 1px solid #364E6A; }
+.asset-toolbar > span { font-size: 13px; }
+.asset-toolbar > div { display: flex; border: 1px solid #7083A0; }
+.asset-toolbar button { background: transparent; border: 0; color: #F3ECDD; font-size: 12px; min-height: 36px; padding: 0 16px; }
+.asset-toolbar button[aria-pressed="true"] { background: #C9A85E; color: #142238; }
+.asset-toolbar small { margin-left: auto; color: #A8C7D1; font-size: 12px; }
+.asset-review button:focus-visible, .asset-review a:focus-visible { outline: 2px solid #C9A85E; outline-offset: 4px; }
+.asset-samples { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.asset-sample { min-width: 0; border: 1px solid #364E6A; background: #1E2B45; }
+.asset-stage { min-height: 304px; display: grid; place-items: center; position: relative; }
+.asset-stage-checker { background-color: #F3ECDD; background-image: repeating-conic-gradient(#A8C7D144 0% 25%, transparent 0% 50%); background-size: 24px 24px; }
+.asset-stage-night { background: #142238; }
+.asset-stage-cream { background: #F3ECDD; }
+.asset-review img { image-rendering: pixelated; display: block; object-fit: contain; }
+.asset-scale { position: absolute; left: 12px; top: 12px; background: #142238; color: #F3ECDD; font: 11px/1.8 Consolas, monospace; padding: 0 6px; }
+.asset-caption { display: flex; align-items: center; gap: 12px; padding: 20px 18px 0; }
+.asset-number { color: #7083A0; font: 12px Consolas, monospace; }
+.asset-caption h2 { font-size: 20px; font-weight: 500; }
+.asset-pending { margin-left: auto; }
+.asset-description { font-size: 12px; color: #A8C7D1; line-height: 1.8; padding: 8px 18px 18px; }
+.asset-original { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin: 0 18px; padding: 16px 0; border-top: 1px solid #364E6A; }
+.asset-original img { background: #F3ECDD; }
+.asset-original span { color: #A8C7D1; font-size: 11px; line-height: 1.8; }
+.asset-original a { margin-left: auto; font-size: 11px; min-height: 44px; display: flex; align-items: center; }
+.asset-palette { border-top: 1px solid #364E6A; padding: 28px 0; margin-top: 28px; }
+.asset-palette h2 { font-size: 16px; font-weight: 500; }
+.asset-palette p { color: #A8C7D1; font-size: 12px; line-height: 1.8; margin: 8px 0 20px; }
+.asset-palette ul { display: flex; flex-wrap: wrap; gap: 12px; padding: 0; margin: 0; list-style: none; }
+.asset-palette li { display: flex; gap: 8px; align-items: center; }
+.asset-palette li > span { display: block; width: 22px; height: 22px; border: 1px solid #7083A0; }
+.asset-palette code { font-size: 10px; color: #A8C7D1; }
+.asset-review-footer { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; padding: 22px 0 32px; border-top: 1px solid #364E6A; }
+.asset-review-footer p { color: #A8C7D1; font-size: 12px; line-height: 1.9; max-width: 740px; }
+.asset-review-footer a { color: #F3ECDD; font-size: 12px; min-height: 44px; display: flex; align-items: center; }
+@media (max-width: 980px) { .asset-samples { grid-template-columns: 1fr; } .asset-review-inner { max-width: 600px; padding: 0 20px; } .asset-toolbar small { width: 100%; margin-left: 0; } .asset-intro h1 { font-size: 26px; } }

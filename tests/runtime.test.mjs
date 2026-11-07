@@ -43,7 +43,7 @@ test('真实服务生命周期、并发、关闭、冲突与恢复', { timeout: 
       const result = await cli('start', environment);
       assert.equal(result.exitCode, 0);
       assert.equal(result.state, 'RUNNING');
-      assert.equal(result.checkpoint, 'CP1');
+      assert.equal(result.checkpoint, 'CP2');
       assert.equal(result.port, port);
       assert.equal(result.adapters.music.state, 'DISCONNECTED');
       assert.equal(result.adapters.bilibili.state, 'NOT_CONFIGURED');
@@ -60,7 +60,7 @@ test('真实服务生命周期、并发、关闭、冲突与恢复', { timeout: 
     });
 
     await context.test('双平台和后台同时可访问，敏感文件与未知 API 不暴露', async () => {
-      const responses = await Promise.all(['/live/bilibili', '/live/douyin', '/admin'].map(route => fetch(origin + route)));
+      const responses = await Promise.all(['/live/bilibili', '/live/douyin', '/admin', '/assets/review'].map(route => fetch(origin + route)));
       for (const response of responses) { assert.equal(response.status, 200); assert.match(response.headers.get('content-type'), /text\/html/); }
       assert.equal((await fetch(`${origin}/api/missing`)).status, 404);
       assert.equal((await fetch(`${origin}/data/settings.json`)).status, 404);

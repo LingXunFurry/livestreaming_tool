@@ -1,5 +1,90 @@
 {
   "schemaVersion": 1,
-  "assets": [],
-  "note": "CP0 使用线框。后续素材按 docs/ASSET_POLICY.md 独立制作、登记和验收。"
+  "assets": [
+    {
+      "id": "cp2-tavern-mug",
+      "name": "酒杯",
+      "path": "assets/generated/cp2/tavern-mug.png",
+      "source": "Original AI-generated asset",
+      "generationMethod": "built-in image_gen, followed by 64x64 nearest-neighbor sampling and fixed V2 palette mapping",
+      "promptFile": "assets/prompts/cp2/tavern-mug.md",
+      "version": 1,
+      "logicalSize": [
+        64,
+        64
+      ],
+      "usage": "CP2 review board only",
+      "license": "AI-generated for this project; no third-party input assets; no external asset license assigned",
+      "status": "WAITING_USER_REVIEW",
+      "userConfirmed": false,
+      "sourcePath": "assets/generated/cp2/tavern-mug-source.png",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "postprocess": "scripts/prepare-cp2-assets.ps1",
+      "sha256": "d22ec1a9161bfbde06349197dc735ad8e6637b0f3c332b91ce5510ee7a0e1eec"
+    },
+    {
+      "id": "cp2-wooden-table",
+      "name": "木桌",
+      "path": "assets/generated/cp2/wooden-table.png",
+      "source": "Original AI-generated asset",
+      "generationMethod": "built-in image_gen, followed by 64x64 nearest-neighbor sampling and fixed V2 palette mapping",
+      "promptFile": "assets/prompts/cp2/wooden-table.md",
+      "version": 1,
+      "logicalSize": [
+        64,
+        64
+      ],
+      "usage": "CP2 review board only",
+      "license": "AI-generated for this project; no third-party input assets; no external asset license assigned",
+      "status": "WAITING_USER_REVIEW",
+      "userConfirmed": false,
+      "sourcePath": "assets/generated/cp2/wooden-table-source.png",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "postprocess": "scripts/prepare-cp2-assets.ps1",
+      "sha256": "f29ee3742e33ec631e4bdb6f4825cade44782ce328335ab7a8e5ccb4b2a832da"
+    },
+    {
+      "id": "cp2-candle",
+      "name": "蜡烛",
+      "path": "assets/generated/cp2/candle.png",
+      "source": "Original AI-generated asset",
+      "generationMethod": "built-in image_gen, followed by 64x64 nearest-neighbor sampling and fixed V2 palette mapping",
+      "promptFile": "assets/prompts/cp2/candle.md",
+      "version": 1,
+      "logicalSize": [
+        64,
+        64
+      ],
+      "usage": "CP2 review board only",
+      "license": "AI-generated for this project; no third-party input assets; no external asset license assigned",
+      "status": "WAITING_USER_REVIEW",
+      "userConfirmed": false,
+      "sourcePath": "assets/generated/cp2/candle-source.png",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "postprocess": "scripts/prepare-cp2-assets.ps1",
+      "sha256": "5f8a347b438e5849a023f62a0a2d58a88d2789562e894d9a85be2ce74a6583c2"
+    }
+  ],
+  "note": "CP2 三件独立透明像素素材待用户验收，生成源稿和提示词随项目保存。",
+  "palette": [
+    "#1E2B45",
+    "#142238",
+    "#7083A0",
+    "#364E6A",
+    "#F3ECDD",
+    "#C9A85E",
+    "#D24943",
+    "#A8C7D1",
+    "#5A3E2B",
+    "#8A6547"
+  ]
 }

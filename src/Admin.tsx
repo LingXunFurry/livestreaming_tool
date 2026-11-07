@@ -103,7 +103,7 @@ export function Admin() {
             <dt>WebSocket 服务</dt><dd>{status?.websocket.state || '等待响应'}</dd>
             <dt>当前页面连接</dt><dd>{connection}</dd>
             <dt>连接数量</dt><dd>{status?.websocket.clients ?? '—'}</dd>
-            <dt>当前阶段</dt><dd>{status?.checkpoint || 'CP1'}</dd>
+            <dt>当前阶段</dt><dd>{status?.checkpoint || '等待响应'}</dd>
           </dl>
         </div>
         <div>

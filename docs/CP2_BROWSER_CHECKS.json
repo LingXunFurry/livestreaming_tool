@@ -1,0 +1,158 @@
+{
+  "checkedAt": "2026-11-07 07:49:50 UTC",
+  "board": {
+    "route": "/assets/review",
+    "desktopViewport": [
+      1440,
+      1100
+    ],
+    "sampleCards": 3,
+    "swatches": 10,
+    "imageCount": 6,
+    "naturalSize": [
+      64,
+      64
+    ],
+    "displaySizes": [
+      [
+        64,
+        64
+      ],
+      [
+        256,
+        256
+      ]
+    ],
+    "imageRendering": "pixelated",
+    "horizontalOverflow": false
+  },
+  "backgrounds": {
+    "checker": true,
+    "night": "rgb(20, 34, 56)",
+    "cream": "rgb(243, 236, 221)",
+    "allThreeStagesSwitchTogether": true
+  },
+  "downloads": [
+    {
+      "file": "cp2-tavern-mug.png",
+      "failure": null,
+      "sha256MatchesRepository": true
+    },
+    {
+      "file": "cp2-wooden-table.png",
+      "failure": null,
+      "sha256MatchesRepository": true
+    },
+    {
+      "file": "cp2-candle.png",
+      "failure": null,
+      "sha256MatchesRepository": true
+    }
+  ],
+  "narrow": {
+    "viewport": [
+      375,
+      900
+    ],
+    "scrollWidth": 375,
+    "displaySize": [
+      256,
+      256
+    ]
+  },
+  "console": {
+    "errors": 0,
+    "warnings": 0
+  },
+  "sourceRegression": {
+    "sources": [
+      {
+        "platform": "bilibili",
+        "canvas": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "header": {
+          "x": 40,
+          "y": 40,
+          "width": 1840,
+          "height": 72
+        },
+        "mainPanel": {
+          "x": 1352,
+          "y": 144,
+          "width": 528,
+          "height": 576
+        },
+        "lyricsPanel": {
+          "x": 1352,
+          "y": 744,
+          "width": 528,
+          "height": 256
+        },
+        "quest": {
+          "x": 40,
+          "y": 888,
+          "width": 1280,
+          "height": 112
+        },
+        "artImages": 0,
+        "backgrounds": [
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)"
+        ]
+      },
+      {
+        "platform": "douyin",
+        "canvas": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "header": {
+          "x": 40,
+          "y": 40,
+          "width": 1840,
+          "height": 72
+        },
+        "mainPanel": {
+          "x": 1352,
+          "y": 144,
+          "width": 528,
+          "height": 576
+        },
+        "lyricsPanel": {
+          "x": 1352,
+          "y": 744,
+          "width": 528,
+          "height": 256
+        },
+        "quest": {
+          "x": 40,
+          "y": 888,
+          "width": 1280,
+          "height": 112
+        },
+        "artImages": 0,
+        "backgrounds": [
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)"
+        ]
+      }
+    ],
+    "concurrent": 2
+  },
+  "screenshots": [
+    "screenshots/cp2/asset-board.png",
+    "screenshots/cp2/dark-edges.png",
+    "screenshots/cp2/light-edges.png",
+    "screenshots/cp2/narrow.png"
+  ]
+}
