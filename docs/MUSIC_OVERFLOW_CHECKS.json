@@ -1,0 +1,104 @@
+{
+  "state": "WAITING_USER_REVIEW",
+  "syntheticWebSocketData": true,
+  "beforeFix": {
+    "reproduced": true,
+    "sample": "long-english",
+    "fontSize": 24,
+    "panelWidth": 14692,
+    "panelRight": 16044
+  },
+  "source": {
+    "checkedAt": "2026-11-08T14:17:35.433Z",
+    "passed": true,
+    "cases": 130,
+    "platforms": [
+      "bilibili",
+      "douyin"
+    ],
+    "sizes": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24
+    ],
+    "samples": [
+      "short-descenders",
+      "long-english",
+      "long-chinese",
+      "long-unbroken",
+      "long-artist"
+    ],
+    "panelBounds": {
+      "x": 1352,
+      "y": 768,
+      "width": 528,
+      "height": 256
+    },
+    "contentWidthPx": 464,
+    "allPanelsConstrained": true,
+    "allTextConstrained": true,
+    "longLinesTruncated": true,
+    "pageErrors": []
+  },
+  "packaged": {
+    "checkedAt": "2026-11-08T14:18:17.369Z",
+    "passed": true,
+    "cases": 130,
+    "platforms": [
+      "bilibili",
+      "douyin"
+    ],
+    "sizes": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24
+    ],
+    "samples": [
+      "short-descenders",
+      "long-english",
+      "long-chinese",
+      "long-unbroken",
+      "long-artist"
+    ],
+    "panelBounds": {
+      "x": 1352,
+      "y": 768,
+      "width": 528,
+      "height": 256
+    },
+    "contentWidthPx": 464,
+    "allPanelsConstrained": true,
+    "allTextConstrained": true,
+    "longLinesTruncated": true,
+    "pageErrors": []
+  },
+  "buildPassed": true,
+  "nodeTests": {
+    "passed": 24,
+    "failed": 0
+  },
+  "screenshots": [
+    "screenshots/music-overflow-fixed.png",
+    "screenshots/music-overflow-packaged.png"
+  ]
+}
