@@ -1,6 +1,6 @@
 # Windows 应用检查版
 
-状态为 `WAITING_USER_REVIEW`。装潢已由用户通过，桌面应用等待本次用户检查后再上传 GitHub。
+状态为 `WAITING_USER_REVIEW`。装潢已由用户通过。用户随后明确授权先推送 GitHub 并完善 README，源码与文档据此上传，桌面应用继续等待功能检查。
 
 交付采用 Windows x64 免安装文件夹，入口为 `release/凌巽的酒馆-win32-x64/凌巽的酒馆.exe`，包含 Electron 45.2.3、已构建页面和 Python 3.14.3 桥接运行环境。整个文件夹一起使用。构建输出被 Git 忽略，代码和检查记录保存本地 Git 快照。
 

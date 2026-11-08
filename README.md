@@ -1,79 +1,168 @@
 # 凌巽的酒馆
 
-本地双平台直播装饰系统，使用 React、TypeScript、Vite 和 Node.js。
-CP0 至 CP6 与本轮追加装潢已通过验收，B 站互动等待授权。
+像素酒馆主题的本地直播装修工具，提供 Windows 桌面控制台、双平台独立直播页面、网易云歌曲与同步歌词，以及可实时修改的公告、今日委托和分区字号。
 
-## Windows 桌面应用
+直播画布固定为 **1920 × 1080**，游戏窗口为 **1280 × 720 真透明区域**。B 站和抖音共用酒馆美术，各自保存公告、字号与歌词设置。
 
-免安装检查版位于 `release/凌巽的酒馆-win32-x64/`。双击 `凌巽的酒馆.exe` 启动，保留同目录文件。菜单提供后台编辑、双平台实时预览、场景/素材预览以及服务启动和停止，音乐控制沿用后台按钮。关闭窗口时可选择保留直播服务或停止后退出。
+![酒馆场景与公告、留声机播放区预览](docs/screenshots/art-revision-announcement.png)
 
-应用设置和日志保存在 `%APPDATA%/LingxunTavern/`。当前本机的设置在首次交付时复制到该目录，原项目设置继续保存在 `data/`。
+## 当前功能
 
-开发模式运行 `npm run desktop`。构建 Windows 包运行 `npm run package:desktop`，需要先按 `docs/MUSIC_SETUP.md` 安装本地桥接依赖。检查记录见 `docs/DESKTOP_REVIEW.md`。
+- **桌面控制台** — 编辑文本和字号，查看场景、独立素材与双平台实时画面，启动和停止本地服务。
+- **模块化像素场景** — 木质游戏框、双桌面、地图账本、酒桶挂杯架、栏目艺术字与框上留声机。
+- **独立平台设置** — 两个平台分别编辑公告和歌词选项，保存后通过 WebSocket 实时同步。
+- **网易云音乐** — 读取本机客户端的歌曲、歌手、进度和同步歌词，支持播放/暂停、上一首、下一首。
+- **播放区自动隐藏** — 开启后，暂停或切歌的短暂空档保留播放区，连续 5 秒未恢复播放才隐藏。
+- **配置持久化** — 服务端校验、原子保存和历史备份，用户设置与进程运行记录分开管理。
 
-## 首次初始化
+### 平台接入状态
 
-安装 Node.js 22.12 或更新受支持版本，在项目目录运行一次 `npm ci`。正常启动过程中程序会按需构建网页资源。
+| 模块 | 当前状态 |
+| --- | --- |
+| 网易云音乐 | 已完成本机真实连接、歌词与播放控制验证 |
+| B 站互动 | 保存房间地址，等待官方开放平台授权，未连接时自动显示公告 |
+| 抖音页面 | 固定显示该平台独立公告 |
+| 场景预览 | 可切换模拟留言与公告，展示弹幕、礼物、舰长和 SC 的视觉效果 |
 
-## 日常入口
+右栏公告与底部公告互斥显示。右栏为公告时隐藏底部公告，右栏为留言时显示底部公告。顶部“凌巽的酒馆”沿用固定艺术字。
 
-| 操作 | 中文入口 | 英文入口 |
+## Windows 应用
+
+### 本机交付文件
+
+| 文件 | 位置 |
+| --- | --- |
+| 完整应用压缩包，约 173 MiB | `release/凌巽的酒馆-Windows-x64.zip` |
+| 解压后的程序入口 | `release/凌巽的酒馆-win32-x64/凌巽的酒馆.exe` |
+
+应用通过完整压缩包交付，构建产物保存在本地 `release/` 并由 Git 忽略。从源码生成应用的步骤见下方“构建 Windows 应用”。
+
+1. 将压缩包完整解压，保留应用文件夹内的所有文件。
+2. 双击“凌巽的酒馆.exe”，程序会启动本地服务并打开后台。
+3. 在后台编辑今日委托、两平台公告、各区字号和歌词选项，点击“保存设置”。
+4. 播放音乐时，打开本机网易云客户端，启用后台的“本地网易云连接”，使用默认桥接地址 `http://127.0.0.1:18726`。
+5. 从顶部“预览”菜单查看实时画面，从“直播服务”菜单复制对应平台的直播源链接。
+
+关闭窗口时可以选择保留直播服务，或停止服务并退出。再次打开应用会复用自身已运行的服务实例。
+
+应用包含 Electron 和 Python 桥接运行环境。网易云桌面客户端需安装在使用电脑上，当前实测版本为 **3.1.41.205564**。
+
+## 在直播软件中使用
+
+服务默认监听 `127.0.0.1:3000`，直播软件的网页源尺寸设为 **1920 × 1080**。
+
+| 页面 | 默认地址 |
+| --- | --- |
+| B 站直播源 | http://127.0.0.1:3000/live/bilibili |
+| 抖音直播源 | http://127.0.0.1:3000/live/douyin |
+| 管理后台 | http://127.0.0.1:3000/admin |
+| 场景与美术预览 | http://127.0.0.1:3000/scene/review |
+| 独立像素素材 | http://127.0.0.1:3000/assets/review |
+| 布局线框预览 | http://127.0.0.1:3000/preview |
+
+游戏窗口位于 `X=40、Y=144`。将游戏捕获放在网页装饰层下方，由直播软件捕获游戏、音频并编码推流。OBS 可按使用习惯选择。
+
+两个直播源可以同时运行。调整端口后，以应用或启动器显示的实际地址为准。场景预览中的模拟留言和歌曲用于检查排版，正式直播源读取真实音乐及对应平台的运行状态。
+
+## 从源码运行
+
+需要 Node.js **22.12 或更新版本**。网易云桥接依赖 Windows，安装说明见 [网易云本地桥接](docs/MUSIC_SETUP.md)。
+
+```powershell
+git clone https://github.com/LingXunFurry/livestreaming_tool.git
+cd livestreaming_tool
+npm ci
+npm start
+```
+
+随后在浏览器打开管理后台。正常启动时，统一入口会检查依赖、构建页面并启动后台服务。
+
+| 操作 | npm 命令 | Windows 入口 |
 | --- | --- | --- |
-| 启动 | `启动直播间.bat` | `start.bat` |
-| 关闭 | `关闭直播间.bat` | `stop.bat` |
-| 状态 | `检查运行状态.bat` | `status.bat` |
+| 启动服务 | `npm start` | `启动直播间.bat` / `start.bat` |
+| 检查状态 | `npm run status` | `检查运行状态.bat` / `status.bat` |
+| 停止服务 | `npm stop` | `关闭直播间.bat` / `stop.bat` |
+| 桌面开发入口 | `npm run desktop` | Electron 窗口 |
 
-脚本支持其他当前工作目录、中文路径和空格路径。启动后服务在后台运行，窗口可以关闭。重复启动复用现有实例。
-默认三个页面如下，若修改端口，以启动器实际输出为准。
+日常选择一种启动方式，切换方式时先从原入口停止服务。源码脚本与桌面入口各自保存配置。
 
-- B 站透明源为 <http://127.0.0.1:3000/live/bilibili>。
-- 抖音透明源为 <http://127.0.0.1:3000/live/douyin>。
-- 基础后台为 <http://127.0.0.1:3000/admin>。
-- 线框预览为 <http://127.0.0.1:3000/preview>。
-- CP2 素材展示板为 <http://127.0.0.1:3000/assets/review>。
-- CP3 场景验收页为 <http://127.0.0.1:3000/scene/review>。
+源码运行时，在后台启用默认音乐地址后，统一启动器会尝试自动启动已安装的网易云桥接。桥接安装、版本与故障排查见 [MUSIC_SETUP.md](docs/MUSIC_SETUP.md)。
 
-两个源均设为 1920×1080。游戏捕获由直播软件负责，游戏区域位于 X=40、Y=144，大小 1280×720。首次连接时在直播软件中把游戏源放到装修网页下层。
+## 构建 Windows 应用
 
-## 配置和日志
+构建环境为 Windows x64。封装脚本使用 **Python 3.14.3 嵌入式运行环境**，用于打包的 `.cache/netease-venv` 应使用 Python 3.14 创建，并按桥接安装说明安装依赖。
 
-首次启动复制 `config/example.json` 的默认内容到 `data/settings.json`。修改 `server.port` 调整端口，修改 `server.openAdminOnStart` 控制启动时是否打开后台。配置由统一模块校验，保存使用原子替换及备份。
+```powershell
+npm ci
+npm run package:desktop
+```
 
-运行记录位于 `data/runtime/`，日志位于 `data/logs/`，设置备份位于 `data/backups/`。这些目录归本地用户数据管理。实际平台凭证后续与普通设置分开保存。
+命令会构建页面并输出 `release/凌巽的酒馆-win32-x64/`。在 PowerShell 中运行以下命令可将整个应用目录打包为 ZIP。
+
+```powershell
+Compress-Archive -LiteralPath "release/凌巽的酒馆-win32-x64" -DestinationPath "release/凌巽的酒馆-Windows-x64.zip" -Force
+```
+
+首次构建会下载 Electron 和 Python 运行环境。已使用的桥接源码和 Python 依赖需要先安装在项目的 `.cache/` 下，具体步骤见 [MUSIC_SETUP.md](docs/MUSIC_SETUP.md)。
+
+## 设置、备份与日志
+
+| 内容 | 源码脚本入口 | 桌面应用入口 |
+| --- | --- | --- |
+| 普通设置 | `data/settings.json` | `%APPDATA%/LingxunTavern/settings.json` |
+| 历史备份 | `data/backups/` | `%APPDATA%/LingxunTavern/backups/` |
+| 日志 | `data/logs/` | `%APPDATA%/LingxunTavern/logs/` |
+| 运行记录 | `data/runtime/` | `%APPDATA%/LingxunTavern/runtime/` |
+
+首次启动根据 `config/example.json` 初始化设置。本机交付时已将原项目设置复制到桌面应用的用户目录。后续修改通过各自后台保存，桌面菜单可打开设置与日志目录。
+
+普通配置包括公告正文、今日委托、字号、音乐地址和歌词选项。公告支持加粗和固定色板文字，语法与字段范围见 [产品规范](docs/PROJECT_SPEC.md)。
 
 ## 开发与验证
 
 ```powershell
+npm run check
 npm run build
 npm test
-npm run test:migration
-npm run start
-npm run status -- --json
-npm run stop
 ```
 
-`npm run test:migration` 会在 `.cache/` 中创建含中文和空格的新目录，使用空缓存重新安装依赖，再实际调用 Windows 启动、状态和关闭入口。此项需要联网，测试服务结束后关闭。
+开发热更新使用 `npm run dev`，页面位于 `http://127.0.0.1:5173`，API 请求代理到本地 3000 端口。迁移测试使用 `npm run test:migration`，会创建独立目录并联网安装依赖。
 
-开发热更新可用 `npm run dev`，地址为 `http://127.0.0.1:5173`。日常统一服务使用上方启动入口。开发页面的状态请求代理到本地 3000 端口。
+本机已完成构建、24 项 Node.js 测试、双平台八种场景组合、文字下伸笔画裁切回归，以及封装应用的保存、预览、真实音乐回读、播放控制和服务关闭/重开验证。
 
-## 规范与当前能力
+| 记录 | 内容 |
+| --- | --- |
+| [桌面应用验证](docs/DESKTOP_REVIEW.md) | 封装方式、测试结果与本机依赖 |
+| [桌面应用机器记录](docs/DESKTOP_APP_CHECKS.json) | 设置保存、预览、播放控制与生命周期 |
+| [网易云冷启动记录](docs/DESKTOP_COLD_START_CHECK.json) | 从停止到启动的真实连接 |
+| [装潢追加记录](docs/ART_REVISION_REVIEW.md) | 最新场景、对齐与字号检查 |
+| [阶段进度](docs/CHECKPOINTS.md) | CP0 至 CP6 已通过，CP7 进行中 |
 
-项目要求见 `docs/PROJECT_SPEC.md`，固定视觉 Token 见 `docs/DESIGN_SYSTEM.md`，独立透明素材及用户原稿授权边界见 `docs/ASSET_POLICY.md`。
-架构、运行、迁移、阶段、决策、测试和日常操作分别记录在 `docs/` 对应文件。
+第二台电脑、直播客户端的完整兼容性和长时间稳定性仍需实机验证。网易云升级可能影响第三方桥接的客户端适配。
 
-后台支持编辑两平台独立配置、底部公告和各区字号。CP6 使用单独运行的本机网易云桥接，安装和启动见 `docs/MUSIC_SETUP.md`；酒馆启动器不会自动启动该桥接。真实平台互动属于 CP7，实际直播客户端和第二台电脑等待 CP8 实机验收。
+## 素材与项目结构
 
-CP2 源稿、64×64 交付 PNG 和提示词分别位于 `assets/generated/cp2/`、`assets/prompts/cp2/`，清单位于 `assets/manifest.json`。离线制作命令 `pwsh -File scripts/prepare-cp2-assets.ps1` 通过 Windows 自带的 System.Drawing 统一像素与固定色板，并写出检查记录。日常服务直接使用已交付 PNG。验收结果和文件清单见 `docs/CP2_REVIEW.md`。
-
-CP3 新素材及源稿位于 `assets/generated/cp3/`，完整生图提示词位于 `assets/prompts/cp3/`，无 UI 背景位于 `assets/backgrounds/cp3-tavern.png`。验收页可切换 UI、平台、歌词、参考线和透明区底色，并下载背景、独立 PNG 和布局 JSON。
-
-修改 `assets/layouts/cp3-tavern.json` 中的 `layers` 后运行以下命令重组背景，再构建网页。`x`、`y` 使用最终画布像素坐标，`scale` 是 1–8 的整数，`rotation` 是 0/90/180/270，`repeat` 是可选的平铺区域宽高。图层按数组顺序绘制。画布和游戏窗口由脚本锁定为已验收尺寸。此文件属于离线美术配方，网页设置由现有配置模块管理。
-
-```powershell
-pwsh -File scripts/compose-cp3-scene.ps1
-npm run build
+```text
+desktop/              Windows 桌面入口
+src/                  React 后台、直播页与预览
+server/               配置、HTTP/WebSocket 与音乐适配
+scripts/              服务生命周期、封装和离线美术制作
+config/               默认配置与字号范围
+assets/generated/     像素素材与生成源稿
+assets/prompts/       生图提示词
+assets/layouts/       离线组合配方
+assets/backgrounds/   组合背景
+docs/                 规范、检查记录与截图
+release/              本地 Windows 应用与压缩包
 ```
 
-重新处理 CP3 生图源稿时运行 `pwsh -File scripts/prepare-cp2-assets.ps1 -Checkpoint cp3`。脚本使用 Windows 自带的 System.Drawing。运行服务直接加载交付 PNG。实际检查及文件清单见 `docs/CP3_REVIEW.md`。
+当前装潢配方为 `assets/layouts/cp3-tavern-art.json`，美术清单位于 `assets/manifest.json`。素材采用固定十色、像素硬边和透明 PNG。栏目正文使用随项目分发的 Fusion Pixel 字体，并附上游许可证。
 
-V2 前的美术草稿保存在本地 `data/backups/pre-v2-draft/`，旧规范保存在 `docs/history/`。
+- [产品规范](docs/PROJECT_SPEC.md)
+- [视觉设计系统](docs/DESIGN_SYSTEM.md)
+- [素材来源与授权政策](docs/ASSET_POLICY.md)
+- [技术架构](docs/ARCHITECTURE.md)
+- [服务运行与恢复](docs/RUNTIME.md)
+- [Fusion Pixel 字体来源](assets/fonts/fusion-pixel/SOURCE.md)
+
+角色原稿的使用和修改依照素材政策取得单独授权，素材与字体的来源、许可和验收状态以项目清单及随附文件为准。
