@@ -1,0 +1,27 @@
+{
+  "checkedAt": "2026-11-08T10:58:59.805Z",
+  "packagedApp": true,
+  "unicodeExecutable": true,
+  "menu": [
+    "管理后台",
+    "预览",
+    "直播服务",
+    "窗口"
+  ],
+  "backendFieldsSaved": true,
+  "settingsRetained": true,
+  "livePreview": true,
+  "artPreview": true,
+  "assetPreview": true,
+  "music": {
+    "state": "CONNECTED",
+    "title": "早点早点",
+    "artist": "沙一汀EL",
+    "lyricsState": "AVAILABLE"
+  },
+  "playPauseRestored": true,
+  "pageErrors": [],
+  "closeKeptService": true,
+  "relaunchReusedService": true,
+  "exitStoppedService": true
+}

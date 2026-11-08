@@ -72,8 +72,6 @@ async function ensureBuild() {
   }
   try { await import('ws'); } catch { throw new Error('依赖尚未安装，请先在项目目录运行 npm ci'); }
   const built = await stat(path.join(paths.distDir, 'index.html')).catch(() => null);
-  const sourceTimes = await Promise.all(['index.html', 'vite.config.ts', 'package.json', 'package-lock.json', 'config/example.json', 'config/font-sizes.json'].map(async file => (await stat(path.join(projectRoot, file))).mtimeMs));
-  const latestSource = Math.max(await newestSourceTime(path.join(projectRoot, 'src')), ...sourceTimes);
   let completeBuild = false;
   if (built) {
     const html = await readFile(path.join(paths.distDir, 'index.html'), 'utf8');
@@ -81,6 +79,12 @@ async function ensureBuild() {
     const resourcesExist = await Promise.all(resources.map(match => stat(path.join(paths.distDir, match[1].slice(1))).then(info => info.isFile()).catch(() => false)));
     completeBuild = resources.length > 0 && resourcesExist.every(Boolean);
   }
+  if (process.env.TAVERN_PREBUILT === '1') {
+    if (!completeBuild) throw new Error('应用资源不完整，请重新解压完整应用文件夹');
+    return;
+  }
+  const sourceTimes = await Promise.all(['index.html', 'vite.config.ts', 'package.json', 'package-lock.json', 'config/example.json', 'config/font-sizes.json'].map(async file => (await stat(path.join(projectRoot, file))).mtimeMs));
+  const latestSource = Math.max(await newestSourceTime(path.join(projectRoot, 'src')), ...sourceTimes);
   if (built && built.mtimeMs >= latestSource && completeBuild) return;
   if (!jsonOutput) console.log('正在构建网页资源…');
   const executable = process.platform === 'win32' ? (process.env.ComSpec || 'cmd.exe') : 'npm';

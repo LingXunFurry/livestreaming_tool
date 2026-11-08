@@ -1,4 +1,4 @@
-param([ValidateSet('cp2', 'cp3')][string]$Checkpoint = 'cp2')
+param([ValidateSet('cp2', 'cp3', 'cp3-art')][string]$Checkpoint = 'cp2')
 $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.Drawing
 $projectRoot = Split-Path -Parent $PSScriptRoot

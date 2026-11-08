@@ -1,0 +1,220 @@
+{
+  "checkedAt": "2026-11-08T10:40:53.785Z",
+  "cases": [
+    {
+      "platform": "bilibili",
+      "lyrics": "on",
+      "board": "comments",
+      "boardSize": [
+        528,
+        576
+      ],
+      "boardPosition": [
+        1352,
+        144
+      ],
+      "musicSize": [
+        528,
+        256
+      ],
+      "bottomAnnouncement": true,
+      "frame": "url(\"http://127.0.0.1:3000/assets/notice-frame-BG6NSF0_.png\")",
+      "gramophone": true,
+      "latestVisible": true,
+      "imagesLoaded": true
+    },
+    {
+      "platform": "bilibili",
+      "lyrics": "off",
+      "board": "comments",
+      "boardSize": [
+        528,
+        856
+      ],
+      "boardPosition": [
+        1352,
+        144
+      ],
+      "musicSize": null,
+      "bottomAnnouncement": true,
+      "frame": "url(\"http://127.0.0.1:3000/assets/notice-frame-BG6NSF0_.png\")",
+      "gramophone": false,
+      "latestVisible": true,
+      "imagesLoaded": true
+    },
+    {
+      "platform": "bilibili",
+      "lyrics": "on",
+      "board": "announcement",
+      "boardSize": [
+        528,
+        576
+      ],
+      "boardPosition": [
+        1352,
+        144
+      ],
+      "musicSize": [
+        528,
+        256
+      ],
+      "bottomAnnouncement": false,
+      "frame": "url(\"http://127.0.0.1:3000/assets/notice-frame-BG6NSF0_.png\")",
+      "gramophone": true,
+      "latestVisible": true,
+      "imagesLoaded": true
+    },
+    {
+      "platform": "bilibili",
+      "lyrics": "off",
+      "board": "announcement",
+      "boardSize": [
+        528,
+        856
+      ],
+      "boardPosition": [
+        1352,
+        144
+      ],
+      "musicSize": null,
+      "bottomAnnouncement": false,
+      "frame": "url(\"http://127.0.0.1:3000/assets/notice-frame-BG6NSF0_.png\")",
+      "gramophone": false,
+      "latestVisible": true,
+      "imagesLoaded": true
+    },
+    {
+      "platform": "douyin",
+      "lyrics": "on",
+      "board": "comments",
+      "boardSize": [
+        528,
+        576
+      ],
+      "boardPosition": [
+        1352,
+        144
+      ],
+      "musicSize": [
+        528,
+        256
+      ],
+      "bottomAnnouncement": true,
+      "frame": "url(\"http://127.0.0.1:3000/assets/notice-frame-BG6NSF0_.png\")",
+      "gramophone": true,
+      "latestVisible": true,
+      "imagesLoaded": true
+    },
+    {
+      "platform": "douyin",
+      "lyrics": "off",
+      "board": "comments",
+      "boardSize": [
+        528,
+        856
+      ],
+      "boardPosition": [
+        1352,
+        144
+      ],
+      "musicSize": null,
+      "bottomAnnouncement": true,
+      "frame": "url(\"http://127.0.0.1:3000/assets/notice-frame-BG6NSF0_.png\")",
+      "gramophone": false,
+      "latestVisible": true,
+      "imagesLoaded": true
+    },
+    {
+      "platform": "douyin",
+      "lyrics": "on",
+      "board": "announcement",
+      "boardSize": [
+        528,
+        576
+      ],
+      "boardPosition": [
+        1352,
+        144
+      ],
+      "musicSize": [
+        528,
+        256
+      ],
+      "bottomAnnouncement": false,
+      "frame": "url(\"http://127.0.0.1:3000/assets/notice-frame-BG6NSF0_.png\")",
+      "gramophone": true,
+      "latestVisible": true,
+      "imagesLoaded": true
+    },
+    {
+      "platform": "douyin",
+      "lyrics": "off",
+      "board": "announcement",
+      "boardSize": [
+        528,
+        856
+      ],
+      "boardPosition": [
+        1352,
+        144
+      ],
+      "musicSize": null,
+      "bottomAnnouncement": false,
+      "frame": "url(\"http://127.0.0.1:3000/assets/notice-frame-BG6NSF0_.png\")",
+      "gramophone": false,
+      "latestVisible": true,
+      "imagesLoaded": true
+    }
+  ],
+  "narrow": {
+    "width": 375,
+    "scroll": 375
+  },
+  "approvedBackground": "http://127.0.0.1:3000/assets/cp3-tavern-B50HaELC.png",
+  "liveSourcesUpdated": true,
+  "glyphChecks": [
+    {
+      "size": 20,
+      "height": 18.49169921875,
+      "textHeight": 18.49169921875,
+      "descendersFit": true,
+      "insidePanel": true
+    },
+    {
+      "size": 20,
+      "height": 18.4915771484375,
+      "textHeight": 18.4915771484375,
+      "descendersFit": true,
+      "insidePanel": true
+    },
+    {
+      "size": 20,
+      "height": 18.49169921875,
+      "textHeight": 18.49169921875,
+      "descendersFit": true,
+      "insidePanel": true
+    },
+    {
+      "size": 24,
+      "height": 22.1859130859375,
+      "textHeight": 21.79376220703125,
+      "descendersFit": true,
+      "insidePanel": true
+    },
+    {
+      "size": 24,
+      "height": 22.1859130859375,
+      "textHeight": 21.7938232421875,
+      "descendersFit": true,
+      "insidePanel": true
+    },
+    {
+      "size": 24,
+      "height": 22.1859130859375,
+      "textHeight": 21.793701171875,
+      "descendersFit": true,
+      "insidePanel": true
+    }
+  ],
+  "pageErrors": []
+}

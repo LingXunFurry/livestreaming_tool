@@ -1,7 +1,15 @@
 # 凌巽的酒馆
 
 本地双平台直播装饰系统，使用 React、TypeScript、Vite 和 Node.js。
-CP0 至 CP5 已通过验收；CP6 网易云播放与歌词功能等待用户验收。
+CP0 至 CP6 与本轮追加装潢已通过验收，B 站互动等待授权。
+
+## Windows 桌面应用
+
+免安装检查版位于 `release/凌巽的酒馆-win32-x64/`。双击 `凌巽的酒馆.exe` 启动，保留同目录文件。菜单提供后台编辑、双平台实时预览、场景/素材预览以及服务启动和停止，音乐控制沿用后台按钮。关闭窗口时可选择保留直播服务或停止后退出。
+
+应用设置和日志保存在 `%APPDATA%/LingxunTavern/`。当前本机的设置在首次交付时复制到该目录，原项目设置继续保存在 `data/`。
+
+开发模式运行 `npm run desktop`。构建 Windows 包运行 `npm run package:desktop`，需要先按 `docs/MUSIC_SETUP.md` 安装本地桥接依赖。检查记录见 `docs/DESKTOP_REVIEW.md`。
 
 ## 首次初始化
 

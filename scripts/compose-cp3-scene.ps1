@@ -1,4 +1,8 @@
-param([string]$LayoutPath = 'assets/layouts/cp3-tavern.json')
+param(
+    [string]$LayoutPath = 'assets/layouts/cp3-tavern.json',
+    [string]$OutputPath = 'assets/backgrounds/cp3-tavern.png',
+    [string]$ReportPath = 'docs/CP3_SCENE_CHECKS.json'
+)
 $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.Drawing
 $projectRoot = Split-Path -Parent $PSScriptRoot
@@ -61,8 +65,8 @@ try {
     $graphics.SetClip([System.Drawing.Rectangle]::new(40, 144, 1280, 720))
     $graphics.Clear([System.Drawing.Color]::Transparent)
     $graphics.ResetClip()
-    $outputPath = Join-Path $projectRoot 'assets/backgrounds/cp3-tavern.png'
-    $temporaryPath = "$outputPath.tmp.png"
+    $resolvedOutputPath = Join-Path $projectRoot $OutputPath
+    $temporaryPath = "$resolvedOutputPath.tmp.png"
     $canvas.Save($temporaryPath, [System.Drawing.Imaging.ImageFormat]::Png)
 } finally { $graphics.Dispose(); $canvas.Dispose() }
 
@@ -93,13 +97,13 @@ try {
     $palette = [int[]]@($manifest.palette | ForEach-Object { [System.Drawing.ColorTranslator]::FromHtml($_).ToArgb() })
     $transparent = [SceneCheck]::Verify($saved, $palette)
 } finally { $saved.Dispose() }
-[System.IO.File]::Move($temporaryPath, $outputPath, $true)
+[System.IO.File]::Move($temporaryPath, $resolvedOutputPath, $true)
 $report = @{
     checkedAt = [DateTime]::UtcNow.ToString('o'); canvas = @(1920,1080); gameWindow = $layout.gameWindow
     transparentPixels = $transparent; paletteOnly = $true; partialAlphaPixels = 0
     layerCount = $layout.layers.Count; assets = @($usedAssets | Sort-Object); layoutPath = $LayoutPath
-    outputPath = 'assets/backgrounds/cp3-tavern.png'
-    sha256 = (Get-FileHash -LiteralPath $outputPath -Algorithm SHA256).Hash.ToLowerInvariant()
+    outputPath = $OutputPath
+    sha256 = (Get-FileHash -LiteralPath $resolvedOutputPath -Algorithm SHA256).Hash.ToLowerInvariant()
 }
-[System.IO.File]::WriteAllText((Join-Path $projectRoot 'docs/CP3_SCENE_CHECKS.json'), ($report | ConvertTo-Json -Depth 6).Replace("`r`n", "`n") + "`n", [System.Text.UTF8Encoding]::new($false))
-Write-Output "Scene composed and verified: $outputPath"
+[System.IO.File]::WriteAllText((Join-Path $projectRoot $ReportPath), ($report | ConvertTo-Json -Depth 6).Replace("`r`n", "`n") + "`n", [System.Text.UTF8Encoding]::new($false))
+Write-Output "Scene composed and verified: $resolvedOutputPath"

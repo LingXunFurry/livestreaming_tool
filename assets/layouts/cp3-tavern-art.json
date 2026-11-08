@@ -1,0 +1,197 @@
+{
+  "canvas": {
+    "width": 1920,
+    "height": 1080
+  },
+  "gameWindow": {
+    "x": 40,
+    "y": 144,
+    "width": 1280,
+    "height": 720
+  },
+  "backgroundColor": "#1E2B45",
+  "layers": [
+    {
+      "asset": "cp3-tavern-wall-tile",
+      "x": 0,
+      "y": 0,
+      "scale": 2,
+      "repeat": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "asset": "cp3-tavern-floor-tile",
+      "x": 0,
+      "y": 864,
+      "scale": 2,
+      "repeat": [
+        1920,
+        216
+      ]
+    },
+    {
+      "asset": "cp3-timber-beam",
+      "x": 16,
+      "y": 120,
+      "scale": 2,
+      "sourceRegion": [
+        16,
+        10,
+        96,
+        12
+      ],
+      "repeat": [
+        1328,
+        24
+      ]
+    },
+    {
+      "asset": "cp3-timber-beam",
+      "x": 16,
+      "y": 864,
+      "scale": 2,
+      "sourceRegion": [
+        16,
+        10,
+        96,
+        12
+      ],
+      "repeat": [
+        1328,
+        24
+      ]
+    },
+    {
+      "asset": "cp3-timber-beam",
+      "x": 16,
+      "y": 144,
+      "scale": 2,
+      "rotation": 90,
+      "sourceRegion": [
+        16,
+        10,
+        96,
+        12
+      ],
+      "repeat": [
+        24,
+        720
+      ]
+    },
+    {
+      "asset": "cp3-timber-beam",
+      "x": 1320,
+      "y": 144,
+      "scale": 2,
+      "rotation": 90,
+      "sourceRegion": [
+        16,
+        10,
+        96,
+        12
+      ],
+      "repeat": [
+        24,
+        720
+      ]
+    },
+    {
+      "asset": "cp3-tavern-canopy",
+      "x": 0,
+      "y": 0,
+      "scale": 2,
+      "repeat": [
+        640,
+        144
+      ]
+    },
+    {
+      "asset": "cp3-art-right-rack",
+      "x": 1312,
+      "y": 24,
+      "scale": 2
+    },
+    {
+      "asset": "cp3-tavern-counter",
+      "x": 40,
+      "y": 864,
+      "scale": 2,
+      "sourceRegion": [
+        5,
+        0,
+        309,
+        128
+      ],
+      "repeat": [
+        618,
+        216
+      ]
+    },
+    {
+      "asset": "cp3-tavern-counter",
+      "x": 658,
+      "y": 864,
+      "scale": 2,
+      "sourceRegion": [
+        630,
+        0,
+        5,
+        128
+      ],
+      "repeat": [
+        10,
+        216
+      ]
+    },
+    {
+      "asset": "cp3-tavern-counter",
+      "x": 692,
+      "y": 864,
+      "scale": 2,
+      "sourceRegion": [
+        5,
+        0,
+        134,
+        128
+      ],
+      "repeat": [
+        268,
+        216
+      ]
+    },
+    {
+      "asset": "cp3-tavern-counter",
+      "x": 960,
+      "y": 864,
+      "scale": 2,
+      "sourceRegion": [
+        455,
+        0,
+        180,
+        128
+      ],
+      "repeat": [
+        360,
+        216
+      ]
+    },
+    {
+      "asset": "cp3-timber-beam",
+      "x": 1320,
+      "y": 1048,
+      "scale": 1,
+      "repeat": [
+        600,
+        32
+      ]
+    },
+    {
+      "asset": "cp3-art-quest-desk",
+      "x": 332,
+      "y": 880,
+      "scale": 2
+    }
+  ]
+}

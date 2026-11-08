@@ -2,6 +2,8 @@
 
 本轮执行 V2 CP7，依据 `docs/V2_BRIEF.md`。CP0 至 CP6 已由用户验收通过。CP7 当前为 `IN_PROGRESS`，B 站互动未授权时使用公告回退。
 
+2026-11-08 用户已通过本轮追加装潢并授权继续 Windows 应用封装，先做真实网易云冷启动连接测试，应用覆盖现有后台、预览、素材与控制功能，完成后交用户检查。GitHub 上传等待用户验收。
+
 1. 每次任务重新阅读相关规范。每次开始检查点必须阅读 `docs/PROJECT_SPEC.md`、`docs/DESIGN_SYSTEM.md`、`docs/ASSET_POLICY.md`、`docs/ARCHITECTURE.md`、`docs/RUNTIME.md` 和 `docs/CHECKPOINTS.md`，聊天记忆不能替代规范。
 2. 用户确认的新要求先写入规范再改代码。修改已验收设计决定需要用户批准。保留历史已通过的 CP1 区域位置与比例，美术单独验收。
 3. 只实现当前获准阶段。完成后更新为 `WAITING_USER_REVIEW`，提供实际测试、预览、截图、文件列表与 Git 提交，停止等待用户确认。只有明确批准才能标记 `APPROVED` 并进入下一阶段。

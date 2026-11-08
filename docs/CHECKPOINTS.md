@@ -1,5 +1,7 @@
 # 阶段验收
 
+2026-11-08 用户已通过装潢追加，取消标题窗龛、调整左桌落地、放大酒桶架并贴合公告框、留声机移到下移的播放框上沿。新装潢已用于双平台正式页面。用户授权继续 Windows 应用封装，应用交付状态另见 `DESKTOP_REVIEW.md`，B 站真实互动仍等待授权。
+
 2026-11-08 用户明确通过 CP6 并授权进入 CP7；CP0 至 CP6 为 `APPROVED`，CP7 正在进行。
 
 状态统一使用 `NOT_STARTED`、`IN_PROGRESS`、`WAITING_USER_REVIEW`、`NEEDS_REVISION`、`APPROVED`、`BLOCKED`。用户明确通过后才能标记 `APPROVED`。每阶段开始重新阅读相关规范，完成后提供实际测试、预览、截图、文件清单和 Git 提交。

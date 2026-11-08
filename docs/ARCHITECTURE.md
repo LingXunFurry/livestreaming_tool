@@ -1,5 +1,7 @@
 # 技术架构
 
+Windows 桌面入口位于 `desktop/main.cjs`。Electron 原生菜单复用现有后台、场景与素材页面，实时源在独立窗口等比缩放。子进程通过 Electron 的 Node 模式执行统一运行入口，封装版以 `TAVERN_PREBUILT=1` 验证现成构建产物，配置位于用户目录。关闭窗口可保留服务，再次打开复用同一实例。
+
 保留现有 React、TypeScript、Vite 前端。运行时采用 Node.js HTTP 服务和 `ws`，同一监听端口托管构建产物、两个直播页面、后台、健康接口和 WebSocket。目录保持 `src/`、`server/`、`scripts/`，当前规模采用简洁单项目结构。
 
 ## 路由和数据流

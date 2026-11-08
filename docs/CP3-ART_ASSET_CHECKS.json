@@ -1,0 +1,216 @@
+{
+  "checkedAt": "2026-11-08T10:30:30.9080168Z",
+  "process": "Manifest logical size, center nearest-neighbor sampling, closest V2 RGB color, alpha threshold 128; tiles match opposite edge pixels",
+  "assets": [
+    {
+      "id": "cp3-art-notice-frame",
+      "path": "assets/generated/cp3-art/notice-frame.png",
+      "sourcePath": "assets/generated/cp3-art/notice-frame-source.png",
+      "sourceSize": [
+        1200,
+        1310
+      ],
+      "sourceRegion": [
+        0,
+        0,
+        1200,
+        1310
+      ],
+      "logicalSize": [
+        264,
+        288
+      ],
+      "transparentPixels": 62692,
+      "opaquePixels": 13340,
+      "partialAlphaPixels": 0,
+      "palette": [
+        "#142238",
+        "#1E2B45",
+        "#364E6A",
+        "#5A3E2B",
+        "#7083A0",
+        "#8A6547",
+        "#A8C7D1",
+        "#C9A85E",
+        "#D24943",
+        "#F3ECDD"
+      ],
+      "bounds": {
+        "y": 4,
+        "x": 5,
+        "height": 279,
+        "width": 253
+      },
+      "sha256": "261c04522e6ea5910cae209184b2402f26fb9f7f0cf9d723aad7139f3531194b",
+      "sourceSha256": "daadd8d7666e2b9d9e171dabd1524a1c204f2b9d8290bc0ddb416d7859d64599"
+    },
+    {
+      "id": "cp3-art-music-frame",
+      "path": "assets/generated/cp3-art/music-frame.png",
+      "sourcePath": "assets/generated/cp3-art/music-frame-source.png",
+      "sourceSize": [
+        1801,
+        873
+      ],
+      "sourceRegion": [
+        0,
+        0,
+        1801,
+        873
+      ],
+      "logicalSize": [
+        264,
+        128
+      ],
+      "transparentPixels": 26799,
+      "opaquePixels": 6993,
+      "partialAlphaPixels": 0,
+      "palette": [
+        "#142238",
+        "#1E2B45",
+        "#364E6A",
+        "#5A3E2B",
+        "#7083A0",
+        "#8A6547",
+        "#A8C7D1",
+        "#C9A85E",
+        "#D24943",
+        "#F3ECDD"
+      ],
+      "bounds": {
+        "y": 2,
+        "x": 2,
+        "height": 124,
+        "width": 260
+      },
+      "sha256": "707b89c6ca19960f1d5340b4f07fec28ceb3394ffb1a1da3ddb44b123dd8225f",
+      "sourceSha256": "38586b8c63165889714a4d5d7d775420dabd45809db03b2e66195b0b8f45a6a7"
+    },
+    {
+      "id": "cp3-art-quest-desk",
+      "path": "assets/generated/cp3-art/quest-desk.png",
+      "sourcePath": "assets/generated/cp3-art/quest-desk-source.png",
+      "sourceSize": [
+        2172,
+        724
+      ],
+      "sourceRegion": [
+        0,
+        0,
+        2172,
+        724
+      ],
+      "logicalSize": [
+        160,
+        32
+      ],
+      "transparentPixels": 2081,
+      "opaquePixels": 3039,
+      "partialAlphaPixels": 0,
+      "palette": [
+        "#142238",
+        "#1E2B45",
+        "#364E6A",
+        "#5A3E2B",
+        "#7083A0",
+        "#8A6547",
+        "#A8C7D1",
+        "#C9A85E",
+        "#D24943",
+        "#F3ECDD"
+      ],
+      "bounds": {
+        "y": 2,
+        "x": 1,
+        "height": 29,
+        "width": 158
+      },
+      "sha256": "34cff6ddc588b10f0bcc8edd09b1eb6e5c296b44302299f51593b8a06c1d7369",
+      "sourceSha256": "67d887ce5773940e0275e2c11ea0ea90cae25a04c323a4e67e850f5060fd5134"
+    },
+    {
+      "id": "cp3-art-gramophone",
+      "path": "assets/generated/cp3-art/gramophone.png",
+      "sourcePath": "assets/generated/cp3-art/gramophone-source.png",
+      "sourceSize": [
+        1341,
+        1173
+      ],
+      "sourceRegion": [
+        0,
+        0,
+        1341,
+        1173
+      ],
+      "logicalSize": [
+        56,
+        48
+      ],
+      "transparentPixels": 1715,
+      "opaquePixels": 973,
+      "partialAlphaPixels": 0,
+      "palette": [
+        "#142238",
+        "#1E2B45",
+        "#364E6A",
+        "#5A3E2B",
+        "#7083A0",
+        "#8A6547",
+        "#A8C7D1",
+        "#C9A85E",
+        "#D24943",
+        "#F3ECDD"
+      ],
+      "bounds": {
+        "y": 1,
+        "x": 7,
+        "height": 46,
+        "width": 44
+      },
+      "sha256": "f2db3b90cc48081f5506cf8094503e3f9e352d8153d0163d075f7bb93d47631c",
+      "sourceSha256": "4894fa2d5b35dc0c8205ec4470b4bb83237b410dd5975a9fe19eefd1e695a396"
+    },
+    {
+      "id": "cp3-art-right-rack",
+      "path": "assets/generated/cp3-art/right-rack.png",
+      "sourcePath": "assets/generated/cp3/tavern-right-rack-source.png",
+      "sourceSize": [
+        2172,
+        724
+      ],
+      "sourceRegion": [
+        0,
+        0,
+        2172,
+        724
+      ],
+      "logicalSize": [
+        288,
+        88
+      ],
+      "transparentPixels": 16120,
+      "opaquePixels": 9224,
+      "partialAlphaPixels": 0,
+      "palette": [
+        "#142238",
+        "#1E2B45",
+        "#364E6A",
+        "#5A3E2B",
+        "#7083A0",
+        "#8A6547",
+        "#A8C7D1",
+        "#C9A85E",
+        "#D24943",
+        "#F3ECDD"
+      ],
+      "bounds": {
+        "y": 12,
+        "x": 8,
+        "height": 68,
+        "width": 272
+      },
+      "sha256": "53275c89b7efc53bde5f90f2dbf26aecb1a1a341bd5dd63fefe95469ccb34f9a",
+      "sourceSha256": "dc8e05adb67e3021a1b8e97655e170fea3e36056edef32e68a74dfa2f3f178ab"
+    }
+  ]
+}

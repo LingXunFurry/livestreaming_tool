@@ -1,0 +1,29 @@
+{
+  "layoutPath": "assets/layouts/cp3-tavern-art.json",
+  "sha256": "56f849ea4133391731bdf5c19aa46fb0009025f793a1c8e7a77f69ee2431b388",
+  "transparentPixels": 921600,
+  "paletteOnly": true,
+  "layerCount": 14,
+  "assets": [
+    "cp3-art-quest-desk",
+    "cp3-art-right-rack",
+    "cp3-tavern-canopy",
+    "cp3-tavern-counter",
+    "cp3-tavern-floor-tile",
+    "cp3-tavern-wall-tile",
+    "cp3-timber-beam"
+  ],
+  "checkedAt": "2026-11-08T10:31:41.1180642Z",
+  "canvas": [
+    1920,
+    1080
+  ],
+  "outputPath": "assets/backgrounds/cp3-tavern-art.png",
+  "partialAlphaPixels": 0,
+  "gameWindow": {
+    "x": 40,
+    "y": 144,
+    "width": 1280,
+    "height": 720
+  }
+}

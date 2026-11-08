@@ -458,9 +458,15 @@
         "assets/generated/cp3/playing-wordmark-source.png"
       ],
       "version": 1,
-      "logicalSize": [288, 96],
+      "logicalSize": [
+        288,
+        96
+      ],
       "kind": "wordmark",
-      "sourceSize": [2172, 724],
+      "sourceSize": [
+        2172,
+        724
+      ],
       "sha256": "80994cddff46d384d8567bcde904d56e2b6dd3968c74f198c5039cd0fc0e01a2",
       "sourceSha256": "6c24d1733f89f5e888d4b97290ca16b3d3323120085821ecd8a72786c2f822a5",
       "usage": "CP3 announcement component preview",
@@ -468,6 +474,136 @@
       "status": "WAITING_USER_REVIEW",
       "userConfirmed": false,
       "postprocess": "scripts/prepare-cp2-assets.ps1 -Checkpoint cp3"
+    },
+    {
+      "id": "cp3-art-notice-frame",
+      "name": "木榫留言板框",
+      "path": "assets/generated/cp3-art/notice-frame.png",
+      "sourcePath": "assets/generated/cp3-art/notice-frame-source.png",
+      "source": "Original AI-generated asset",
+      "generationMethod": "built-in image_gen, text-only; nearest-neighbor V2 ten-color normalization and binary alpha",
+      "promptFile": "assets/prompts/cp3-art/notice-frame.md",
+      "version": 1,
+      "logicalSize": [
+        264,
+        288
+      ],
+      "kind": "ui-frame",
+      "usage": "Approved scene decoration in live sources and /scene/review",
+      "license": "AI-generated for this project; no third-party input assets; no external asset license assigned",
+      "status": "APPROVED",
+      "userConfirmed": true,
+      "postprocess": "scripts/prepare-cp2-assets.ps1 -Checkpoint cp3-art",
+      "sourceSize": [
+        1200,
+        1310
+      ],
+      "sha256": "261c04522e6ea5910cae209184b2402f26fb9f7f0cf9d723aad7139f3531194b",
+      "sourceSha256": "daadd8d7666e2b9d9e171dabd1524a1c204f2b9d8290bc0ddb416d7859d64599"
+    },
+    {
+      "id": "cp3-art-music-frame",
+      "name": "播放木框",
+      "path": "assets/generated/cp3-art/music-frame.png",
+      "sourcePath": "assets/generated/cp3-art/music-frame-source.png",
+      "source": "Original AI-generated asset",
+      "generationMethod": "built-in image_gen, text-only; nearest-neighbor V2 ten-color normalization and binary alpha",
+      "promptFile": "assets/prompts/cp3-art/music-frame.md",
+      "version": 1,
+      "logicalSize": [
+        264,
+        128
+      ],
+      "kind": "ui-frame",
+      "usage": "Approved scene decoration in live sources and /scene/review",
+      "license": "AI-generated for this project; no third-party input assets; no external asset license assigned",
+      "status": "APPROVED",
+      "userConfirmed": true,
+      "postprocess": "scripts/prepare-cp2-assets.ps1 -Checkpoint cp3-art",
+      "sourceSize": [
+        1801,
+        873
+      ],
+      "sha256": "707b89c6ca19960f1d5340b4f07fec28ceb3394ffb1a1da3ddb44b123dd8225f",
+      "sourceSha256": "38586b8c63165889714a4d5d7d775420dabd45809db03b2e66195b0b8f45a6a7"
+    },
+    {
+      "id": "cp3-art-quest-desk",
+      "name": "左桌账本与冒险地图",
+      "path": "assets/generated/cp3-art/quest-desk.png",
+      "sourcePath": "assets/generated/cp3-art/quest-desk-source.png",
+      "source": "Original AI-generated asset",
+      "generationMethod": "built-in image_gen, text-only; nearest-neighbor V2 ten-color normalization and binary alpha",
+      "promptFile": "assets/prompts/cp3-art/quest-desk.md",
+      "version": 1,
+      "logicalSize": [
+        160,
+        32
+      ],
+      "kind": "scene-group",
+      "usage": "Approved scene decoration in live sources and /scene/review",
+      "license": "AI-generated for this project; no third-party input assets; no external asset license assigned",
+      "status": "APPROVED",
+      "userConfirmed": true,
+      "postprocess": "scripts/prepare-cp2-assets.ps1 -Checkpoint cp3-art",
+      "sourceSize": [
+        2172,
+        724
+      ],
+      "sha256": "34cff6ddc588b10f0bcc8edd09b1eb6e5c296b44302299f51593b8a06c1d7369",
+      "sourceSha256": "67d887ce5773940e0275e2c11ea0ea90cae25a04c323a4e67e850f5060fd5134"
+    },
+    {
+      "id": "cp3-art-gramophone",
+      "name": "播放区留声机",
+      "path": "assets/generated/cp3-art/gramophone.png",
+      "sourcePath": "assets/generated/cp3-art/gramophone-source.png",
+      "source": "Original AI-generated asset",
+      "generationMethod": "built-in image_gen, text-only; nearest-neighbor V2 ten-color normalization and binary alpha",
+      "promptFile": "assets/prompts/cp3-art/gramophone.md",
+      "version": 1,
+      "logicalSize": [
+        56,
+        48
+      ],
+      "kind": "scene-group",
+      "usage": "Approved scene decoration in live sources and /scene/review",
+      "license": "AI-generated for this project; no third-party input assets; no external asset license assigned",
+      "status": "APPROVED",
+      "userConfirmed": true,
+      "postprocess": "scripts/prepare-cp2-assets.ps1 -Checkpoint cp3-art",
+      "sourceSize": [
+        1341,
+        1173
+      ],
+      "sha256": "f2db3b90cc48081f5506cf8094503e3f9e352d8153d0163d075f7bb93d47631c",
+      "sourceSha256": "4894fa2d5b35dc0c8205ec4470b4bb83237b410dd5975a9fe19eefd1e695a396"
+    },
+    {
+      "id": "cp3-art-right-rack",
+      "name": "放大酒桶挂杯架",
+      "path": "assets/generated/cp3-art/right-rack.png",
+      "sourcePath": "assets/generated/cp3/tavern-right-rack-source.png",
+      "source": "Existing project AI-generated tavern rack",
+      "generationMethod": "Reuse approved original image_gen source; nearest-neighbor V2 palette normalization at 288x88",
+      "promptFile": "assets/prompts/cp3/tavern-right-rack.md",
+      "version": 2,
+      "logicalSize": [
+        288,
+        88
+      ],
+      "kind": "scene-group",
+      "usage": "Approved scene decoration in live sources and /scene/review",
+      "license": "AI-generated for this project; no third-party input assets; no external asset license assigned",
+      "status": "APPROVED",
+      "userConfirmed": true,
+      "postprocess": "scripts/prepare-cp2-assets.ps1 -Checkpoint cp3-art",
+      "sourceSize": [
+        2172,
+        724
+      ],
+      "sha256": "53275c89b7efc53bde5f90f2dbf26aecb1a1a341bd5dd63fefe95469ccb34f9a",
+      "sourceSha256": "dc8e05adb67e3021a1b8e97655e170fea3e36056edef32e68a74dfa2f3f178ab"
     }
   ],
   "note": "CP2 三件独立透明像素素材已于 2026-11-07 获用户验收；CP3 新素材与组合背景待用户验收。",

@@ -9,13 +9,20 @@ import { disconnectedMusic, type MusicState } from './music'
 import { Admin } from './Admin'
 import { AssetReview } from './AssetReview'
 import sceneLayout from '../assets/layouts/cp3-tavern.json'
+import revisedSceneLayout from '../assets/layouts/cp3-tavern-art.json'
 import './scene-review.css'
 import './styles.css'
 
 const sceneBackground = new URL('../assets/backgrounds/cp3-tavern.png', import.meta.url).href
 const sceneTitle = new URL('../assets/generated/cp3/tavern-wordmark.png', import.meta.url).href
+const revisedSceneBackground = new URL('../assets/backgrounds/cp3-tavern-art.png', import.meta.url).href
 
 const sceneAssets = [
+  { name: '木榫留言板框', size: '264 × 288', image: new URL('../assets/generated/cp3-art/notice-frame.png', import.meta.url).href },
+  { name: '播放木框', size: '264 × 128', image: new URL('../assets/generated/cp3-art/music-frame.png', import.meta.url).href },
+  { name: '像素留声机', size: '56 × 48', image: new URL('../assets/generated/cp3-art/gramophone.png', import.meta.url).href },
+  { name: '左桌账本与冒险地图', size: '160 × 32', image: new URL('../assets/generated/cp3-art/quest-desk.png', import.meta.url).href },
+  { name: '放大酒桶挂杯架', size: '288 × 88', image: new URL('../assets/generated/cp3-art/right-rack.png', import.meta.url).href },
   { name: '酒馆标题艺术字', size: '384 × 128', image: sceneTitle },
   { name: '梁架与悬挂陈设组', size: '320 × 80', image: new URL('../assets/generated/cp3/tavern-canopy.png', import.meta.url).href },
   { name: '吧台与供酒陈设组', size: '640 × 128', image: new URL('../assets/generated/cp3/tavern-counter.png', import.meta.url).href },
@@ -41,10 +48,13 @@ function Preview({ scene = false }: { scene?: boolean }) {
   const [lyrics, setLyrics] = useState(params.get('lyrics') !== 'off')
   const [guides, setGuides] = useState(!scene)
   const [showUI, setShowUI] = useState(true)
+  const [revisedArt, setRevisedArt] = useState(params.get('art') !== 'approved')
+  const [boardMode, setBoardMode] = useState<BoardMode>(params.get('board') === 'announcement' ? 'announcement' : 'comments')
   const [background, setBackground] = useState('transparent')
   const [scale, setScale] = useState(0)
   const stageRef = useRef<HTMLDivElement>(null)
   const sourceUrl = `/live/${platform}${lyrics ? '' : '?lyrics=off'}`
+  const previewBackground = revisedArt ? revisedSceneBackground : sceneBackground
 
   useEffect(() => {
     const stage = stageRef.current
@@ -58,19 +68,23 @@ function Preview({ scene = false }: { scene?: boolean }) {
     const url = new URL(window.location.href)
     url.searchParams.set('platform', platform)
     url.searchParams.set('lyrics', lyrics ? 'on' : 'off')
+    if (scene) {
+      url.searchParams.set('art', revisedArt ? 'candidate' : 'approved')
+      url.searchParams.set('board', boardMode)
+    }
     window.history.replaceState(null, '', url)
-  }, [platform, lyrics])
+  }, [platform, lyrics, scene, revisedArt, boardMode])
 
   return (
     <div className="review-shell">
       <header className="review-header">
         <a className="project-brand" href="/preview" aria-label="凌巽的酒馆布局预览首页"><span className="brand-grid" aria-hidden="true"><i /><i /><i /><i /></span><span>凌巽的酒馆 <small>OVERLAY WORKSHOP</small></span></a>
-        <span className="checkpoint-status"><span /> {scene ? 'V2 CP3 · 等待场景验收' : 'V2 CP1 · 已通过'}</span>
+        <span className="checkpoint-status"><span /> {scene ? '装潢追加 · 已通过' : 'V2 CP1 · 已通过'}</span>
       </header>
 
       <div className="intro">
-        <div><p className="eyebrow">{scene ? 'CHECKPOINT 03 / TAVERN SCENE' : 'CHECKPOINT 01 / LAYOUT'}</p><h1>凌巽的酒馆 · {scene ? '像素场景返修' : '横屏布局线框'}</h1><p className="intro-description">{scene ? '梁架、旗帜与供酒吧台。切换 UI，查看独立背景与艺术字叠加的效果。' : '复核 1920 × 1080 双平台布局，保留已确认的区域位置与比例。'}</p></div>
-        <div className="phase-note"><span>当前阶段</span><strong>{scene ? 'CP3 · 酒馆场景' : 'CP1 · 横屏布局'}</strong><small>{scene ? '布局已通过 · 场景等待验收' : '美术与场景素材另行验收'}</small></div>
+        <div><p className="eyebrow">{scene ? 'TAVERN / ART REVIEW' : 'CHECKPOINT 01 / LAYOUT'}</p><h1>凌巽的酒馆 · {scene ? '像素装潢预览' : '横屏布局线框'}</h1><p className="intro-description">{scene ? '木榫留言板、留声机播放区与左桌地图账本。切换新增装潢对比效果，留言和音乐为模拟示例。' : '复核 1920 × 1080 双平台布局，保留已确认的区域位置与比例。'}</p></div>
+        <div className="phase-note"><span>当前阶段</span><strong>{scene ? '装潢追加 · 已通过' : 'CP1 · 横屏布局'}</strong><small>{scene ? '本轮装潢已通过' : '美术与场景素材另行验收'}</small></div>
       </div>
 
       <section className="review-workspace" aria-label="直播布局预览">
@@ -80,20 +94,24 @@ function Preview({ scene = false }: { scene?: boolean }) {
             <button aria-pressed={platform === 'douyin'} onClick={() => setPlatform('douyin')}>抖音</button>
           </div>
           <div className="preview-options">
-            {scene && <label><input type="checkbox" checked={showUI} onChange={event => setShowUI(event.target.checked)} />叠加 UI</label>}
+            {scene && <>
+              <label><input type="checkbox" checked={revisedArt} onChange={event => setRevisedArt(event.target.checked)} />新增装潢</label>
+              <label><input type="checkbox" checked={showUI} onChange={event => setShowUI(event.target.checked)} />叠加 UI</label>
+              <label>右栏预览<select aria-label="右栏预览" value={boardMode} onChange={event => setBoardMode(event.target.value as BoardMode)}><option value="comments">模拟留言</option><option value="announcement">公告示例</option></select></label>
+            </>}
             <label><input type="checkbox" checked={lyrics} onChange={event => setLyrics(event.target.checked)} />显示歌词</label>
             <label><input type="checkbox" checked={guides} onChange={event => setGuides(event.target.checked)} />尺寸参考</label>
             <label className="background-picker">透明区底图<select aria-label="预览底图" value={background} onChange={event => setBackground(event.target.value)}><option value="transparent">透明棋盘</option><option value="solid">纯色</option></select></label>
           </div>
-          <a className="open-source" href={scene ? sceneBackground : sourceUrl} download={scene ? 'cp3-tavern.png' : undefined} target={scene ? undefined : '_blank'} rel="noreferrer">{scene ? '下载无 UI 背景' : '打开透明源'} <span aria-hidden="true">↗</span></a>
+          <a className="open-source" href={scene ? previewBackground : sourceUrl} download={scene ? (revisedArt ? 'cp3-tavern-art.png' : 'cp3-tavern.png') : undefined} target={scene ? undefined : '_blank'} rel="noreferrer">{scene ? '下载无 UI 背景' : '打开透明源'} <span aria-hidden="true">↗</span></a>
         </div>
 
         <div className="canvas-surround">
           <div className="canvas-caption"><span>{platformNames[platform]} / {lyrics ? '歌词开启' : '歌词关闭'}</span><span>1920 × 1080 <b>16:9</b></span></div>
           <div ref={stageRef} className={`preview-stage ${background !== 'solid' ? 'checkerboard' : 'solid-stage'}`}>
-            <div className={`scaled-stage ${scene ? 'scene-preview' : ''}`} style={{ transform: `scale(${scale})`, visibility: scale ? 'visible' : 'hidden' }}>
-              {scene && <img className="scene-background" src={sceneBackground} width="1920" height="1080" alt="模块化酒馆背景，游戏窗口透明" />}
-              {(!scene || showUI) && <Overlay platform={platform} lyrics={lyrics} />}
+            <div className={`scaled-stage ${scene ? 'scene-preview' : ''} ${scene && revisedArt ? 'scene-art-updated' : ''}`} style={{ transform: `scale(${scale})`, visibility: scale ? 'visible' : 'hidden' }}>
+              {scene && <img className="scene-background" src={previewBackground} width="1920" height="1080" alt="模块化酒馆背景，游戏窗口透明" />}
+              {(!scene || showUI) && <Overlay platform={platform} lyrics={lyrics} boardMode={boardMode} liveStatus={scene && boardMode === 'announcement' ? '公告示例' : undefined} announcementText={'**欢迎来到凌巽的酒馆**\n旅人请在这里歇脚，聊聊今天的冒险。\n\n<span style="color: gold">今晚的酒馆公告</span>\n这里预览后台保存的公告排版与像素装潢。'} />}
               {scene && showUI && <img className="scene-title-art" src={sceneTitle} width="384" height="128" alt="凌巽的酒馆" />}
               {(!scene || guides) && <div className={`game-guide ${guides ? 'with-guides' : ''}`} aria-label="仅预览显示的透明游戏区">
                 {guides && <><span className="game-dimension">01 / 游戏画面</span><span className="corner top-left" /><span className="corner top-right" /><span className="corner bottom-left" /><span className="corner bottom-right" /></>}
@@ -107,7 +125,7 @@ function Preview({ scene = false }: { scene?: boolean }) {
       </section>
 
       {scene && <section className="scene-assets" aria-label="CP3 独立场景素材">
-        <div className="scene-assets-heading"><div><p className="eyebrow">CP3 / INDEPENDENT ASSETS</p><h2>梁架、吧台与酒馆字样。</h2><p>前七件为返修新稿，其余为首版独立模块，均等待美术验收。</p></div><a href={`data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify(sceneLayout, null, 2))}`} download="cp3-tavern.json">下载物件布局 JSON ↗</a></div>
+        <div className="scene-assets-heading"><div><p className="eyebrow">TAVERN / INDEPENDENT ASSETS</p><h2>木框、留声机与酒馆陈设。</h2><p>前五件为本轮已验收装潢，下方同时展示既有素材。</p></div><a href={`data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify(revisedArt ? revisedSceneLayout : sceneLayout, null, 2))}`} download={revisedArt ? 'cp3-tavern-art.json' : 'cp3-tavern.json'}>下载物件布局 JSON ↗</a></div>
         <div className="scene-asset-grid">{sceneAssets.map(asset => <article key={asset.name}>
           <div className="scene-asset-stage checkerboard"><img src={asset.image} alt={`${asset.name}独立像素素材`} /></div>
           <h3>{asset.name}</h3><p>{asset.size} px</p><a href={asset.image} download={`${asset.name}.png`}>下载 PNG ↗</a>
@@ -126,7 +144,7 @@ function Preview({ scene = false }: { scene?: boolean }) {
           <small>当前为美术原型与示例内容，尚未接入平台互动或音乐。</small>
         </section>
       </div>
-      <footer className="review-footer"><span>CP0 · CP1 · CP2 已通过 <b>→</b> CP3 场景验收</span><a href={scene ? '/preview' : '/scene/review'}>{scene ? '查看 CP1 布局 ↗' : '查看 CP3 场景 ↗'}</a><a href="/assets/review">CP2 素材 ↗</a><a href="/admin">实际系统状态 ↗</a></footer>
+      <footer className="review-footer"><span>{scene ? 'CP0 至 CP6 与本轮装潢已通过' : 'CP1 布局已通过'}</span><a href={scene ? '/preview' : '/scene/review'}>{scene ? '查看 CP1 布局 ↗' : '查看装潢预览 ↗'}</a><a href="/assets/review">CP2 素材 ↗</a><a href="/admin">实际系统状态 ↗</a></footer>
     </div>
   )
 }
@@ -247,11 +265,11 @@ function SourcePage({ platform }: { platform: Platform }) {
     clearTimeout(musicHideTimer.current)
     musicHideTimer.current = setTimeout(() => setMusicHidden(true), 5000)
     return () => clearTimeout(musicHideTimer.current)
-  }, [music, platformSettings.lyricsAutoHide])
+  }, [music.state, music.playing, platformSettings.lyricsAutoHide])
   const showMusic = platformSettings.lyricsEnabled && (!platformSettings.lyricsAutoHide || !musicHidden)
   return (
-    <main className="source-stage scene-preview" aria-label={`${platformNames[platform]}酒馆直播源`}>
-      <img className="scene-background" src={sceneBackground} width="1920" height="1080" alt="已验收模块化酒馆背景，游戏窗口透明" />
+    <main className="source-stage scene-preview scene-art-updated" aria-label={`${platformNames[platform]}酒馆直播源`}>
+      <img className="scene-background" src={revisedSceneBackground} width="1920" height="1080" alt="已验收模块化酒馆背景，游戏窗口透明" />
       <Overlay platform={platform} lyrics={showMusic} task={settings.global.task} boardMode={platformSettings.boardMode} announcementText={platformSettings.announcementText} bottomAnnouncementText={platformSettings.bottomAnnouncementText} globalFontSizes={settings.global.fontSizes} fontSizes={platformSettings.fontSizes} music={music} liveStatus={liveStatus} liveMessages={liveMessages} interactionState={interactionState} />
       <img className="scene-title-art" src={sceneTitle} width="384" height="128" alt="凌巽的酒馆" />
     </main>
@@ -265,7 +283,7 @@ function UnavailablePage() {
 
 if (sourcePlatform) document.title = `凌巽的酒馆 · ${platformNames[sourcePlatform]}直播页 · CP7`
 if (path === '/assets/review') document.title = '凌巽的酒馆 · CP2 像素素材验收'
-if (path === '/scene/review') document.title = '凌巽的酒馆 · CP3 场景验收'
+if (path === '/scene/review') document.title = '凌巽的酒馆 · 像素装潢验收'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

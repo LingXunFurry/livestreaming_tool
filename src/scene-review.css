@@ -56,16 +56,23 @@
 .scene-preview .message p, .scene-preview .message-meta,
 .scene-preview .message-meta > span { font-size: var(--font-comments, 20px); }
 .scene-preview .message-detail { font-size: calc(var(--font-comments, 20px) * .9); }
-.scene-preview .song-title { font-size: var(--font-song, 20px); line-height: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.scene-preview .song-title { margin-top: 4px; font-size: var(--font-song, 20px); line-height: 1.4; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .scene-preview .song-title > span { font-size: inherit; }
 .scene-preview .song-time { font-size: calc(var(--font-song, 20px) * .8); line-height: 1.2; }
 .scene-preview .song-progress { margin-top: 8px; }
-.scene-preview .lyric-line, .scene-preview .lyric-line.current { font-size: var(--font-lyrics, 20px); line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.scene-preview .lyric-line, .scene-preview .lyric-line.current { margin-top: 4px; font-size: var(--font-lyrics, 20px); line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .source-stage { position: relative; width: 1920px; height: 1080px; overflow: hidden; }
 .source-stage .overlay { position: absolute; inset: 0; }
 .scene-preview .quest-progress { background: #364E6A; }
 .scene-preview .quest-progress i { background: #C9A85E; }
 .scene-assets { padding: 36px 0; border-bottom: 1px solid var(--line); }
+.scene-art-updated .side-board,
+.scene-art-updated .lyrics-board { position: relative; border-color: transparent; box-shadow: none; }
+.scene-art-updated .side-board::before,
+.scene-art-updated .lyrics-board::before { content: ''; position: absolute; inset: -4px; pointer-events: none; border: 48px solid transparent; border-image: url('../assets/generated/cp3-art/notice-frame.png') 48 repeat; image-rendering: pixelated; }
+.scene-art-updated .lyrics-board::before { border-width: 24px; border-image-source: url('../assets/generated/cp3-art/music-frame.png'); border-image-slice: 24; }
+.scene-art-updated .lyrics-board { transform: translateY(24px); overflow: visible; z-index: 1; }
+.scene-art-updated .lyrics-board::after { content: ''; position: absolute; top: -90px; right: 4px; width: 112px; height: 96px; background: url('../assets/generated/cp3-art/gramophone.png') center / 112px 96px no-repeat; image-rendering: pixelated; pointer-events: none; }
 .scene-assets-heading { display: flex; justify-content: space-between; align-items: end; gap: 20px; flex-wrap: wrap; margin-bottom: 24px; }
 .scene-assets-heading h2 { font-size: 24px; font-weight: 500; margin: 8px 0; }
 .scene-assets-heading p:not(.eyebrow) { font-size: 13px; color: var(--muted); line-height: 1.8; }
