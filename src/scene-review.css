@@ -1,12 +1,13 @@
-.scene-title-art { position: absolute; left: 736px; top: -10px; width: 448px; height: auto; image-rendering: pixelated; pointer-events: none; }
+.scene-title-art { position: absolute; left: 768px; top: 12px; image-rendering: pixelated; pointer-events: none; }
 @font-face { font-family: 'Fusion Pixel'; src: url('../assets/fonts/fusion-pixel/fusion-pixel-10px-proportional-zh_hans.otf.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
 .scene-background { position: absolute; inset: 0; image-rendering: pixelated; }
 .scene-preview .overlay { --panel: #142238; --panel-line: #8A6547; color: #F3ECDD; font-family: 'Fusion Pixel', 'Microsoft YaHei', sans-serif; font-synthesis: none; text-rendering: geometricPrecision; }
 .scene-preview .stream-header { background: transparent; border: 0; }
 .scene-preview .tavern-name { visibility: hidden; }
-.scene-preview .side-board, .scene-preview .lyrics-board { border-width: 4px; box-shadow: inset 0 0 0 4px #1E2B45, inset 0 0 0 8px #5A3E2B, 0 4px #142238; background: #142238 url('../assets/generated/cp3/tavern-wall-tile.png') repeat; background-size: 128px 128px; image-rendering: pixelated; }
+.scene-preview .side-board, .scene-preview .lyrics-board { border-width: 4px; box-shadow: inset 0 0 0 4px #1E2B45, 0 4px #142238; }
 .scene-preview .module-heading h2 { color: #C9A85E; font-size: 30px; line-height: 1.4; font-weight: 400; }
 .scene-preview .module-heading h2 { width: 288px; height: 80px; margin-top: 0; font-size: 0; background: url('../assets/generated/cp3/comment-wordmark.png') -15px center / 288px 96px no-repeat; image-rendering: pixelated; }
+.scene-preview .announcement-board .module-heading h2 { width: 288px; height: 80px; margin-top: 0; font-size: 0; line-height: 0; background: url('../assets/generated/cp3/announcement-wordmark.png') -25px center / 288px 96px no-repeat; image-rendering: pixelated; }
 .scene-preview .module-heading .module-index { display: none; }
 .scene-preview .messages { margin-top: 18px; flex: 1 1 auto; min-height: 0; overflow-y: auto; scrollbar-width: none; }
 .scene-preview .messages::-webkit-scrollbar { display: none; }

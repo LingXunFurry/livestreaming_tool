@@ -73,6 +73,7 @@ export function validateSettings(input, defaults) {
   const settings = {
     schemaVersion: input.schemaVersion ?? 1,
     announcementMovedToBottom: input.announcementMovedToBottom ?? false,
+    douyinInteractionRemoved: input.douyinInteractionRemoved ?? false,
     server: { ...defaults.server, ...input.server },
     global: {
       title: defaults.global.title,
@@ -90,6 +91,7 @@ export function validateSettings(input, defaults) {
   };
   if (settings.schemaVersion !== 1) throw new Error('不支持此配置版本，请保留文件并按迁移说明升级');
   if (typeof settings.announcementMovedToBottom !== 'boolean') throw new Error('公告迁移标记必须为布尔值');
+  if (typeof settings.douyinInteractionRemoved !== 'boolean') throw new Error('抖音互动迁移标记必须为布尔值');
   for (const [scope, value] of Object.entries({ global: settings.global, ...settings.platforms })) {
     const allowed = scope === 'global' ? ['task', 'bottomLabel'] : ['comments', 'announcement', 'song', 'lyrics', 'benefits'];
     for (const [field, size] of Object.entries(value.fontSizes)) {
@@ -103,13 +105,26 @@ export function validateSettings(input, defaults) {
     throw new Error('server.port 必须为 1 到 65535 之间的整数');
   }
   if (typeof settings.server.openAdminOnStart !== 'boolean') throw new Error('openAdminOnStart 必须为布尔值');
-  for (const platform of Object.values(settings.platforms)) {
+  for (const [name, platform] of Object.entries(settings.platforms)) {
+    if (typeof platform.roomAddress !== 'string' || platform.roomAddress.length > 256) throw new Error('roomAddress 必须为 256 字以内的房间地址');
+    const address = platform.roomAddress.trim();
+    if (address && !/^\d{1,30}$/.test(address)) {
+      let url;
+      try { url = new URL(address); } catch { throw new Error('roomAddress 不是有效的直播间地址'); }
+      const hosts = name === 'bilibili' ? ['live.bilibili.com', 'b23.tv'] : ['live.douyin.com', 'v.douyin.com'];
+      if (url.protocol !== 'https:' || !hosts.includes(url.hostname) || url.username || url.password || url.port || url.search || url.hash || !/^\/[a-zA-Z0-9_-]+\/?$/.test(url.pathname)) throw new Error('roomAddress 只能填写对应平台的直播间或分享短链接');
+    }
+    platform.roomAddress = address;
     if (!['comments', 'announcement'].includes(platform.boardMode)) throw new Error('boardMode 必须为 comments 或 announcement');
     if (typeof platform.announcementText !== 'string' || platform.announcementText.length > 2000) throw new Error('announcementText 必须为 2000 字以内的文本');
     if (typeof platform.lyricsEnabled !== 'boolean') throw new Error('lyricsEnabled 必须为布尔值');
     if (typeof platform.lyricsAutoHide !== 'boolean') throw new Error('lyricsAutoHide 必须为布尔值');
     if (typeof platform.benefitsText !== 'string' || platform.benefitsText.length > 500) throw new Error('benefitsText 必须为 500 字以内的文本');
     if (typeof platform.bottomAnnouncementText !== 'string' || platform.bottomAnnouncementText.length > 2501) throw new Error('bottomAnnouncementText 必须为 2501 字以内的文本');
+    if (name === 'douyin') {
+      platform.roomAddress = '';
+      platform.boardMode = 'announcement';
+    }
   }
   for (const adapter of Object.values(settings.adapters)) {
     if (typeof adapter.enabled !== 'boolean') throw new Error('适配器 enabled 必须为布尔值');
@@ -134,14 +149,21 @@ export async function loadSettings({ initialize = false } = {}) {
   const defaults = await readJson(path.join(projectRoot, 'config', 'example.json'));
   const existing = await readJson(paths.settingsFile);
   const settings = validateSettings(existing ?? defaults, defaults);
-  if (initialize && existing && !settings.announcementMovedToBottom) {
-    for (const platform of Object.values(settings.platforms)) {
-      const oldText = platform.announcementText;
-      if (oldText && oldText !== platform.bottomAnnouncementText) {
-        platform.bottomAnnouncementText = [platform.bottomAnnouncementText, oldText].filter(Boolean).join('\n');
+  if (initialize && existing && (!settings.announcementMovedToBottom || !settings.douyinInteractionRemoved || existing.platforms?.douyin?.roomAddress || existing.platforms?.douyin?.boardMode !== 'announcement')) {
+    if (!settings.announcementMovedToBottom) {
+      for (const platform of Object.values(settings.platforms)) {
+        const oldText = platform.announcementText;
+        if (oldText && oldText !== platform.bottomAnnouncementText) {
+          platform.bottomAnnouncementText = [platform.bottomAnnouncementText, oldText].filter(Boolean).join('\n');
+        }
       }
+      settings.announcementMovedToBottom = true;
     }
-    settings.announcementMovedToBottom = true;
+    if (!settings.douyinInteractionRemoved) {
+      settings.platforms.douyin.roomAddress = '';
+      settings.platforms.douyin.boardMode = 'announcement';
+      settings.douyinInteractionRemoved = true;
+    }
     await saveSettings(settings);
   }
   if (process.env.TAVERN_PORT !== undefined) {

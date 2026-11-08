@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "announcementMovedToBottom": true,
+  "douyinInteractionRemoved": true,
   "server": {
     "host": "127.0.0.1",
     "port": 3000,
@@ -13,6 +14,7 @@
   },
   "platforms": {
     "bilibili": {
+      "roomAddress": "",
       "boardMode": "comments",
       "announcementText": "欢迎来到凌巽的酒馆，歇歇脚，一起聊聊今天的冒险。",
       "benefitsText": "",
@@ -22,7 +24,8 @@
       "fontSizes": { "comments": 20, "announcement": 20, "song": 20, "lyrics": 20, "benefits": 24 }
     },
     "douyin": {
-      "boardMode": "comments",
+      "roomAddress": "",
+      "boardMode": "announcement",
       "announcementText": "欢迎来到凌巽的酒馆，歇歇脚，一起聊聊今天的冒险。",
       "benefitsText": "",
       "bottomAnnouncementText": "",

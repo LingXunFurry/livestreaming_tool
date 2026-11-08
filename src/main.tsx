@@ -2,6 +2,8 @@ import { StrictMode, useEffect, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Overlay, platformNames } from './Overlay'
 import type { BoardMode, Platform, GlobalFontSizes, PlatformFontSizes } from './Overlay'
+import { appendSimulatedMessage } from './simulation'
+import type { SimulatedMessage } from './simulation'
 import defaultSettings from '../config/example.json'
 import { disconnectedMusic, type MusicState } from './music'
 import { Admin } from './Admin'
@@ -131,20 +133,24 @@ function Preview({ scene = false }: { scene?: boolean }) {
 
 type SourceSettings = {
   global: { task: string; fontSizes: GlobalFontSizes }
-  platforms: Record<Platform, { boardMode: BoardMode; announcementText: string; lyricsEnabled: boolean; lyricsAutoHide: boolean; bottomAnnouncementText: string; fontSizes: PlatformFontSizes }>
+  platforms: Record<Platform, { roomAddress?: string; boardMode?: BoardMode; announcementText: string; lyricsEnabled: boolean; lyricsAutoHide: boolean; bottomAnnouncementText: string; fontSizes: PlatformFontSizes }>
 }
 
 const defaultSourceSettings: SourceSettings = {
   global: { task: '探索未知，也记得沿途歇脚。', fontSizes: defaultSettings.global.fontSizes },
   platforms: {
-    bilibili: { boardMode: 'comments', announcementText: '欢迎来到凌巽的酒馆，歇歇脚，一起聊聊今天的冒险。', lyricsEnabled: true, lyricsAutoHide: false, bottomAnnouncementText: '', fontSizes: defaultSettings.platforms.bilibili.fontSizes },
-    douyin: { boardMode: 'comments', announcementText: '欢迎来到凌巽的酒馆，歇歇脚，一起聊聊今天的冒险。', lyricsEnabled: true, lyricsAutoHide: false, bottomAnnouncementText: '', fontSizes: defaultSettings.platforms.douyin.fontSizes },
+    bilibili: { roomAddress: '', boardMode: 'comments', announcementText: '欢迎来到凌巽的酒馆，歇歇脚，一起聊聊今天的冒险。', lyricsEnabled: true, lyricsAutoHide: false, bottomAnnouncementText: '', fontSizes: defaultSettings.platforms.bilibili.fontSizes },
+    douyin: { boardMode: 'announcement', announcementText: '欢迎来到凌巽的酒馆，歇歇脚，一起聊聊今天的冒险。', lyricsEnabled: true, lyricsAutoHide: false, bottomAnnouncementText: '', fontSizes: defaultSettings.platforms.douyin.fontSizes },
   },
 }
 
 function SourcePage({ platform }: { platform: Platform }) {
   const [settings, setSettings] = useState(defaultSourceSettings)
   const [music, setMusic] = useState<MusicState>(disconnectedMusic)
+  const [liveStatus, setLiveStatus] = useState('正在连接本地服务')
+  const [liveMessages, setLiveMessages] = useState<SimulatedMessage[]>([])
+  const [interactionState, setInteractionState] = useState(platform === 'bilibili' ? 'WAITING_AUTHORIZATION' : 'FIXED_ANNOUNCEMENT')
+  const musicHideTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
 
   useEffect(() => {
     let disposed = false
@@ -165,7 +171,7 @@ function SourcePage({ platform }: { platform: Platform }) {
 
     function connect() {
       if (disposed) return
-      socket = new WebSocket(`${location.protocol === 'https:' ? 'wss:' : 'ws:'}//${location.host}/ws`)
+      socket = new WebSocket(`${location.protocol === 'https:' ? 'wss:' : 'ws:'}//${location.host}/ws?platform=${platform}`)
       socket.onopen = () => {
         receivedSettingsUpdate = false
         void readSettings()
@@ -174,6 +180,17 @@ function SourcePage({ platform }: { platform: Platform }) {
         try {
           const message = JSON.parse(event.data)
           const update = message.data
+          if (!disposed && message.type === 'runtime.status') {
+            const state = update?.adapters?.[platform]?.state
+            if (platform === 'bilibili') {
+              setInteractionState(state || 'WAITING_AUTHORIZATION')
+              setLiveStatus(state === 'NOT_CONFIGURED' ? '互动尚未配置' : state === 'WAITING_AUTHORIZATION' ? '等待平台授权' : state === 'UNAVAILABLE' ? '互动暂不可用' : state === 'CONNECTED' ? '等待留言' : '互动连接中')
+            }
+          }
+          if (!disposed && platform === 'bilibili' && message.type === 'interaction.message' && update?.platform === platform) {
+            setLiveMessages(current => appendSimulatedMessage(current, update as SimulatedMessage))
+            setLiveStatus('等待留言')
+          }
           if (!disposed && message.type === 'music.updated' && update) {
             setMusic(update)
             clearTimeout(musicExpiry)
@@ -191,6 +208,10 @@ function SourcePage({ platform }: { platform: Platform }) {
       socket.onclose = () => {
         if (disposed) return
         clearTimeout(musicExpiry)
+        clearTimeout(musicHideTimer.current)
+        if (platform === 'bilibili') setInteractionState('UNAVAILABLE')
+        setLiveStatus('本地服务连接中断')
+        setLiveMessages([])
         setMusic({ ...disconnectedMusic, state: 'UNAVAILABLE' })
         void readSettings()
         retry = setTimeout(connect, 2000)
@@ -204,16 +225,34 @@ function SourcePage({ platform }: { platform: Platform }) {
       controller.abort()
       clearTimeout(retry)
       clearTimeout(musicExpiry)
+      clearTimeout(musicHideTimer.current)
       socket?.close()
     }
   }, [platform])
 
   const platformSettings = settings.platforms[platform]
-  const showMusic = platformSettings.lyricsEnabled && (!platformSettings.lyricsAutoHide || (music.state === 'CONNECTED' && music.playing))
+  const [musicHidden, setMusicHidden] = useState(false)
+  useEffect(() => {
+    if (!platformSettings.lyricsAutoHide) {
+      clearTimeout(musicHideTimer.current)
+      setMusicHidden(false)
+      return
+    }
+    if (music.state !== 'CONNECTED' || music.playing) {
+      clearTimeout(musicHideTimer.current)
+      setMusicHidden(music.state !== 'CONNECTED')
+      return
+    }
+    setMusicHidden(false)
+    clearTimeout(musicHideTimer.current)
+    musicHideTimer.current = setTimeout(() => setMusicHidden(true), 5000)
+    return () => clearTimeout(musicHideTimer.current)
+  }, [music, platformSettings.lyricsAutoHide])
+  const showMusic = platformSettings.lyricsEnabled && (!platformSettings.lyricsAutoHide || !musicHidden)
   return (
     <main className="source-stage scene-preview" aria-label={`${platformNames[platform]}酒馆直播源`}>
       <img className="scene-background" src={sceneBackground} width="1920" height="1080" alt="已验收模块化酒馆背景，游戏窗口透明" />
-      <Overlay platform={platform} lyrics={showMusic} task={settings.global.task} bottomAnnouncementText={platformSettings.bottomAnnouncementText} globalFontSizes={settings.global.fontSizes} fontSizes={platformSettings.fontSizes} music={music} />
+      <Overlay platform={platform} lyrics={showMusic} task={settings.global.task} boardMode={platformSettings.boardMode} announcementText={platformSettings.announcementText} bottomAnnouncementText={platformSettings.bottomAnnouncementText} globalFontSizes={settings.global.fontSizes} fontSizes={platformSettings.fontSizes} music={music} liveStatus={liveStatus} liveMessages={liveMessages} interactionState={interactionState} />
       <img className="scene-title-art" src={sceneTitle} width="384" height="128" alt="凌巽的酒馆" />
     </main>
   )
@@ -224,7 +263,7 @@ function UnavailablePage() {
   return <div className="unavailable-page"><p className="eyebrow">LINGXUN’S TAVERN</p><h1>{admin ? '管理后台还没开工。' : '这扇门还没有打开。'}</h1><p>{admin ? '横屏布局已通过。统一管理后台安排在 CP5。' : '请从布局验收页进入两个直播源。'}</p><a href="/preview">返回布局验收 ↗</a></div>
 }
 
-if (sourcePlatform) document.title = `凌巽的酒馆 · ${platformNames[sourcePlatform]}直播页 · CP6`
+if (sourcePlatform) document.title = `凌巽的酒馆 · ${platformNames[sourcePlatform]}直播页 · CP7`
 if (path === '/assets/review') document.title = '凌巽的酒馆 · CP2 像素素材验收'
 if (path === '/scene/review') document.title = '凌巽的酒馆 · CP3 场景验收'
 

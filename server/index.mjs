@@ -30,8 +30,7 @@ try {
   const localMusicBridge = createLocalMusicBridge(projectRoot, log);
   const adapters = {
     music: { state: 'DISCONNECTED', configured: settings.adapters.music.enabled, implemented: true },
-    bilibili: { state: settings.adapters.bilibili.enabled ? 'UNAVAILABLE' : 'NOT_CONFIGURED', configured: settings.adapters.bilibili.enabled, implemented: false },
-    douyin: { state: 'NOT_CONFIGURED', configured: false, implemented: false },
+    bilibili: { state: settings.platforms.bilibili.roomAddress ? 'WAITING_AUTHORIZATION' : 'NOT_CONFIGURED', configured: Boolean(settings.platforms.bilibili.roomAddress), implemented: false },
   };
   const music = createMusicAdapter(snapshot => {
     if (adapters.music.state !== snapshot.state) log('music_adapter_status', { state: snapshot.state, error: snapshot.error });
@@ -47,7 +46,7 @@ try {
       instanceId,
       state: degraded ? 'DEGRADED' : 'RUNNING',
       version: packageInfo.version,
-      checkpoint: 'CP6',
+      checkpoint: 'CP7',
       startedAt,
       port,
       host: '127.0.0.1',
@@ -68,7 +67,10 @@ try {
       global: { task: settings.global.task, fontSizes: settings.global.fontSizes },
       music: { enabled: settings.adapters.music.enabled, baseUrl: settings.adapters.music.baseUrl },
       platforms: Object.fromEntries(['bilibili', 'douyin'].map(platform => [platform, {
-        boardMode: settings.platforms[platform].boardMode,
+        ...(platform === 'bilibili' ? {
+          roomAddress: settings.platforms.bilibili.roomAddress,
+          boardMode: settings.platforms.bilibili.boardMode,
+        } : {}),
         announcementText: settings.platforms[platform].announcementText,
         bottomAnnouncementText: settings.platforms[platform].bottomAnnouncementText,
         lyricsEnabled: settings.platforms[platform].lyricsEnabled,
@@ -83,6 +85,10 @@ try {
     for (const connection of sockets.clients) {
       if (connection.readyState === WebSocket.OPEN) connection.send(serialized);
     }
+  }
+
+  function sendUpgradeError(socket, status, message) {
+    socket.end(`HTTP/1.1 ${status} ${message}\r\nConnection: close\r\n\r\n`);
   }
 
   async function readSettingsRequest(request) {
@@ -106,10 +112,12 @@ try {
     if (!exactKeys(input, ['global', 'platforms'], ['music']) || !exactKeys(input.global, ['task'], ['fontSizes'])
       || (input.music !== undefined && !exactKeys(input.music, ['enabled', 'baseUrl']))
       || !exactKeys(input.platforms, ['bilibili', 'douyin'])
-      || !exactKeys(input.platforms.bilibili, platformFields, ['benefitsText', 'bottomAnnouncementText', 'fontSizes', 'lyricsAutoHide'])
-      || !exactKeys(input.platforms.douyin, platformFields, ['benefitsText', 'bottomAnnouncementText', 'fontSizes', 'lyricsAutoHide'])) {
+      || !exactKeys(input.platforms.bilibili, platformFields, ['benefitsText', 'bottomAnnouncementText', 'fontSizes', 'lyricsAutoHide', 'roomAddress'])
+      || !exactKeys(input.platforms.douyin, ['announcementText', 'lyricsEnabled'], ['boardMode', 'benefitsText', 'bottomAnnouncementText', 'fontSizes', 'lyricsAutoHide', 'roomAddress'])) {
       throw Object.assign(new Error('配置字段不完整或包含不允许的字段'), { status: 400 });
     }
+    delete input.platforms.douyin.roomAddress;
+    delete input.platforms.douyin.boardMode;
     return input;
   }
 
@@ -178,6 +186,9 @@ try {
         for (const platform of ['bilibili', 'douyin']) {
           const platformChanged = JSON.stringify(previousSettings.platforms[platform]) !== JSON.stringify(settings.platforms[platform]);
           if (!globalChanged && !platformChanged && !musicChanged) continue;
+          if (platform === 'bilibili' && previousSettings.platforms.bilibili.roomAddress !== settings.platforms.bilibili.roomAddress) {
+            adapters.bilibili = { ...adapters.bilibili, state: settings.platforms.bilibili.roomAddress ? 'WAITING_AUTHORIZATION' : 'NOT_CONFIGURED', configured: Boolean(settings.platforms.bilibili.roomAddress) };
+          }
           broadcastMessage({ type: 'settings.updated', data: {
             platform,
             global: editableSettings().global,
@@ -185,6 +196,7 @@ try {
             platformSettings: editableSettings().platforms[platform],
           } });
         }
+        broadcastMessage({ type: 'runtime.status', data: runtimeStatus() });
         return sendJson(response, 200, { settings: editableSettings() });
       }
       if (request.method === 'POST' && pathname === '/api/runtime/stop') {
@@ -219,18 +231,23 @@ try {
   });
 
   server.on('upgrade', (request, socket, head) => {
-    let validPath;
-    try { validPath = new URL(request.url, origin).pathname === '/ws'; }
-    catch { socket.end('HTTP/1.1 400 Bad Request\r\nConnection: close\r\n\r\n'); return; }
-    if (shuttingDown || !validPath || !allowedHosts.has(request.headers.host) || (request.headers.origin && !allowedOrigins.has(request.headers.origin))) {
-      socket.end('HTTP/1.1 403 Forbidden\r\nConnection: close\r\n\r\n');
+    let url;
+    try { url = new URL(request.url, origin); }
+    catch { sendUpgradeError(socket, 400, 'Bad Request'); return; }
+    if (shuttingDown || !allowedHosts.has(request.headers.host)) {
+      sendUpgradeError(socket, 403, 'Forbidden');
       return;
     }
-    sockets.handleUpgrade(request, socket, head, connection => sockets.emit('connection', connection));
+    if (url.pathname !== '/ws' || (request.headers.origin && !allowedOrigins.has(request.headers.origin))) {
+      sendUpgradeError(socket, 403, 'Forbidden');
+      return;
+    }
+    sockets.handleUpgrade(request, socket, head, connection => sockets.emit('connection', connection, url.searchParams.get('platform')));
   });
 
-  sockets.on('connection', connection => {
+  sockets.on('connection', (connection, platform) => {
     log('websocket_connected');
+    connection.platform = platform === 'bilibili' || platform === 'douyin' ? platform : null;
     connection.alive = true;
     connection.on('pong', () => { connection.alive = true; });
     connection.on('error', error => log('websocket_error', { code: error.code || 'SOCKET_ERROR' }));

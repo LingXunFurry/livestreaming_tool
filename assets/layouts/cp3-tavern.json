@@ -15,7 +15,6 @@
     {"asset": "cp3-tavern-counter", "x": 658, "y": 864, "scale": 2, "sourceRegion": [630, 0, 5, 128], "repeat": [10, 216]},
     {"asset": "cp3-tavern-counter", "x": 692, "y": 864, "scale": 2, "sourceRegion": [5, 0, 134, 128], "repeat": [268, 216]},
     {"asset": "cp3-tavern-counter", "x": 960, "y": 864, "scale": 2, "sourceRegion": [455, 0, 180, 128], "repeat": [360, 216]},
-    {"asset": "cp3-bottle-shelf", "x": 480, "y": 864, "scale": 1},
     {"asset": "cp3-timber-beam", "x": 1320, "y": 1048, "scale": 1, "repeat": [600, 32]}
   ]
 }

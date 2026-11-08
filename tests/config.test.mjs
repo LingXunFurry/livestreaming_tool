@@ -81,15 +81,21 @@ test('旧右栏公告迁移到底部并保留备份，只迁移一次', async ()
   try {
     const old = JSON.parse(await readFile(new URL('../config/example.json', import.meta.url), 'utf8'));
     delete old.announcementMovedToBottom;
+    delete old.douyinInteractionRemoved;
     old.platforms.bilibili.bottomAnnouncementText = '现有底部公告';
     old.platforms.bilibili.announcementText = '**原公告**';
     old.platforms.douyin.bottomAnnouncementText = '';
     old.platforms.douyin.announcementText = '抖音原公告';
+    old.platforms.douyin.roomAddress = 'https://live.douyin.com/523485074400';
+    old.platforms.douyin.boardMode = 'comments';
     await writeFile(path.join(directory, 'settings.json'), JSON.stringify(old));
     const migrated = await loadSettings({ initialize: true });
     assert.equal(migrated.platforms.bilibili.bottomAnnouncementText, '现有底部公告\n**原公告**');
     assert.equal(migrated.platforms.douyin.bottomAnnouncementText, '抖音原公告');
     assert.equal(migrated.announcementMovedToBottom, true);
+    assert.equal(migrated.platforms.douyin.roomAddress, '');
+    assert.equal(migrated.platforms.douyin.boardMode, 'announcement');
+    assert.equal(migrated.douyinInteractionRemoved, true);
     const backups = await readdir(path.join(directory, 'backups'));
     assert.equal(backups.length, 1);
     assert.deepEqual(JSON.parse(await readFile(path.join(directory, 'backups', backups[0]), 'utf8')), old);

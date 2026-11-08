@@ -50,21 +50,33 @@ export const platformNames: Record<Platform, string> = {
   douyin: '抖音',
 }
 
-function MessageBoard({ platform }: { platform: Platform }) {
-  const [messages, setMessages] = useState(() => initialMessages[platform])
+function AnnouncementBoard({ platform, text }: { platform: Platform; text: string }) {
+  return (
+    <section className="side-board announcement-board" aria-label={`${platformNames[platform]}酒馆公告`}>
+      <div className="module-heading"><div><h2>酒馆公告</h2></div></div>
+      <div className="announcement-content">{renderAnnouncement(text)}</div>
+    </section>
+  )
+}
+
+function MessageBoard({ platform, liveStatus, liveMessages = [] }: { platform: Platform; liveStatus?: string; liveMessages?: SimulatedMessage[] }) {
+  const [simulatedMessages, setSimulatedMessages] = useState(initialMessages[platform])
   const messagesRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    setMessages(initialMessages[platform])
+    if (liveStatus !== undefined) return
+    setSimulatedMessages(initialMessages[platform])
     let eventIndex = 0
     const timer = window.setInterval(() => {
       const event = eventTimeline[platform][eventIndex % eventTimeline[platform].length]
       const message: SimulatedMessage = { ...event, id: `${platform}-${eventIndex}` }
       eventIndex += 1
-      setMessages(current => appendSimulatedMessage(current, message))
+      setSimulatedMessages(current => appendSimulatedMessage(current, message))
     }, 3000)
     return () => window.clearInterval(timer)
-  }, [platform])
+  }, [platform, liveStatus !== undefined])
+
+  const messages = liveStatus === undefined ? simulatedMessages : liveMessages
 
   useEffect(() => {
     const messagesElement = messagesRef.current
@@ -88,6 +100,7 @@ function MessageBoard({ platform }: { platform: Platform }) {
         <div><h2>酒馆留言板</h2></div>
       </div>
       <div className="messages" ref={messagesRef}>
+        {liveStatus !== undefined && messages.length === 0 && <p role="status">{liveStatus}</p>}
         {messages.map(message => (
           <div className={`message message--${message.kind}`} data-event-kind={message.kind} data-gift-count={message.count} key={message.id}>
             <div className="message-meta"><span>{messageLabels[message.kind]}</span><b>{message.name}</b>{message.detail && <small className="message-detail">{message.detail}</small>}{message.kind === 'gift' && <small className="message-detail">×{message.count}</small>}</div>
@@ -127,10 +140,16 @@ export function Overlay({
   lyrics = true,
   task = '探索未知，也记得沿途歇脚。',
   bottomAnnouncementText = '',
+  boardMode = 'comments',
+  announcementText = '',
   globalFontSizes = defaultSettings.global.fontSizes,
   fontSizes = defaultSettings.platforms.bilibili.fontSizes,
   music,
-}: { platform: Platform; lyrics?: boolean; task?: string; bottomAnnouncementText?: string; globalFontSizes?: GlobalFontSizes; fontSizes?: PlatformFontSizes; music?: MusicState }) {
+  liveStatus,
+  liveMessages = [],
+  interactionState,
+}: { platform: Platform; lyrics?: boolean; task?: string; bottomAnnouncementText?: string; boardMode?: BoardMode; announcementText?: string; globalFontSizes?: GlobalFontSizes; fontSizes?: PlatformFontSizes; music?: MusicState; liveStatus?: string; liveMessages?: SimulatedMessage[]; interactionState?: string }) {
+  const showAnnouncement = liveStatus !== undefined && (platform === 'douyin' || boardMode === 'announcement' || (platform === 'bilibili' && interactionState !== 'CONNECTED'))
   const fontStyle = Object.fromEntries(
     Object.entries({ ...globalFontSizes, ...fontSizes }).map(([field, size]) => [`--font-${field}`, `${size}px`]),
   ) as CSSProperties
@@ -140,16 +159,16 @@ export function Overlay({
         <strong className="tavern-name">凌巽的酒馆</strong>
       </header>
       <aside className={`side-column ${lyrics ? '' : 'without-lyrics'}`}>
-        <MessageBoard platform={platform} />
+        {showAnnouncement ? <AnnouncementBoard platform={platform} text={announcementText} /> : <MessageBoard platform={platform} liveStatus={liveStatus} liveMessages={liveMessages} />}
         {lyrics && (music ? <MusicPanel music={music} /> : <SimulatedLyrics />)}
       </aside>
       <section className="stream-info" aria-label="底部酒桌">
         <section className="bottom-table today-quest" aria-label="今日委托">
           <h2 className="module-index">今日委托</h2><p title={task}>{task}</p>
         </section>
-        <section className="bottom-table bottom-announcement" aria-label="底部公告">
+        {!showAnnouncement && <section className="bottom-table bottom-announcement" aria-label="底部公告">
           <h2 className="module-index">公告</h2><p title={bottomAnnouncementText}>{renderAnnouncement(bottomAnnouncementText)}</p>
-        </section>
+        </section>}
       </section>
     </main>
   )

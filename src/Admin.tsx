@@ -19,10 +19,21 @@ interface RuntimeStatus {
 interface EditableSettings {
   global: { task: string; fontSizes: GlobalFontSizes }
   music: { enabled: boolean; baseUrl: string }
-  platforms: Record<Platform, { boardMode: BoardMode; announcementText: string; lyricsEnabled: boolean; lyricsAutoHide: boolean; bottomAnnouncementText: string; fontSizes: PlatformFontSizes }>
+  platforms: Record<Platform, { roomAddress?: string; boardMode?: BoardMode; announcementText: string; lyricsEnabled: boolean; lyricsAutoHide: boolean; bottomAnnouncementText: string; fontSizes: PlatformFontSizes }>
 }
 
 const platformLabels: Record<Platform, string> = { bilibili: 'B 站', douyin: '抖音' }
+
+function adapterStateLabel(state?: string) {
+  return ({
+    NOT_CONFIGURED: '未配置',
+    WAITING_AUTHORIZATION: '等待平台授权',
+    CONNECTED: '互动已连接',
+    DISCONNECTED: '未连接',
+    CONNECTING: '连接中',
+    UNAVAILABLE: '暂不可用',
+  } as Record<string, string>)[state || ''] || state || '等待响应'
+}
 
 function FontSizeControl({ name, label, value, onChange }: {
   name: keyof typeof fontSizeLimits; label: string; value: number; onChange: (size: number) => void
@@ -158,16 +169,16 @@ export function Admin() {
   return (
     <main className="admin-shell">
       <header className="admin-header">
-        <div><p className="eyebrow">SYSTEM / CP6 CONTROL</p><h1>凌巽的酒馆 · 管理后台</h1></div>
+        <div><p className="eyebrow">SYSTEM / CP7 CONTROL</p><h1>凌巽的酒馆 · 管理后台</h1></div>
         <span className="admin-state">{displayState}</span>
       </header>
-      <p className="admin-intro">这里显示本地服务的实际状态，管理底部酒桌与两个平台各自的右栏设置。</p>
+      <p className="admin-intro">这里显示本地服务与双平台互动接入状态，并管理底部酒桌和平台设置。</p>
       {error && <p className="admin-error" role="alert">{error}</p>}
 
       <section className="admin-grid" aria-label="本地系统状态">
         <div><h2>本地服务</h2><dl><dt>服务状态</dt><dd>{status?.state || '等待响应'}</dd><dt>版本</dt><dd>{status?.version || '—'}</dd><dt>监听端口</dt><dd>{status?.port || '—'}</dd><dt>启动时间</dt><dd>{startTime}</dd></dl></div>
         <div><h2>状态连接</h2><dl><dt>WebSocket 服务</dt><dd>{status?.websocket.state || '等待响应'}</dd><dt>当前页面连接</dt><dd>{connection}</dd><dt>连接数量</dt><dd>{status?.websocket.clients ?? '—'}</dd><dt>当前阶段</dt><dd>{status?.checkpoint || '等待响应'}</dd></dl></div>
-        <div><h2>外部适配器</h2><dl><dt>网易云</dt><dd>{status?.adapters.music?.state || '等待响应'}</dd><dt>B 站互动</dt><dd>{status?.adapters.bilibili?.state || '等待响应'}</dd><dt>抖音互动</dt><dd>{status?.adapters.douyin?.state || '未接入'}</dd></dl><p>音乐连接通过下方网易云设置管理。</p></div>
+        <div><h2>外部适配器</h2><dl><dt>网易云</dt><dd>{adapterStateLabel(status?.adapters.music?.state)}</dd><dt>B 站互动</dt><dd>{adapterStateLabel(status?.adapters.bilibili?.state)}</dd></dl><p>音乐连接通过下方网易云设置管理。B 站未获得开放平台授权时自动使用公告；抖音固定使用公告。</p></div>
         <div><h2>本地配置</h2><dl><dt>配置标题</dt><dd>{status?.configuration.title || '等待响应'}</dd><dt>今日委托</dt><dd>{status?.configuration.task || '等待响应'}</dd><dt>配置版本</dt><dd>{status?.configuration.schemaVersion ?? '—'}</dd></dl><p>普通设置保存到 data/settings.json，旧版本保存在 data/backups/。</p></div>
       </section>
 
@@ -208,6 +219,16 @@ export function Admin() {
           <div className="admin-platform-grid">{(['bilibili', 'douyin'] as Platform[]).map(platform => {
             const value = settings.platforms[platform]
             return <fieldset key={platform}><legend>{platformLabels[platform]}专属页面</legend>
+              {platform === 'bilibili' && <>
+                <label className="admin-field"><span>直播间地址或房间号</span><input type="text" maxLength={256} value={value.roomAddress || ''} onChange={event => { updatePlatform(platform, { roomAddress: event.target.value }); setSaveState('') }} /></label>
+                <p className="admin-field-hint">房间地址已保存；真实互动等待 B 站开放平台授权。</p>
+                <p className="admin-field-hint">互动状态：{adapterStateLabel(status?.adapters.bilibili?.state)}</p>
+                <label className="admin-field"><span>获得互动授权后的右栏</span><select value={value.boardMode || 'comments'} onChange={event => { updatePlatform(platform, { boardMode: event.target.value as BoardMode }); setSaveState('') }}><option value="comments">直播留言</option><option value="announcement">酒馆公告</option></select></label>
+              </>}
+              <label className="admin-field"><span>右栏公告正文</span><textarea value={value.announcementText} maxLength={2000} rows={5} onChange={event => { updatePlatform(platform, { announcementText: event.target.value }); setSaveState('') }} /></label>
+              <FontSizeControl name="announcement" label={`${platformLabels[platform]}公告字号`} value={value.fontSizes.announcement}
+                onChange={size => updateFontSize(platform, 'announcement', size)} />
+              <p className="admin-field-hint">{platform === 'bilibili' ? 'B 站互动未授权时自动显示此公告；获得互动后按上方选择显示。' : '抖音暂不接入第三方弹幕，直播页固定显示此公告。'}</p>
               <label className="admin-check"><input type="checkbox" checked={value.lyricsEnabled} onChange={event => { updatePlatform(platform, { lyricsEnabled: event.target.checked }); setSaveState('') }} /><span>显示歌词</span></label>
               <label className="admin-check"><input type="checkbox" checked={value.lyricsAutoHide} onChange={event => { updatePlatform(platform, { lyricsAutoHide: event.target.checked }); setSaveState('') }} /><span>暂停或未连接时自动隐藏播放组件</span></label>
               <div className="admin-font-grid">{([['comments', '评论文字字号'], ['song', '歌曲信息字号'], ['lyrics', '歌词字号']] as const).map(([field, label]) => (

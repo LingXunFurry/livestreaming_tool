@@ -1,6 +1,6 @@
 # CP6 验收记录
 
-状态：`WAITING_USER_REVIEW`。CP0 至 CP5 已由用户通过；CP7 尚未开始。
+状态：`APPROVED`。2026-11-08 用户通过 CP6 并授权进入 CP7；最近追加的美术调整按用户要求回退，新美术待用户通知后再继续。
 
 ## 交付
 
@@ -8,7 +8,7 @@
 - 保留双桌面，右桌改为各平台独立的“公告”，后台可编辑内容和字号。旧福利文字保留在旧配置中，但不会展示或自动迁移。
 - 右栏固定显示留言板，旧右栏公告各自迁移到底部公告，保留现有底部内容、先备份且仅迁移一次。底部公告支持加粗与固定色板文字，最多显示两行。
 - 自动启动已安装的默认本机网易云桥接；仅关闭由酒馆服务启动的桥接。安装、启动和限制见 `MUSIC_SETUP.md`。
-- 复用已有像素素材丰富桌面和右栏，并放大原有标题图；新增美术调整等待用户验收。
+- 用户随后要求回退新增的桌面与右栏装饰及标题放大；后续原创美术等待用户通知再制作。
 
 ## 实际检查
 
@@ -18,6 +18,12 @@
 - 截图：`screenshots/cp6/bilibili.png`、`douyin.png`、`bilibili-paused.png`、`no-lyrics.png`、`admin-narrow.png`。截图内容使用测试文案。
 - 追加隔离浏览器测试：后台保存、两平台公告隔离、加粗及颜色渲染、WebSocket 实时更新、刷新恢复和右栏留言板通过。新截图为 `screenshots/cp6/announcement-update.png`、`art-update-preview.png`、`art-update-mobile.png`，使用测试或预览内容。
 - 背景合成检查游戏区完全透明及固定色板；TokenFlux 生图请求返回流内错误，本轮未采用新生成素材。
+
+## 原创美术再次尝试
+
+- 用户要求增加不同区域的原创酒馆场景组，减少现有资源复用；要求已记入 `ASSET_POLICY.md`，新美术继续单独等待验收。
+- 2026-11-08 使用用户指定的 TokenFlux 地址和 `gpt-image-2.5-sunburst` 模型尝试生成吧台场景组。非流式调用返回 Cloudflare HTTP 502（源站响应异常）；现有流式调用返回 `upstream_error: Upstream service temporarily unavailable`，未收到完成图片。
+- 流式接口的完成图片应从 `image_generation.completed` 事件的 `b64_json` 读取；本次失败发生在图片返回之前，不能归因于下载 URL 或 Base64 解析。未生成或接入新素材，直播画面沿用上次版本。
 
 ## 文件
 

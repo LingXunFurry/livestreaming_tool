@@ -68,10 +68,11 @@ test('真实服务生命周期、并发、关闭、冲突与恢复', { timeout: 
       const result = await cli('start', environment);
       assert.equal(result.exitCode, 0);
       assert.equal(result.state, 'RUNNING');
-      assert.equal(result.checkpoint, 'CP6');
+      assert.equal(result.checkpoint, 'CP7');
       assert.equal(result.port, port);
       assert.equal(result.adapters.music.state, 'DISCONNECTED');
       assert.equal(result.adapters.bilibili.state, 'NOT_CONFIGURED');
+      assert.equal(result.adapters.douyin, undefined);
       assert.equal((await (await fetch(`${origin}/health`)).json()).ready, true);
     });
 
@@ -101,15 +102,15 @@ test('真实服务生命周期、并发、关闭、冲突与恢复', { timeout: 
     await context.test('后台覆盖全部直播页字段并保持平台设置隔离', async () => {
       const initial = await (await fetch(`${origin}/api/settings`)).json();
       assert.deepEqual(Object.keys(initial.settings.global).sort(), ['fontSizes', 'task']);
-      assert.deepEqual(Object.keys(initial.settings.platforms.bilibili).sort(), ['announcementText', 'boardMode', 'bottomAnnouncementText', 'fontSizes', 'lyricsAutoHide', 'lyricsEnabled']);
-      assert.deepEqual(Object.keys(initial.settings.platforms.douyin).sort(), ['announcementText', 'boardMode', 'bottomAnnouncementText', 'fontSizes', 'lyricsAutoHide', 'lyricsEnabled']);
+      assert.deepEqual(Object.keys(initial.settings.platforms.bilibili).sort(), ['announcementText', 'boardMode', 'bottomAnnouncementText', 'fontSizes', 'lyricsAutoHide', 'lyricsEnabled', 'roomAddress']);
+      assert.deepEqual(Object.keys(initial.settings.platforms.douyin).sort(), ['announcementText', 'bottomAnnouncementText', 'fontSizes', 'lyricsAutoHide', 'lyricsEnabled']);
       settingsSocket = new WebSocket(`ws://127.0.0.1:${port}/ws`);
       assert.equal((await nextJsonMessage(settingsSocket)).type, 'runtime.status');
       const payload = {
         global: { task: '寻找今晚的风', fontSizes: initial.settings.global.fontSizes },
         music: initial.settings.music,
         platforms: {
-          bilibili: { boardMode: 'announcement', announcementText: 'B 站今晚公告', lyricsEnabled: false, lyricsAutoHide: false, bottomAnnouncementText: 'B站底部公告\n第二行', fontSizes: initial.settings.platforms.bilibili.fontSizes },
+          bilibili: { roomAddress: 'https://live.bilibili.com/14041317', boardMode: 'announcement', announcementText: 'B 站今晚公告', lyricsEnabled: false, lyricsAutoHide: false, bottomAnnouncementText: 'B站底部公告\n第二行', fontSizes: initial.settings.platforms.bilibili.fontSizes },
           douyin: initial.settings.platforms.douyin,
         },
       };
@@ -127,11 +128,33 @@ test('真实服务生命周期、并发、关闭、冲突与恢复', { timeout: 
       assert.equal(afterSave.global.task, '寻找今晚的风');
       assert.equal(afterSave.platforms.douyin.boardMode, initial.settings.platforms.douyin.boardMode);
       assert.equal(afterSave.platforms.douyin.bottomAnnouncementText, '');
+      assert.equal(afterSave.platforms.bilibili.roomAddress, 'https://live.bilibili.com/14041317');
+      assert.equal(afterSave.platforms.douyin.roomAddress, undefined);
       const backupCount = (await readdir(path.join(directory, 'backups'))).length;
       const invalid = await fetch(`${origin}/api/settings`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...payload, global: { ...payload.global, title: 42 } }) });
       assert.equal(invalid.status, 400);
       assert.equal((await (await fetch(`${origin}/api/settings`)).json()).settings.global.task, '寻找今晚的风');
       assert.equal((await readdir(path.join(directory, 'backups'))).length, backupCount);
+    });
+
+    await context.test('仅 B 站房间地址可配置，抖音旧采集地址被忽略', async () => {
+      const settings = (await (await fetch(`${origin}/api/settings`)).json()).settings;
+      for (const address of ['http://live.bilibili.com/123', 'https://evil.example/123', 'https://user:pass@live.bilibili.com/123']) {
+        const invalid = structuredClone(settings);
+        invalid.platforms.bilibili.roomAddress = address;
+        assert.equal((await fetch(`${origin}/api/settings`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(invalid) })).status, 400);
+      }
+      const legacy = structuredClone(settings);
+      delete legacy.platforms.bilibili.roomAddress;
+      legacy.platforms.douyin.roomAddress = 'https://live.douyin.com/523485074400';
+      legacy.platforms.douyin.boardMode = 'comments';
+      const response = await fetch(`${origin}/api/settings`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(legacy) });
+      assert.equal(response.status, 200);
+      const saved = (await response.json()).settings;
+      assert.equal(saved.platforms.bilibili.roomAddress, settings.platforms.bilibili.roomAddress);
+      assert.equal(saved.platforms.douyin.roomAddress, undefined);
+      assert.equal(saved.platforms.douyin.boardMode, undefined);
+      assert.equal((await (await fetch(`${origin}/ws/douyin`)).status), 404);
     });
 
     await context.test('底部公告严格校验，旧后台保存兼容且平台隔离', async () => {

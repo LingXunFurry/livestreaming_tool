@@ -98,9 +98,11 @@ button, a, input { transition: background-color 140ms ease, color 140ms ease; }
 .side-column.without-lyrics { grid-template-rows: minmax(0, 1fr); }
 .side-board, .lyrics-board { background: var(--panel); border: 2px solid var(--panel-line); min-height: 0; overflow: hidden; }
 .side-board { padding: 28px; display: flex; flex-direction: column; }
+.announcement-content { margin-top: 22px; flex: 1 1 auto; min-height: 0; overflow-y: auto; font-size: var(--font-announcement, 20px); line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; }
 .module-heading { display: flex; align-items: center; justify-content: space-between; }
 .module-index { color: #74766b; font-size: 16px; letter-spacing: 2px; }
 .module-heading h2 { margin-top: 8px; font-size: 32px; line-height: 1.4; font-weight: 500; letter-spacing: 2px; }
+.announcement-board .module-heading h2 { width: 288px; height: 80px; margin-top: 0; font-size: 0; line-height: 0; background: url('../assets/generated/cp3/announcement-wordmark.png') -25px center / 288px 96px no-repeat; image-rendering: pixelated; }
 .module-description { color: #73756d; font-size: 18px; margin-top: 8px; line-height: 1.7; }
 .messages { margin-top: 22px; flex: 1 1 auto; min-height: 0; overflow-y: auto; }
 .message { border-top: 1px solid #c9cbc0; padding: 18px 0; }
