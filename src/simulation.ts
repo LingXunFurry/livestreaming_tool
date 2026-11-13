@@ -1,5 +1,5 @@
 export type Platform = 'bilibili' | 'douyin'
-export type MessageKind = 'comment' | 'gift' | 'captain' | 'sc' | 'follow'
+export type MessageKind = 'comment' | 'gift' | 'captain' | 'sc' | 'follow' | 'enter' | 'member'
 
 export type SimulatedMessage = {
   id: string
@@ -17,6 +17,8 @@ export const messageLabels: Record<MessageKind, string> = {
   captain: '舰长',
   sc: 'SC',
   follow: '关注',
+  enter: '进房',
+  member: '会员 / 粉丝团',
 }
 
 export const initialMessages: Record<Platform, SimulatedMessage[]> = {
@@ -57,13 +59,12 @@ export const lyricLines = [
   '星光会记得归来的路',
 ]
 
-export function appendSimulatedMessage(messages: SimulatedMessage[], incoming: SimulatedMessage) {
+export function appendSimulatedMessage(messages: SimulatedMessage[], incoming: SimulatedMessage, limit = 20) {
   const latest = messages[messages.length - 1]
   if (incoming.kind === 'gift' && latest?.kind === 'gift' && latest.name === incoming.name && latest.gift === incoming.gift) {
     return [...messages.slice(0, -1), { ...latest, count: (latest.count ?? 1) + (incoming.count ?? 1) }]
   }
-  // shortcut: keep the latest 20 events in the local simulation; replace with adapter-side retention for real streams.
-  return [...messages, incoming].slice(-20)
+  return [...messages, incoming].slice(-limit)
 }
 
 export function lyricIndexAt(elapsedSeconds: number) {

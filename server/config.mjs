@@ -81,7 +81,7 @@ export function validateSettings(input, defaults) {
       fontSizes: { ...defaults.global.fontSizes, ...input.global?.fontSizes },
     },
     platforms: {
-      bilibili: { ...defaults.platforms.bilibili, ...input.platforms?.bilibili, fontSizes: { ...defaults.platforms.bilibili.fontSizes, ...input.platforms?.bilibili?.fontSizes } },
+      bilibili: { ...defaults.platforms.bilibili, ...input.platforms?.bilibili, collector: {...defaults.platforms.bilibili.collector, ...input.platforms?.bilibili?.collector}, fontSizes: { ...defaults.platforms.bilibili.fontSizes, ...input.platforms?.bilibili?.fontSizes } },
       douyin: { ...defaults.platforms.douyin, ...input.platforms?.douyin, fontSizes: { ...defaults.platforms.douyin.fontSizes, ...input.platforms?.douyin?.fontSizes } },
     },
     adapters: {
@@ -116,12 +116,28 @@ export function validateSettings(input, defaults) {
     }
     platform.roomAddress = address;
     if (!['comments', 'announcement'].includes(platform.boardMode)) throw new Error('boardMode 必须为 comments 或 announcement');
+    if (typeof platform.snifferEnabled !== 'boolean') throw new Error('snifferEnabled 必须为布尔值');
+    if (name === 'bilibili') {
+      const collector = platform.collector;
+      const providedCollector = input.platforms?.[name]?.collector;
+      if (providedCollector !== undefined && (!providedCollector || typeof providedCollector !== 'object' || Array.isArray(providedCollector))) throw new Error('collector 必须为配置对象');
+      if (Object.keys(collector).some(key => !['url', 'executable', 'autoStart'].includes(key))) throw new Error('collector 包含未知字段');
+      if (typeof collector.autoStart !== 'boolean') throw new Error('collector.autoStart 必须为布尔值');
+      if (typeof collector.executable !== 'string' || collector.executable.length > 1024 || collector.executable && (!path.win32.isAbsolute(collector.executable) || !collector.executable.toLowerCase().endsWith('.exe'))) throw new Error('采集程序路径必须为空或完整 exe 路径');
+      try {
+        if (typeof collector.url !== 'string' || collector.url.length > 256) throw new Error();
+        const url = new URL(collector.url);
+        if (url.protocol !== 'ws:' || !['127.0.0.1', 'localhost', '[::1]'].includes(url.hostname) || url.username || url.password || url.search || url.hash || url.pathname !== '/ws/data') throw new Error();
+      } catch { throw new Error('采集 WebSocket 地址必须为本机 ws://.../ws/data'); }
+    }
     if (typeof platform.announcementText !== 'string' || platform.announcementText.length > 2000) throw new Error('announcementText 必须为 2000 字以内的文本');
     if (typeof platform.lyricsEnabled !== 'boolean') throw new Error('lyricsEnabled 必须为布尔值');
     if (typeof platform.lyricsAutoHide !== 'boolean') throw new Error('lyricsAutoHide 必须为布尔值');
     if (typeof platform.benefitsText !== 'string' || platform.benefitsText.length > 500) throw new Error('benefitsText 必须为 500 字以内的文本');
     if (typeof platform.bottomAnnouncementText !== 'string' || platform.bottomAnnouncementText.length > 2501) throw new Error('bottomAnnouncementText 必须为 2501 字以内的文本');
     if (name === 'douyin') {
+      platform.snifferEnabled = false;
+      delete platform.collector;
       platform.roomAddress = '';
       platform.boardMode = 'announcement';
     }
@@ -149,7 +165,7 @@ export async function loadSettings({ initialize = false } = {}) {
   const defaults = await readJson(path.join(projectRoot, 'config', 'example.json'));
   const existing = await readJson(paths.settingsFile);
   const settings = validateSettings(existing ?? defaults, defaults);
-  if (initialize && existing && (!settings.announcementMovedToBottom || !settings.douyinInteractionRemoved || existing.platforms?.douyin?.roomAddress || existing.platforms?.douyin?.boardMode !== 'announcement')) {
+  if (initialize && existing && (!settings.announcementMovedToBottom || !settings.douyinInteractionRemoved)) {
     if (!settings.announcementMovedToBottom) {
       for (const platform of Object.values(settings.platforms)) {
         const oldText = platform.announcementText;

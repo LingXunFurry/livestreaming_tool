@@ -149,7 +149,7 @@ export function Overlay({
   liveMessages = [],
   interactionState,
 }: { platform: Platform; lyrics?: boolean; task?: string; bottomAnnouncementText?: string; boardMode?: BoardMode; announcementText?: string; globalFontSizes?: GlobalFontSizes; fontSizes?: PlatformFontSizes; music?: MusicState; liveStatus?: string; liveMessages?: SimulatedMessage[]; interactionState?: string }) {
-  const showAnnouncement = liveStatus !== undefined && (platform === 'douyin' || boardMode === 'announcement' || (platform === 'bilibili' && interactionState !== 'CONNECTED'))
+  const showAnnouncement = liveStatus !== undefined && (boardMode === 'announcement' || interactionState !== 'CONNECTED')
   const fontStyle = Object.fromEntries(
     Object.entries({ ...globalFontSizes, ...fontSizes }).map(([field, size]) => [`--font-${field}`, `${size}px`]),
   ) as CSSProperties

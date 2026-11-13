@@ -22,6 +22,7 @@ test('配置校验、原子写入与备份', async () => {
     delete legacySettings.platforms.bilibili.lyricsAutoHide;
     delete legacySettings.platforms.douyin.lyricsAutoHide;
     delete legacySettings.adapters.music.baseUrl;
+    delete legacySettings.platforms.bilibili.collector;
     await writeFile(path.join(directory, 'settings.json'), JSON.stringify(legacySettings));
     assert.equal((await loadSettings()).platforms.bilibili.benefitsText, '');
     assert.equal((await loadSettings()).platforms.douyin.benefitsText, '');
@@ -31,6 +32,10 @@ test('配置校验、原子写入与备份', async () => {
     assert.equal((await loadSettings()).platforms.douyin.fontSizes.comments, 20);
     assert.equal((await loadSettings()).platforms.bilibili.lyricsAutoHide, false);
     assert.equal((await loadSettings()).adapters.music.baseUrl, 'http://127.0.0.1:18726');
+    assert.equal((await loadSettings()).platforms.bilibili.collector.url, 'ws://127.0.0.1:8000/ws/data');
+    for (const url of ['ws://example.com/ws/data', 'http://127.0.0.1:8000/ws/data', 'ws://user:pass@127.0.0.1/ws/data']) {
+      assert.throws(() => validateSettings({platforms: {bilibili: {collector: {url}}}}, settings), /WebSocket/);
+    }
     for (const baseUrl of ['https://127.0.0.1:18726', 'http://example.com', 'http://127.0.0.1:18726/info', 'http://user:pass@localhost', ['http://localhost'], null]) {
       assert.throws(() => validateSettings({ adapters: { music: { baseUrl } } }, settings), /baseUrl/);
     }

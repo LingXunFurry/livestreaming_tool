@@ -16,6 +16,8 @@
     "bilibili": {
       "roomAddress": "",
       "boardMode": "comments",
+      "snifferEnabled": false,
+      "collector": {"url": "ws://127.0.0.1:8000/ws/data", "executable": "", "autoStart": false},
       "announcementText": "欢迎来到凌巽的酒馆，歇歇脚，一起聊聊今天的冒险。",
       "benefitsText": "",
       "bottomAnnouncementText": "",
@@ -26,6 +28,7 @@
     "douyin": {
       "roomAddress": "",
       "boardMode": "announcement",
+      "snifferEnabled": false,
       "announcementText": "欢迎来到凌巽的酒馆，歇歇脚，一起聊聊今天的冒险。",
       "benefitsText": "",
       "bottomAnnouncementText": "",

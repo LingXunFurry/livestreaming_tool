@@ -1,0 +1,83 @@
+{
+  "status": "WAITING_USER_REVIEW",
+  "archive": {
+    "name": "凌巽的酒馆-Windows-x64.zip",
+    "bytes": 179179602,
+    "sha256": "2040d39217a027f6e543b4402b28c5ba42912267d6a5132df58cd9ac33bdf40c",
+    "keyFilesComparedWithCurrentBuild": 10,
+    "entries": 793,
+    "externalCollectorAndPersonalRuntimeFilesBundled": false
+  },
+  "scope": {
+    "bilibili": "one-click local collector control and WebSocket input",
+    "douyin": "fixed independent announcement",
+    "likesDisplayed": false,
+    "particleEffects": false,
+    "retainedEventsPerPlatform": 100,
+    "automaticCollectionDefault": false
+  },
+  "automatedChecks": {
+    "build": "passed",
+    "nodeTests": 29,
+    "passed": 29,
+    "failed": 0,
+    "covers": [
+      "local control and data WebSockets",
+      "room identity checked before reconnecting",
+      "ordinary comment and single-emote replay suppression",
+      "distinct source IDs and consecutive gifts preserved",
+      "like events discarded",
+      "bounded storage and persisted-message validation",
+      "platform isolation and reconnect snapshots",
+      "configuration validation and legacy settings"
+    ]
+  },
+  "packagedAppLocalMock": {
+    "checkedAt": "2026-11-13T11:43:45.068Z",
+    "packagedApp": true,
+    "syntheticProtocolData": true,
+    "oneClickLocalCollector": true,
+    "comments": true,
+    "giftFrame": true,
+    "captainFrame": true,
+    "scFrame": true,
+    "retainedGiftAfter40Comments": true,
+    "shortConnectionDisplay": true,
+    "announcementAfterSilence": true,
+    "resumeComments": true,
+    "savedMessageCount": 46,
+    "persistedAfterServiceRestart": true,
+    "autoStartLocalCollector": true
+  },
+  "historicalRealBilibiliChecks": {
+    "performedBeforeUserStoppedStreaming": true,
+    "room": "14041317",
+    "commentsReceived": true,
+    "giftReceived": true,
+    "latestMessageFullyVisible": true,
+    "messagesRestoredAfterReload": true,
+    "douyinIsolated": true,
+    "pageErrors": [],
+    "replayObservation": {
+      "durationSeconds": 40,
+      "suppressedBefore": 333,
+      "suppressedAfter": 349,
+      "effectiveEventsBefore": 37,
+      "effectiveEventsAfter": 37,
+      "savedMessages": 37
+    }
+  },
+  "limits": {
+    "ordinaryNoIdDeduplicationWindowSeconds": 60,
+    "windowSlidesOnRepeatedArrival": true,
+    "genuineIdenticalOrdinaryCommentsMayMerge": true,
+    "noIdGiftCaptainScEventsKeptIndependently": true,
+    "realCollectorExeColdStart": "awaiting user verification",
+    "realCaptainAndSc": "awaiting user verification",
+    "allFinalChecksAfterStreamingStopped": "local mocks only"
+  },
+  "screenshots": [
+    "screenshots/cp7-bilibili-real-messages.png",
+    "screenshots/cp7-sniffer-admin.png"
+  ]
+}

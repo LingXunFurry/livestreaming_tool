@@ -13,6 +13,9 @@ test('连续同用户同礼物在消息流底部合并，其他事件保持时�
   assert.equal(separate[1].id, 'gift-3');
   assert.equal(appendSimulatedMessage([gift], { ...gift, id: 'gift-4', name: '另一位旅人' }).length, 2);
   assert.equal(appendSimulatedMessage([gift, gift, gift, gift], { ...gift, id: 'comment', kind: 'comment' })[4].id, 'comment');
+  const history = Array.from({length: 40}, (_, index) => ({id: String(index), kind: 'comment', name: '旅人', text: '消息'}));
+  assert.equal(appendSimulatedMessage([gift, ...history], {...gift, kind: 'comment'}, 100)[0].kind, 'gift');
+  assert.equal(appendSimulatedMessage([gift, ...history], {...gift, kind: 'comment'}).length, 20);
 });
 
 test('歌词按八秒切换并循环', () => {

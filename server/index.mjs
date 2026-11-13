@@ -8,6 +8,8 @@ import { atomicWriteJson, getPaths, loadSettings, projectRoot, readJson, saveSet
 import { createLogger } from './logger.mjs';
 import { createMusicAdapter } from './music.mjs';
 import { createLocalMusicBridge } from './music-bridge.mjs';
+import { createInteractionStore } from './interactions.mjs';
+import { createCollector } from './collector.mjs';
 
 const paths = getPaths();
 const log = createLogger(paths.logsDir);
@@ -26,12 +28,36 @@ try {
   const allowedHosts = new Set([`127.0.0.1:${port}`, `localhost:${port}`]);
   if (port === 80) ['127.0.0.1', 'localhost'].forEach(host => allowedHosts.add(host));
   const allowedOrigins = new Set([origin, `http://localhost:${port}`]);
-  const sockets = new WebSocketServer({ noServer: true, maxPayload: 4096 });
+  const sockets = new WebSocketServer({ noServer: true, maxPayload: 65536 });
+  const interactions = {};
+  const interactionWrites = {};
+  for (const platform of ['bilibili', 'douyin']) {
+    const file = path.join(paths.dataDir, 'messages', `${platform}.json`);
+    const saved = await readJson(file).catch(() => {log('interaction_history_read_error', {platform}); return null;});
+    interactions[platform] = createInteractionStore(platform, saved || {});
+    if (interactions[platform].snapshot().messages.length) saveInteractionHistory(platform);
+  }
+
+  function saveInteractionHistory(platform) {
+    const previous = interactionWrites[platform] || Promise.resolve();
+    interactionWrites[platform] = previous.catch(() => {}).then(() => atomicWriteJson(
+      path.join(paths.dataDir, 'messages', `${platform}.json`),
+      {schemaVersion: 1, messages: interactions[platform].snapshot().messages},
+    ));
+    interactionWrites[platform].catch(() => log('interaction_history_save_error', {platform}));
+  }
+
   const localMusicBridge = createLocalMusicBridge(projectRoot, log);
   const adapters = {
     music: { state: 'DISCONNECTED', configured: settings.adapters.music.enabled, implemented: true },
     bilibili: { state: settings.platforms.bilibili.roomAddress ? 'WAITING_AUTHORIZATION' : 'NOT_CONFIGURED', configured: Boolean(settings.platforms.bilibili.roomAddress), implemented: false },
   };
+  const collectors = {};
+  for (const platform of ['bilibili']) {
+    collectors[platform] = createCollector(platform, projectRoot, raw => receiveInteraction(platform, raw), () => {
+      broadcastMessage({type: 'runtime.status', data: runtimeStatus()});
+    });
+  }
   const music = createMusicAdapter(snapshot => {
     if (adapters.music.state !== snapshot.state) log('music_adapter_status', { state: snapshot.state, error: snapshot.error });
     adapters.music = { state: snapshot.state, configured: settings.adapters.music.enabled, implemented: true, playbackState: snapshot.playbackState, error: snapshot.error };
@@ -39,6 +65,19 @@ try {
   });
 
   function runtimeStatus() {
+    for (const platform of ['bilibili', 'douyin']) {
+      if (!settings.platforms[platform].snifferEnabled) {
+        if (platform === 'douyin') delete adapters.douyin;
+        else adapters.bilibili = {state: settings.platforms.bilibili.roomAddress ? 'WAITING_AUTHORIZATION' : 'NOT_CONFIGURED', configured: Boolean(settings.platforms.bilibili.roomAddress), implemented: false};
+        continue;
+      }
+      const connections = [...sockets.clients].filter(client => client.ingestPlatform === platform && client.readyState === WebSocket.OPEN).length;
+      const {messages, ...snapshot} = interactions[platform].snapshot();
+      const recentData = snapshot.lastPacketAt && Date.now() - Date.parse(snapshot.lastPacketAt) < 15000;
+      const collector = collectors[platform].getState();
+      const state = collector.state !== 'STOPPED' ? collector.state : connections || recentData ? 'CONNECTED' : 'DISCONNECTED';
+      adapters[platform] = {state, error: collector.error, configured: true, implemented: true, connections, ...snapshot};
+    }
     const degraded = Object.values(adapters).some(adapter => adapter.configured && adapter.state === 'UNAVAILABLE');
     return {
       service: 'lingxun-tavern',
@@ -67,6 +106,9 @@ try {
       global: { task: settings.global.task, fontSizes: settings.global.fontSizes },
       music: { enabled: settings.adapters.music.enabled, baseUrl: settings.adapters.music.baseUrl },
       platforms: Object.fromEntries(['bilibili', 'douyin'].map(platform => [platform, {
+        snifferEnabled: settings.platforms[platform].snifferEnabled,
+        collector: settings.platforms[platform].collector,
+        boardMode: settings.platforms[platform].boardMode,
         ...(platform === 'bilibili' ? {
           roomAddress: settings.platforms.bilibili.roomAddress,
           boardMode: settings.platforms.bilibili.boardMode,
@@ -83,7 +125,9 @@ try {
   function broadcastMessage(message) {
     const serialized = JSON.stringify(message);
     for (const connection of sockets.clients) {
-      if (connection.readyState === WebSocket.OPEN) connection.send(serialized);
+      if (connection.ingestPlatform || connection.readyState !== WebSocket.OPEN) continue;
+      if (message.data?.platform && connection.platform && connection.platform !== message.data.platform) continue;
+      connection.send(serialized);
     }
   }
 
@@ -112,13 +156,22 @@ try {
     if (!exactKeys(input, ['global', 'platforms'], ['music']) || !exactKeys(input.global, ['task'], ['fontSizes'])
       || (input.music !== undefined && !exactKeys(input.music, ['enabled', 'baseUrl']))
       || !exactKeys(input.platforms, ['bilibili', 'douyin'])
-      || !exactKeys(input.platforms.bilibili, platformFields, ['benefitsText', 'bottomAnnouncementText', 'fontSizes', 'lyricsAutoHide', 'roomAddress'])
-      || !exactKeys(input.platforms.douyin, ['announcementText', 'lyricsEnabled'], ['boardMode', 'benefitsText', 'bottomAnnouncementText', 'fontSizes', 'lyricsAutoHide', 'roomAddress'])) {
+      || !exactKeys(input.platforms.bilibili, platformFields, ['collector', 'snifferEnabled', 'benefitsText', 'bottomAnnouncementText', 'fontSizes', 'lyricsAutoHide', 'roomAddress'])
+      || !exactKeys(input.platforms.douyin, ['announcementText', 'lyricsEnabled'], ['collector', 'snifferEnabled', 'boardMode', 'benefitsText', 'bottomAnnouncementText', 'fontSizes', 'lyricsAutoHide', 'roomAddress'])) {
       throw Object.assign(new Error('配置字段不完整或包含不允许的字段'), { status: 400 });
     }
-    delete input.platforms.douyin.roomAddress;
-    delete input.platforms.douyin.boardMode;
     return input;
+  }
+
+  function receiveInteraction(platform, raw) {
+    if (!settings.platforms[platform].snifferEnabled || shuttingDown) return;
+    try {
+      const previousCount = interactions[platform].snapshot().eventCount;
+      if (!interactions[platform].receive(JSON.parse(raw.toString()))) return;
+      if (interactions[platform].snapshot().eventCount !== previousCount) saveInteractionHistory(platform);
+      broadcastMessage({type: 'interaction.snapshot', data: interactions[platform].snapshot()});
+      broadcastMessage({type: 'runtime.status', data: runtimeStatus()});
+    } catch { log('interaction_invalid_message', {platform}); }
   }
 
   function validControlToken(value) {
@@ -141,6 +194,21 @@ try {
       if (request.method === 'GET' && pathname === '/api/runtime/status') return sendJson(response, 200, runtimeStatus());
       if (request.method === 'GET' && pathname === '/api/settings') return sendJson(response, 200, { settings: editableSettings() });
       if (request.method === 'GET' && pathname === '/api/music') return sendJson(response, 200, music.getState());
+      const collectionAction = /^\/api\/interaction\/(bilibili)\/(start|stop)$/.exec(pathname);
+      if (request.method === 'POST' && collectionAction) {
+        if (request.headers.origin && !allowedOrigins.has(request.headers.origin)) return sendJson(response, 403, {error: 'CONTROL_DENIED'});
+        const [, platform, action] = collectionAction;
+        if (action === 'stop') {
+          await collectors[platform].stop();
+          interactions[platform].disconnect();
+          broadcastMessage({type: 'runtime.status', data: runtimeStatus()});
+          return sendJson(response, 200, {state: 'STOPPED'});
+        }
+        const options = settings.platforms[platform];
+        if (!options.snifferEnabled || !options.roomAddress) return sendJson(response, 400, {error: '请启用采集接入并填写直播间地址'});
+        void collectors[platform].start(options).catch(error => log('collector_start_error', {platform, message: error.message}));
+        return sendJson(response, 202, {state: 'CONNECTING'});
+      }
       if (request.method === 'POST' && pathname === '/api/music/control') {
         if (request.headers.origin && !allowedOrigins.has(request.headers.origin)) return sendJson(response, 403, { error: 'MUSIC_REQUEST_DENIED' });
         if (!String(request.headers['content-type'] || '').toLowerCase().startsWith('application/json')) return sendJson(response, 415, { error: 'JSON_REQUIRED' });
@@ -185,6 +253,16 @@ try {
         }
         for (const platform of ['bilibili', 'douyin']) {
           const platformChanged = JSON.stringify(previousSettings.platforms[platform]) !== JSON.stringify(settings.platforms[platform]);
+          const previous = previousSettings.platforms[platform];
+          const current = settings.platforms[platform];
+          const connectionChanged = JSON.stringify([previous.collector?.url, previous.collector?.executable, previous.roomAddress, previous.snifferEnabled]) !== JSON.stringify([current.collector?.url, current.collector?.executable, current.roomAddress, current.snifferEnabled]);
+          if (platform === 'bilibili' && connectionChanged) {
+            await collectors[platform].stop();
+          }
+          if (previousSettings.platforms[platform].snifferEnabled && !settings.platforms[platform].snifferEnabled) {
+            for (const client of sockets.clients) if (client.ingestPlatform === platform) client.close(1000, 'Collection disabled');
+            broadcastMessage({type: 'interaction.snapshot', data: interactions[platform].snapshot()});
+          }
           if (!globalChanged && !platformChanged && !musicChanged) continue;
           if (platform === 'bilibili' && previousSettings.platforms.bilibili.roomAddress !== settings.platforms.bilibili.roomAddress) {
             adapters.bilibili = { ...adapters.bilibili, state: settings.platforms.bilibili.roomAddress ? 'WAITING_AUTHORIZATION' : 'NOT_CONFIGURED', configured: Boolean(settings.platforms.bilibili.roomAddress) };
@@ -238,6 +316,20 @@ try {
       sendUpgradeError(socket, 403, 'Forbidden');
       return;
     }
+    const ingestPlatform = /^\/ws\/ingest\/(bilibili|douyin)$/.exec(url.pathname)?.[1];
+    if (ingestPlatform) {
+      let localOrigin = !request.headers.origin;
+      try {
+        const sender = new URL(request.headers.origin);
+        localOrigin = sender.protocol === 'http:' && ['127.0.0.1', 'localhost', '[::1]'].includes(sender.hostname);
+      } catch { /* Native senders can omit Origin. */ }
+      if (!settings.platforms[ingestPlatform].snifferEnabled || !localOrigin) {
+        sendUpgradeError(socket, 403, 'Forbidden');
+        return;
+      }
+      sockets.handleUpgrade(request, socket, head, connection => sockets.emit('connection', connection, null, ingestPlatform));
+      return;
+    }
     if (url.pathname !== '/ws' || (request.headers.origin && !allowedOrigins.has(request.headers.origin))) {
       sendUpgradeError(socket, 403, 'Forbidden');
       return;
@@ -245,21 +337,30 @@ try {
     sockets.handleUpgrade(request, socket, head, connection => sockets.emit('connection', connection, url.searchParams.get('platform')));
   });
 
-  sockets.on('connection', (connection, platform) => {
+  sockets.on('connection', (connection, platform, ingestPlatform) => {
     log('websocket_connected');
     connection.platform = platform === 'bilibili' || platform === 'douyin' ? platform : null;
+    connection.ingestPlatform = ingestPlatform;
     connection.alive = true;
     connection.on('pong', () => { connection.alive = true; });
     connection.on('error', error => log('websocket_error', { code: error.code || 'SOCKET_ERROR' }));
-    connection.on('close', () => log('websocket_disconnected'));
+    connection.on('close', () => {
+      log('websocket_disconnected');
+      if (ingestPlatform) broadcastMessage({type: 'runtime.status', data: runtimeStatus()});
+    });
+    if (ingestPlatform) {
+      connection.on('message', raw => receiveInteraction(ingestPlatform, raw));
+      broadcastMessage({type: 'runtime.status', data: runtimeStatus()});
+      return;
+    }
     connection.send(JSON.stringify({ type: 'runtime.status', data: runtimeStatus() }));
     connection.send(JSON.stringify({ type: 'music.updated', data: music.getState() }));
+    if (connection.platform) connection.send(JSON.stringify({type: 'interaction.snapshot', data: interactions[connection.platform].snapshot()}));
   });
   sockets.on('error', error => log('websocket_server_error', { code: error.code || 'SOCKET_ERROR' }));
 
   const broadcast = setInterval(() => {
-    const message = JSON.stringify({ type: 'runtime.status', data: runtimeStatus() });
-    for (const connection of sockets.clients) if (connection.readyState === WebSocket.OPEN) connection.send(message);
+    broadcastMessage({ type: 'runtime.status', data: runtimeStatus() });
   }, 5000);
   const heartbeat = setInterval(() => {
     for (const connection of sockets.clients) {
@@ -281,6 +382,10 @@ try {
     clearInterval(broadcast);
     clearInterval(heartbeat);
     music.close();
+    await Promise.all(Object.values(collectors).map(collector => collector.stop()));
+    for (const platform of ['bilibili', 'douyin']) {
+      if (interactions[platform].snapshot().messages.length) saveInteractionHistory(platform);
+    }
     await localMusicBridge.close();
     for (const connection of sockets.clients) connection.close(1001, 'Service stopping');
     const forceClose = setTimeout(() => {
@@ -291,6 +396,7 @@ try {
     const socketsClosed = new Promise(resolve => sockets.close(resolve));
     const httpClosed = new Promise(resolve => server.close(resolve));
     await Promise.all([socketsClosed, httpClosed]);
+    await Promise.allSettled(Object.values(interactionWrites));
     clearTimeout(forceClose);
     await removeOwnMetadata().catch(() => log('metadata_cleanup_error'));
     log('stopped', { reason });
@@ -312,6 +418,10 @@ try {
   await atomicWriteJson(paths.metadataFile, { instanceId, controlToken, projectKey: paths.projectKey, pid: process.pid, port, startedAt });
   music.configure(settings.adapters.music);
   void localMusicBridge.start(settings.adapters.music);
+  for (const platform of Object.keys(collectors)) {
+    const options = settings.platforms[platform];
+    if (options.snifferEnabled && options.collector.autoStart) void collectors[platform].start(options).catch(error => log('collector_start_error', {platform, message: error.message}));
+  }
   log('started', { port, version: packageInfo.version });
   log('adapter_status', { music: adapters.music.state, bilibili: adapters.bilibili.state });
 } catch (error) {

@@ -200,13 +200,14 @@ function SourcePage({ platform }: { platform: Platform }) {
           const update = message.data
           if (!disposed && message.type === 'runtime.status') {
             const state = update?.adapters?.[platform]?.state
-            if (platform === 'bilibili') {
-              setInteractionState(state || 'WAITING_AUTHORIZATION')
-              setLiveStatus(state === 'NOT_CONFIGURED' ? '互动尚未配置' : state === 'WAITING_AUTHORIZATION' ? '等待平台授权' : state === 'UNAVAILABLE' ? '互动暂不可用' : state === 'CONNECTED' ? '等待留言' : '互动连接中')
-            }
+            setInteractionState(state || 'NOT_CONFIGURED')
+            setLiveStatus(state === 'NOT_CONFIGURED' ? '互动尚未配置' : state === 'WAITING_AUTHORIZATION' ? '等待平台授权' : state === 'UNAVAILABLE' ? '互动暂不可用' : state === 'CONNECTED' ? '等待留言' : '互动连接中')
           }
-          if (!disposed && platform === 'bilibili' && message.type === 'interaction.message' && update?.platform === platform) {
-            setLiveMessages(current => appendSimulatedMessage(current, update as SimulatedMessage))
+          if (!disposed && message.type === 'interaction.snapshot' && update?.platform === platform && Array.isArray(update.messages)) {
+            setLiveMessages(update.messages.reduce((messages: SimulatedMessage[], incoming: SimulatedMessage) => appendSimulatedMessage(messages, incoming, 100), []))
+          }
+          if (!disposed && message.type === 'interaction.message' && update?.platform === platform) {
+            setLiveMessages(current => appendSimulatedMessage(current, update as SimulatedMessage, 100))
             setLiveStatus('等待留言')
           }
           if (!disposed && message.type === 'music.updated' && update) {
@@ -227,7 +228,7 @@ function SourcePage({ platform }: { platform: Platform }) {
         if (disposed) return
         clearTimeout(musicExpiry)
         clearTimeout(musicHideTimer.current)
-        if (platform === 'bilibili') setInteractionState('UNAVAILABLE')
+        setInteractionState('UNAVAILABLE')
         setLiveStatus('本地服务连接中断')
         setLiveMessages([])
         setMusic({ ...disconnectedMusic, state: 'UNAVAILABLE' })

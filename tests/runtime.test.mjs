@@ -55,6 +55,20 @@ function nextSettingsUpdate(socket, platform) {
   });
 }
 
+function nextInteractionSnapshot(socket, predicate) {
+  return new Promise((resolve, reject) => {
+    const timeout = setTimeout(() => { socket.off('message', onMessage); reject(new Error('等待互动消息超时')); }, 5000);
+    function onMessage(raw) {
+      const packet = JSON.parse(raw.toString());
+      if (packet.type !== 'interaction.snapshot' || !predicate(packet.data)) return;
+      clearTimeout(timeout);
+      socket.off('message', onMessage);
+      resolve(packet.data);
+    }
+    socket.on('message', onMessage);
+  });
+}
+
 test('真实服务生命周期、并发、关闭、冲突与恢复', { timeout: 120000 }, async context => {
   const directory = await mkdtemp(path.join(os.tmpdir(), '酒馆 runtime 测试 '));
   const port = await unusedPort();
@@ -102,15 +116,15 @@ test('真实服务生命周期、并发、关闭、冲突与恢复', { timeout: 
     await context.test('后台覆盖全部直播页字段并保持平台设置隔离', async () => {
       const initial = await (await fetch(`${origin}/api/settings`)).json();
       assert.deepEqual(Object.keys(initial.settings.global).sort(), ['fontSizes', 'task']);
-      assert.deepEqual(Object.keys(initial.settings.platforms.bilibili).sort(), ['announcementText', 'boardMode', 'bottomAnnouncementText', 'fontSizes', 'lyricsAutoHide', 'lyricsEnabled', 'roomAddress']);
-      assert.deepEqual(Object.keys(initial.settings.platforms.douyin).sort(), ['announcementText', 'bottomAnnouncementText', 'fontSizes', 'lyricsAutoHide', 'lyricsEnabled']);
+      assert.deepEqual(Object.keys(initial.settings.platforms.bilibili).sort(), ['announcementText', 'boardMode', 'bottomAnnouncementText', 'collector', 'fontSizes', 'lyricsAutoHide', 'lyricsEnabled', 'roomAddress', 'snifferEnabled']);
+      assert.deepEqual(Object.keys(initial.settings.platforms.douyin).sort(), ['announcementText', 'boardMode', 'bottomAnnouncementText', 'fontSizes', 'lyricsAutoHide', 'lyricsEnabled', 'snifferEnabled']);
       settingsSocket = new WebSocket(`ws://127.0.0.1:${port}/ws`);
       assert.equal((await nextJsonMessage(settingsSocket)).type, 'runtime.status');
       const payload = {
         global: { task: '寻找今晚的风', fontSizes: initial.settings.global.fontSizes },
         music: initial.settings.music,
         platforms: {
-          bilibili: { roomAddress: 'https://live.bilibili.com/14041317', boardMode: 'announcement', announcementText: 'B 站今晚公告', lyricsEnabled: false, lyricsAutoHide: false, bottomAnnouncementText: 'B站底部公告\n第二行', fontSizes: initial.settings.platforms.bilibili.fontSizes },
+          bilibili: { collector: initial.settings.platforms.bilibili.collector, snifferEnabled: false, roomAddress: 'https://live.bilibili.com/14041317', boardMode: 'announcement', announcementText: 'B 站今晚公告', lyricsEnabled: false, lyricsAutoHide: false, bottomAnnouncementText: 'B站底部公告\n第二行', fontSizes: initial.settings.platforms.bilibili.fontSizes },
           douyin: initial.settings.platforms.douyin,
         },
       };
@@ -137,6 +151,46 @@ test('真实服务生命周期、并发、关闭、冲突与恢复', { timeout: 
       assert.equal((await readdir(path.join(directory, 'backups'))).length, backupCount);
     });
 
+    await context.test('采集器转发接收、双平台隔离、重连快照和关闭接入', async () => {
+      const {settings} = await (await fetch(origin + '/api/settings')).json();
+      const enabled = structuredClone(settings);
+      for (const platform of Object.values(enabled.platforms)) Object.assign(platform, {snifferEnabled: true, boardMode: 'comments'});
+      const save = value => fetch(origin + '/api/settings', {method: 'PUT', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(value)});
+      assert.equal((await save(enabled)).status, 200);
+      const bili = new WebSocket(`ws://127.0.0.1:${port}/ws?platform=bilibili`);
+      const douyin = new WebSocket(`ws://127.0.0.1:${port}/ws?platform=douyin`);
+      const producer = new WebSocket(`ws://127.0.0.1:${port}/ws/ingest/bilibili`, {origin: 'http://127.0.0.1:8000'});
+      const douyinPackets = [];
+      douyin.on('message', raw => douyinPackets.push(JSON.parse(raw.toString())));
+      try {
+        await Promise.all([once(bili, 'open'), once(douyin, 'open'), once(producer, 'open')]);
+        assert.equal((await (await fetch(origin + '/api/runtime/status')).json()).adapters.bilibili.state, 'CONNECTED');
+        producer.send('bad json');
+        producer.send(JSON.stringify({platform: 'douyin', type: '弹幕', user: '错平台', msg: '不能串台'}));
+        const received = nextInteractionSnapshot(bili, snapshot => snapshot.eventCount === 1);
+        producer.send(JSON.stringify({id: 'real-fixture-1', type: '弹幕', user: '测试旅人', msg: '接入测试'}));
+        const snapshot = await received;
+        assert.equal(snapshot.messages[0].text, '接入测试');
+        producer.send(JSON.stringify({id: 'real-fixture-1', type: '弹幕', user: '测试旅人', msg: '重复'}));
+        const gift = nextInteractionSnapshot(bili, value => value.eventCount === 2);
+        producer.send(JSON.stringify({type: '礼物', user: '旅人', msg: {gift_name: '花花', gift_count: 2}}));
+        assert.equal((await gift).messages[1].count, 2);
+        assert.equal(douyinPackets.some(packet => packet.type === 'interaction.snapshot' && packet.data.messages.length > 0), false);
+        const reconnected = new WebSocket(`ws://127.0.0.1:${port}/ws?platform=bilibili`);
+        assert.equal((await nextInteractionSnapshot(reconnected, value => value.messages.length === 2)).eventCount, 2);
+        reconnected.close();
+        producer.close();
+        await once(producer, 'close');
+        assert.equal((await (await fetch(origin + '/api/runtime/status')).json()).adapters.bilibili.state, 'CONNECTED');
+        assert.equal((await save(settings)).status, 200);
+        const persisted = (await (await fetch(origin + '/api/settings')).json()).settings;
+        assert.equal(persisted.platforms.douyin.snifferEnabled, false);
+      } finally {
+        bili.terminate(); douyin.terminate(); producer.terminate();
+        await save(settings);
+      }
+    });
+
     await context.test('仅 B 站房间地址可配置，抖音旧采集地址被忽略', async () => {
       const settings = (await (await fetch(`${origin}/api/settings`)).json()).settings;
       for (const address of ['http://live.bilibili.com/123', 'https://evil.example/123', 'https://user:pass@live.bilibili.com/123']) {
@@ -153,7 +207,7 @@ test('真实服务生命周期、并发、关闭、冲突与恢复', { timeout: 
       const saved = (await response.json()).settings;
       assert.equal(saved.platforms.bilibili.roomAddress, settings.platforms.bilibili.roomAddress);
       assert.equal(saved.platforms.douyin.roomAddress, undefined);
-      assert.equal(saved.platforms.douyin.boardMode, undefined);
+      assert.equal(saved.platforms.douyin.boardMode, 'announcement');
       assert.equal((await (await fetch(`${origin}/ws/douyin`)).status), 404);
     });
 

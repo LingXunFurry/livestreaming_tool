@@ -12,14 +12,14 @@ interface RuntimeStatus {
   port: number
   pages: Record<'bilibili' | 'douyin' | 'admin', string>
   websocket: { state: string; clients: number }
-  adapters: Record<string, { state: string }>
+  adapters: Record<string, { state: string; error?: string; eventCount?: number; suppressedReplays?: number; lastEventAt?: string; room?: {onlineCount: number | null; likeCount: number | null} }>
   configuration: { title: string; task: string; schemaVersion: number }
 }
 
 interface EditableSettings {
   global: { task: string; fontSizes: GlobalFontSizes }
   music: { enabled: boolean; baseUrl: string }
-  platforms: Record<Platform, { roomAddress?: string; boardMode?: BoardMode; announcementText: string; lyricsEnabled: boolean; lyricsAutoHide: boolean; bottomAnnouncementText: string; fontSizes: PlatformFontSizes }>
+  platforms: Record<Platform, { collector: {url: string; executable: string; autoStart: boolean}; snifferEnabled?: boolean; roomAddress?: string; boardMode?: BoardMode; announcementText: string; lyricsEnabled: boolean; lyricsAutoHide: boolean; bottomAnnouncementText: string; fontSizes: PlatformFontSizes }>
 }
 
 const platformLabels: Record<Platform, string> = { bilibili: 'B 站', douyin: '抖音' }
@@ -28,7 +28,7 @@ function adapterStateLabel(state?: string) {
   return ({
     NOT_CONFIGURED: '未配置',
     WAITING_AUTHORIZATION: '等待平台授权',
-    CONNECTED: '互动已连接',
+    CONNECTED: '连接可用',
     DISCONNECTED: '未连接',
     CONNECTING: '连接中',
     UNAVAILABLE: '暂不可用',
@@ -55,6 +55,7 @@ export function Admin() {
   const [music, setMusic] = useState<MusicState>(disconnectedMusic)
   const [musicAction, setMusicAction] = useState(false)
   const [musicActionError, setMusicActionError] = useState('')
+  const [collectionAction, setCollectionAction] = useState('')
 
   useEffect(() => {
     let disposed = false
@@ -147,10 +148,23 @@ export function Admin() {
       if (!response.ok) throw new Error(result.error || '配置保存失败')
       setSettings(result.settings)
       setSaveState('已保存')
+      return true
     } catch (saveError) {
       setSaveState('')
       setError(saveError instanceof Error ? saveError.message : '配置保存失败')
+      return false
     }
+  }
+
+  async function controlCollection(platform: Platform, action: 'start' | 'stop') {
+    setCollectionAction(platform)
+    try {
+      if (action === 'start' && !await save()) return
+      const response = await fetch(`/api/interaction/${platform}/${action}`, {method: 'POST'})
+      const result = await response.json()
+      if (!response.ok) throw new Error(result.error)
+    } catch (error) { setError(error instanceof Error ? error.message : '采集操作失败') }
+    finally { setCollectionAction('') }
   }
 
   async function controlMusic(action: 'prev' | 'next' | 'playpause') {
@@ -178,7 +192,7 @@ export function Admin() {
       <section className="admin-grid" aria-label="本地系统状态">
         <div><h2>本地服务</h2><dl><dt>服务状态</dt><dd>{status?.state || '等待响应'}</dd><dt>版本</dt><dd>{status?.version || '—'}</dd><dt>监听端口</dt><dd>{status?.port || '—'}</dd><dt>启动时间</dt><dd>{startTime}</dd></dl></div>
         <div><h2>状态连接</h2><dl><dt>WebSocket 服务</dt><dd>{status?.websocket.state || '等待响应'}</dd><dt>当前页面连接</dt><dd>{connection}</dd><dt>连接数量</dt><dd>{status?.websocket.clients ?? '—'}</dd><dt>当前阶段</dt><dd>{status?.checkpoint || '等待响应'}</dd></dl></div>
-        <div><h2>外部适配器</h2><dl><dt>网易云</dt><dd>{adapterStateLabel(status?.adapters.music?.state)}</dd><dt>B 站互动</dt><dd>{adapterStateLabel(status?.adapters.bilibili?.state)}</dd></dl><p>音乐连接通过下方网易云设置管理。B 站未获得开放平台授权时自动使用公告；抖音固定使用公告。</p></div>
+        <div><h2>外部适配器</h2><dl><dt>网易云</dt><dd>{adapterStateLabel(status?.adapters.music?.state)}</dd><dt>B 站互动</dt><dd>{adapterStateLabel(status?.adapters.bilibili?.state)}</dd><dt>抖音页面</dt><dd>固定公告</dd></dl><p>采集器连接后，消息计数会随实际接收的事件增加。</p></div>
         <div><h2>本地配置</h2><dl><dt>配置标题</dt><dd>{status?.configuration.title || '等待响应'}</dd><dt>今日委托</dt><dd>{status?.configuration.task || '等待响应'}</dd><dt>配置版本</dt><dd>{status?.configuration.schemaVersion ?? '—'}</dd></dl><p>普通设置保存到 data/settings.json，旧版本保存在 data/backups/。</p></div>
       </section>
 
@@ -218,17 +232,29 @@ export function Admin() {
           </fieldset>
           <div className="admin-platform-grid">{(['bilibili', 'douyin'] as Platform[]).map(platform => {
             const value = settings.platforms[platform]
+            const interaction = status?.adapters[platform]
             return <fieldset key={platform}><legend>{platformLabels[platform]}专属页面</legend>
               {platform === 'bilibili' && <>
-                <label className="admin-field"><span>直播间地址或房间号</span><input type="text" maxLength={256} value={value.roomAddress || ''} onChange={event => { updatePlatform(platform, { roomAddress: event.target.value }); setSaveState('') }} /></label>
-                <p className="admin-field-hint">房间地址已保存；真实互动等待 B 站开放平台授权。</p>
-                <p className="admin-field-hint">互动状态：{adapterStateLabel(status?.adapters.bilibili?.state)}</p>
-                <label className="admin-field"><span>获得互动授权后的右栏</span><select value={value.boardMode || 'comments'} onChange={event => { updatePlatform(platform, { boardMode: event.target.value as BoardMode }); setSaveState('') }}><option value="comments">直播留言</option><option value="announcement">酒馆公告</option></select></label>
+              <label className="admin-check"><input type="checkbox" checked={value.snifferEnabled || false} onChange={event => { updatePlatform(platform, {snifferEnabled: event.target.checked, boardMode: event.target.checked ? 'comments' : 'announcement'}); setSaveState('') }} /><span>启用{platformLabels[platform]}采集器接入</span></label>
+              <label className="admin-field"><span>{platformLabels[platform]}主动推送地址</span><input readOnly value={`ws://${location.host}/ws/ingest/${platform}`} onFocus={event => event.target.select()} /></label>
+              <p className="admin-field-hint">{adapterStateLabel(interaction?.state)} · 已收事件 {interaction?.eventCount ?? 0} 条{interaction?.lastEventAt && ` · 最近 ${new Date(interaction.lastEventAt).toLocaleTimeString('zh-CN')}`}</p>
+              {!!interaction?.suppressedReplays && <p className="admin-field-hint">已过滤旧消息重放 {interaction.suppressedReplays} 条</p>}
+              {interaction?.room && <p className="admin-field-hint">在线人数 {interaction.room.onlineCount ?? '—'} · 点赞 {interaction.room.likeCount ?? '—'}</p>}
+              <label className="admin-field"><span>{platformLabels[platform]}直播间地址或房间号</span><input type="text" maxLength={256} value={value.roomAddress || ''} onChange={event => { updatePlatform(platform, { roomAddress: event.target.value }); setSaveState('') }} /></label>
+              <label className="admin-field"><span>{platformLabels[platform]}采集 WebSocket 地址</span><input value={value.collector.url} maxLength={256} onChange={event => {updatePlatform(platform, {collector: {...value.collector, url: event.target.value}}); setSaveState('')}} /></label>
+              <label className="admin-field"><span>{platformLabels[platform]}采集程序 exe 路径</span><input value={value.collector.executable} maxLength={1024} placeholder="已有采集服务运行时可留空" onChange={event => {updatePlatform(platform, {collector: {...value.collector, executable: event.target.value}}); setSaveState('')}} /></label>
+              <label className="admin-check"><input type="checkbox" checked={value.collector.autoStart} onChange={event => {updatePlatform(platform, {snifferEnabled: event.target.checked || value.snifferEnabled, collector: {...value.collector, autoStart: event.target.checked}}); setSaveState('')}} /><span>随酒馆启动自动采集{platformLabels[platform]}</span></label>
+              <div className="admin-music-controls">
+                <button disabled={!!collectionAction || !value.snifferEnabled} onClick={() => void controlCollection(platform, 'start')}>一键开始{platformLabels[platform]}采集</button>
+                <button disabled={!!collectionAction} onClick={() => void controlCollection(platform, 'stop')}>停止{platformLabels[platform]}采集</button>
+              </div>
+              {interaction?.error && <p className="admin-error" role="status">{interaction.error}</p>}
+              <label className="admin-field"><span>{platformLabels[platform]}右栏显示</span><select value={value.boardMode || 'announcement'} onChange={event => { updatePlatform(platform, { boardMode: event.target.value as BoardMode }); setSaveState('') }}><option value="comments">直播留言</option><option value="announcement">酒馆公告</option></select></label>
               </>}
               <label className="admin-field"><span>右栏公告正文</span><textarea value={value.announcementText} maxLength={2000} rows={5} onChange={event => { updatePlatform(platform, { announcementText: event.target.value }); setSaveState('') }} /></label>
               <FontSizeControl name="announcement" label={`${platformLabels[platform]}公告字号`} value={value.fontSizes.announcement}
                 onChange={size => updateFontSize(platform, 'announcement', size)} />
-              <p className="admin-field-hint">{platform === 'bilibili' ? 'B 站互动未授权时自动显示此公告；获得互动后按上方选择显示。' : '抖音暂不接入第三方弹幕，直播页固定显示此公告。'}</p>
+              <p className="admin-field-hint">{platform === 'bilibili' ? '采集器断开时显示此公告，连接恢复后按右栏设置显示。' : '抖音直播页显示此公告。'}</p>
               <label className="admin-check"><input type="checkbox" checked={value.lyricsEnabled} onChange={event => { updatePlatform(platform, { lyricsEnabled: event.target.checked }); setSaveState('') }} /><span>显示歌词</span></label>
               <label className="admin-check"><input type="checkbox" checked={value.lyricsAutoHide} onChange={event => { updatePlatform(platform, { lyricsAutoHide: event.target.checked }); setSaveState('') }} /><span>暂停或未连接时自动隐藏播放组件</span></label>
               <div className="admin-font-grid">{([['comments', '评论文字字号'], ['song', '歌曲信息字号'], ['lyrics', '歌词字号']] as const).map(([field, label]) => (
